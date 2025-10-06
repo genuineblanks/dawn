@@ -1,0 +1,552 @@
+{{ 'section-why-different.css' | asset_url | stylesheet_tag }}
+
+<div class="why-different-page" id="why-different-{{ section.id }}">
+  
+  <!-- Intro Section -->
+  <section class="why-different-intro" data-card="intro">
+    <div class="why-different-intro__content">
+      <h1 class="why-different-intro__title">{{ section.settings.intro_title | default: "Why We're Different" }}</h1>
+      <p class="why-different-intro__subtitle">{{ section.settings.intro_subtitle | default: "Discover the 5 pillars that set us apart" }}</p>
+      <div class="scroll-prompt">
+        <span>{{ section.settings.scroll_text | default: "Scroll to explore" }}</span>
+        <svg class="scroll-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M19 12l-7 7-7-7"/>
+        </svg>
+      </div>
+    </div>
+    {%- if section.settings.intro_bg_image != blank -%}
+      <div class="why-different-intro__bg">
+        {{ section.settings.intro_bg_image | image_url: width: 1920 | image_tag: loading: 'eager', fetchpriority: 'high' }}
+      </div>
+    {%- endif -%}
+  </section>
+
+  <!-- Card 1: No leftovers -->
+  <section class="why-different-card why-different-card--dark" data-card="1">
+    {%- if section.settings.card1_bg_image != blank -%}
+      <div class="why-different-card__bg">
+        {{ section.settings.card1_bg_image | image_url: width: 1920 | image_tag: loading: 'lazy' }}
+      </div>
+    {%- endif -%}
+    <div class="click-indicator">+</div>
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card1_headline | default: "No leftover fabric. Ever." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card1_description | default: "We create your fabric from zero—spun, dyed, and finished from scratch for your product only, whether it's a heavyweight fleece hoodie or a delicate jersey tee." }}</p>
+        <div class="why-different-card__expanded-text">
+          {{ section.settings.card1_expanded_text | default: "➡️ <em>Your piece starts fresh. No recycled errors. No 'almost right.' 100% made for you.</em>" }}
+        </div>
+        <div class="why-different-badge">{{ section.settings.card1_badge | default: "Exclusive Fabric" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card1_others_text | default: "They buy leftover rolls—cheap stock from fabric warehouses or old batches from other brands. That means your hoodie, tee, or pant might be made with someone else's leftovers." }}</p>
+            </div>
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card1_us_text | default: "We create your fabric from zero—spun, dyed, and finished from scratch for your product only, whether it's a heavyweight fleece hoodie or a delicate jersey tee." }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 2: Zero guesswork -->
+  <section class="why-different-card why-different-card--light" data-card="2">
+    <div class="click-indicator">+</div>
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card2_headline | default: "We test everything. Others roll the dice." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card2_description | default: "Whether it's blanks or a custom design, we stress-test everything first—pre-washing, measuring, dye testing, fit validation." }}</p>
+        <div class="why-different-card__expanded-text">
+          {{ section.settings.card2_expanded_text | default: "➡️ <em>You avoid disaster. What we make behaves exactly like it should—before you go bulk.</em>" }}
+        </div>
+        <div class="why-different-badge">{{ section.settings.card2_badge | default: "100% Pre-tested" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card2_others_text | default: "Most skip critical tests—shrinkage, wash resistance, color stability, or even proper fitting. You only find out something's wrong after 500 pieces are in your hands." }}</p>
+            </div>
+            {%- if section.settings.card2_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card2_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card2_us_text | default: "Whether it's blanks or a custom design, we stress-test everything first—pre-washing, measuring, dye testing, fit validation." }}</p>
+            </div>
+            {%- if section.settings.card2_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card2_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 3: You matter -->
+  <section class="why-different-card why-different-card--dark" data-card="3">
+    <div class="click-indicator">+</div>
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card3_headline | default: "You're not just a number." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card3_description | default: "We assign you a dedicated team that handles your brand—across blanks or custom products. Same person, same fit, same attention. Every time." }}</p>
+        <div class="why-different-card__expanded-text">
+          {{ section.settings.card3_expanded_text | default: "➡️ <em>You get consistency, not confusion. Your garments evolve with care, not chaos.</em>" }}
+        </div>
+        <div class="why-different-badge">{{ section.settings.card3_badge | default: "Named Dedicated Team" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card3_others_text | default: "Every new order means new people, new errors, forgotten specs. No memory. No connection." }}</p>
+            </div>
+            {%- if section.settings.card3_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card3_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card3_us_text | default: "We assign you a dedicated team that handles your brand—across blanks or custom products. Same person, same fit, same attention. Every time." }}</p>
+            </div>
+            {%- if section.settings.card3_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card3_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 4: See it -->
+  <section class="why-different-card why-different-card--light" data-card="4">
+    <div class="click-indicator">+</div>
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card4_headline | default: "You can see it with your own eyes." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card4_description | default: "From blanks to custom-developed pieces, we open the doors. Visit us in Portugal. Film the process. Get real behind-the-scenes visuals for your brand's story." }}</p>
+        <div class="why-different-card__expanded-text">
+          {{ section.settings.card4_expanded_text | default: "➡️ <em>This isn't hidden production—it's a transparent partnership you can show the world.</em>" }}
+        </div>
+        <div class="why-different-badge">{{ section.settings.card4_badge | default: "Fully Transparent" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card4_others_text | default: "No photos. No updates. Just a vague timeline and silence." }}</p>
+            </div>
+            {%- if section.settings.card4_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card4_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card4_us_text | default: "From blanks to custom-developed pieces, we open the doors. Visit us in Portugal. Film the process. Get real behind-the-scenes visuals for your brand's story." }}</p>
+            </div>
+            {%- if section.settings.card4_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card4_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 5: We build brands -->
+  <section class="why-different-card why-different-card--dark" data-card="5">
+    <div class="click-indicator">+</div>
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card5_headline | default: "We don't just make clothes. We help build brands." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card5_description | default: "Whether we're making your signature hoodie, gym shorts, or a full collection—we treat every piece like it matters. Because it does." }}</p>
+        <div class="why-different-card__expanded-text">
+          {{ section.settings.card5_expanded_text | default: "➡️ <em>You're not just buying garments. You're laying the foundation for brand loyalty and real growth.</em>" }}
+        </div>
+        <div class="why-different-badge">{{ section.settings.card5_badge | default: "Brand-Building Mindset" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card5_others_text | default: "They rush orders, follow instructions, and move on. No care for your customer, your resale value, or your long-term vision." }}</p>
+            </div>
+            {%- if section.settings.card5_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card5_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card5_us_text | default: "Whether we're making your signature hoodie, gym shorts, or a full collection—we treat every piece like it matters. Because it does." }}</p>
+            </div>
+            {%- if section.settings.card5_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card5_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky CTA Bar -->
+  <div class="why-different-cta-bar" id="sticky-cta">
+    <div class="why-different-cta-bar__content">
+      <span class="why-different-cta-bar__text">{{ section.settings.cta_text | default: "Ready to build your brand — not just an order?" }}</span>
+      <a href="{{ section.settings.cta_url | default: '/pages/tech-pack-submission' }}" class="why-different-cta-bar__button">
+        {{ section.settings.cta_button_text | default: "Get Your Custom Quote" }}
+      </a>
+    </div>
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="why-different-progress">
+    <div class="why-different-progress__bar"></div>
+  </div>
+
+</div>
+
+<script src="{{ 'why-different-interactions.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "why-different-landing",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Intro Section"
+    },
+    {
+      "type": "text",
+      "id": "intro_title",
+      "label": "Intro Title",
+      "default": "Why We're Different"
+    },
+    {
+      "type": "text",
+      "id": "intro_subtitle",
+      "label": "Intro Subtitle",
+      "default": "Discover the 5 pillars that set us apart"
+    },
+    {
+      "type": "text",
+      "id": "scroll_text",
+      "label": "Scroll Prompt Text",
+      "default": "Scroll to explore"
+    },
+    {
+      "type": "image_picker",
+      "id": "intro_bg_image",
+      "label": "Intro Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Card 1: No Leftovers"
+    },
+    {
+      "type": "text",
+      "id": "card1_headline",
+      "label": "Card 1 Headline",
+      "default": "No leftover fabric. Ever."
+    },
+    {
+      "type": "textarea",
+      "id": "card1_description",
+      "label": "Card 1 Description",
+      "default": "We create your fabric from zero—spun, dyed, and finished from scratch for your product only, whether it's a heavyweight fleece hoodie or a delicate jersey tee."
+    },
+    {
+      "type": "text",
+      "id": "card1_badge",
+      "label": "Card 1 Badge",
+      "default": "Exclusive Fabric"
+    },
+    {
+      "type": "textarea",
+      "id": "card1_expanded_text",
+      "label": "Card 1 Expanded Text",
+      "default": "Every thread tells your story. We don't use generic fabrics or leftover materials from other brands."
+    },
+    {
+      "type": "image_picker",
+      "id": "card1_others_image",
+      "label": "Card 1 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card1_us_image",
+      "label": "Card 1 'Us' Image"
+    },
+    {
+      "type": "textarea",
+      "id": "card1_others_text",
+      "label": "Card 1 'Others' Text",
+      "default": "They buy leftover rolls—cheap stock from fabric warehouses or old batches from other brands."
+    },
+    {
+      "type": "textarea",
+      "id": "card1_us_text",
+      "label": "Card 1 'Us' Text",
+      "default": "We create your fabric from zero—spun, dyed, and finished from scratch for your product only."
+    },
+    {
+      "type": "header",
+      "content": "Card 2: Zero Guesswork"
+    },
+    {
+      "type": "text",
+      "id": "card2_headline",
+      "label": "Card 2 Headline",
+      "default": "We test everything. Others roll the dice."
+    },
+    {
+      "type": "textarea",
+      "id": "card2_description",
+      "label": "Card 2 Description",
+      "default": "Whether it's blanks or a custom design, we stress-test everything first—pre-washing, measuring, dye testing, fit validation."
+    },
+    {
+      "type": "text",
+      "id": "card2_badge",
+      "label": "Card 2 Badge",
+      "default": "100% Pre-tested"
+    },
+    {
+      "type": "textarea",
+      "id": "card2_expanded_text",
+      "label": "Card 2 Expanded Text",
+      "default": "We test everything first. Shrinkage, color fastness, durability, fit - every detail is validated."
+    },
+    {
+      "type": "image_picker",
+      "id": "card2_others_image",
+      "label": "Card 2 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card2_us_image",
+      "label": "Card 2 'Us' Image"
+    },
+    {
+      "type": "textarea",
+      "id": "card2_others_text",
+      "label": "Card 2 'Others' Text",
+      "default": "Most skip critical tests—shrinkage, wash resistance, color stability, or even proper fitting."
+    },
+    {
+      "type": "textarea",
+      "id": "card2_us_text",
+      "label": "Card 2 'Us' Text",
+      "default": "Whether it's blanks or a custom design, we stress-test everything first—pre-washing, measuring, dye testing, fit validation."
+    },
+    {
+      "type": "header",
+      "content": "Card 3: You Matter"
+    },
+    {
+      "type": "text",
+      "id": "card3_headline",
+      "label": "Card 3 Headline",
+      "default": "You're not just a number."
+    },
+    {
+      "type": "textarea",
+      "id": "card3_description",
+      "label": "Card 3 Description",
+      "default": "We assign you a dedicated team that handles your brand—across blanks or custom products. Same person, same fit, same attention. Every time."
+    },
+    {
+      "type": "text",
+      "id": "card3_badge",
+      "label": "Card 3 Badge",
+      "default": "Named Dedicated Team"
+    },
+    {
+      "type": "textarea",
+      "id": "card3_expanded_text",
+      "label": "Card 3 Expanded Text",
+      "default": "We assign dedicated teams to your projects, creating personal connections that go beyond transactions."
+    },
+    {
+      "type": "image_picker",
+      "id": "card3_others_image",
+      "label": "Card 3 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card3_us_image",
+      "label": "Card 3 'Us' Image"
+    },
+    {
+      "type": "textarea",
+      "id": "card3_others_text",
+      "label": "Card 3 'Others' Text",
+      "default": "Every new order means new people, new errors, forgotten specs. No memory. No connection."
+    },
+    {
+      "type": "textarea",
+      "id": "card3_us_text",
+      "label": "Card 3 'Us' Text",
+      "default": "We assign you a dedicated team that handles your brand—across blanks or custom products."
+    },
+    {
+      "type": "header",
+      "content": "Card 4: See It"
+    },
+    {
+      "type": "text",
+      "id": "card4_headline",
+      "label": "Card 4 Headline",
+      "default": "You can see it with your own eyes."
+    },
+    {
+      "type": "textarea",
+      "id": "card4_description",
+      "label": "Card 4 Description",
+      "default": "From blanks to custom-developed pieces, we open the doors. Visit us in Portugal. Film the process. Get real behind-the-scenes visuals for your brand's story."
+    },
+    {
+      "type": "text",
+      "id": "card4_badge",
+      "label": "Card 4 Badge",
+      "default": "Fully Transparent"
+    },
+    {
+      "type": "textarea",
+      "id": "card4_expanded_text",
+      "label": "Card 4 Expanded Text",
+      "default": "Visit our facilities in Portugal. Film your content, document your process, meet your team."
+    },
+    {
+      "type": "image_picker",
+      "id": "card4_others_image",
+      "label": "Card 4 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card4_us_image",
+      "label": "Card 4 'Us' Image"
+    },
+    {
+      "type": "textarea",
+      "id": "card4_others_text",
+      "label": "Card 4 'Others' Text",
+      "default": "No photos. No updates. Just a vague timeline and silence."
+    },
+    {
+      "type": "textarea",
+      "id": "card4_us_text",
+      "label": "Card 4 'Us' Text",
+      "default": "From blanks to custom-developed pieces, we open the doors. Visit us in Portugal."
+    },
+    {
+      "type": "header",
+      "content": "Card 5: We Build Brands"
+    },
+    {
+      "type": "text",
+      "id": "card5_headline",
+      "label": "Card 5 Headline",
+      "default": "We don't just make clothes. We help build brands."
+    },
+    {
+      "type": "textarea",
+      "id": "card5_description",
+      "label": "Card 5 Description",
+      "default": "Whether we're making your signature hoodie, gym shorts, or a full collection—we treat every piece like it matters. Because it does."
+    },
+    {
+      "type": "text",
+      "id": "card5_badge",
+      "label": "Card 5 Badge",
+      "default": "Brand-Building Mindset"
+    },
+    {
+      "type": "textarea",
+      "id": "card5_expanded_text",
+      "label": "Card 5 Expanded Text",
+      "default": "We craft the foundation of your brand's future with 20+ years of luxury streetwear experience."
+    },
+    {
+      "type": "image_picker",
+      "id": "card5_others_image",
+      "label": "Card 5 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card5_us_image",
+      "label": "Card 5 'Us' Image"
+    },
+    {
+      "type": "textarea",
+      "id": "card5_others_text",
+      "label": "Card 5 'Others' Text",
+      "default": "They rush orders, follow instructions, and move on. No care for your customer or long-term vision."
+    },
+    {
+      "type": "textarea",
+      "id": "card5_us_text",
+      "label": "Card 5 'Us' Text",
+      "default": "Whether we're making your signature hoodie, gym shorts, or a full collection—we treat every piece like it matters."
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text",
+      "default": "Ready to build your brand — not just an order?"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text",
+      "label": "CTA Button Text",
+      "default": "Get Your Custom Quote"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "why-different-landing"
+    }
+  ]
+}
+{% endschema %}

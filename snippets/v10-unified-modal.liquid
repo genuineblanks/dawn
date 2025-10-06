@@ -1,0 +1,283 @@
+{% comment %}
+  V10 Unified Modal Component - Reusable Template
+  Consolidates 4 different modal implementations into single template
+  Supports: Quick Guide, Visual Guide, Terms, and Custom modals
+{% endcomment %}
+
+{% liquid
+  assign modal_id = modal_id | default: 'v10-modal'
+  assign modal_size = modal_size | default: 'medium'
+  assign modal_type = modal_type | default: 'standard'
+  assign show_header = show_header | default: true
+  assign show_actions = show_actions | default: false
+  assign backdrop_closable = backdrop_closable | default: true
+  assign has_tabs = has_tabs | default: false
+  assign auto_height = auto_height | default: false
+%}
+
+<!-- V10 Unified Modal Overlay -->
+<div class="v10-modal-overlay" id="{{ modal_id }}" style="display: none;" {% if backdrop_closable %}data-backdrop-close="true"{% endif %}>
+  <div class="v10-modal v10-modal--{{ modal_size }}{% if modal_type == 'guide' %} v10-modal--guide{% endif %}{% if auto_height %} v10-modal--auto-height{% endif %}" role="dialog" aria-labelledby="{{ modal_id }}-title" aria-modal="true">
+    
+    {% if show_header %}
+    <!-- Modal Header -->
+    <div class="v10-modal-header">
+      <div class="v10-modal-header-content">
+        <div class="v10-modal-header-text">
+          {% if modal_title %}
+            <h2 id="{{ modal_id }}-title" class="v10-modal-title">{{ modal_title | escape }}</h2>
+          {% endif %}
+          {% if modal_subtitle %}
+            <p class="v10-modal-subtitle">{{ modal_subtitle | escape }}</p>
+          {% endif %}
+        </div>
+        
+        <!-- Close Button -->
+        <button type="button" class="v10-modal-close" id="close-{{ modal_id }}" aria-label="{{ 'general.accessibility.close' | t | default: 'Close' }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 5L5 15M5 5l10 10"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    {% endif %}
+    
+    <!-- Modal Body -->
+    <div class="v10-modal-body">
+      
+      {% if has_tabs %}
+      <!-- Navigation Tabs for Guide Modals -->
+      <div class="v10-modal-navigation">
+        {{ modal_tabs }}
+      </div>
+      {% endif %}
+      
+      <!-- Content Area -->
+      <div class="v10-modal-content" id="{{ modal_id }}-content">
+        {{ modal_content }}
+      </div>
+      
+    </div>
+    
+    {% if show_actions %}
+    <!-- Modal Actions Footer -->
+    <div class="v10-modal-actions">
+      {{ modal_actions }}
+    </div>
+    {% endif %}
+    
+  </div>
+</div>
+
+<!-- Modal Styles -->
+<style>
+/* Modal Size Variants */
+.v10-modal--small {
+  max-width: 400px;
+}
+
+.v10-modal--medium {
+  max-width: 800px;
+}
+
+.v10-modal--large {
+  max-width: 1200px;
+}
+
+.v10-modal--auto-height {
+  max-height: none;
+  height: auto;
+}
+
+/* Guide Modal Specific Styles */
+.v10-modal--guide .v10-modal-body {
+  padding: var(--v10-space-4);
+}
+
+.v10-modal--guide .v10-modal-header {
+  background: linear-gradient(135deg, var(--v10-bg-secondary) 0%, var(--v10-bg-tertiary) 100%);
+}
+
+/* Modal Navigation Tabs */
+.v10-modal-navigation {
+  display: flex;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-1);
+  margin-bottom: var(--v10-space-6);
+  gap: var(--v10-space-1);
+}
+
+.v10-modal-nav-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: var(--v10-space-3) var(--v10-space-4);
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-muted);
+  cursor: pointer;
+  transition: var(--v10-transition);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--v10-space-2);
+}
+
+.v10-modal-nav-tab.active {
+  background: var(--v10-bg-tertiary);
+  color: var(--v10-text-primary);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.v10-modal-nav-tab:hover:not(.active) {
+  color: var(--v10-text-secondary);
+  background: var(--v10-bg-hover);
+}
+
+/* Content Areas */
+.v10-modal-content {
+  min-height: 200px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .v10-modal--small,
+  .v10-modal--medium,
+  .v10-modal--large {
+    width: 95vw;
+    max-width: none;
+    margin: var(--v10-space-4);
+  }
+  
+  .v10-modal-navigation {
+    flex-direction: column;
+    gap: var(--v10-space-2);
+  }
+  
+  .v10-modal-nav-tab {
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+/* Dark Theme Support */
+[data-theme="dark"] .v10-modal-navigation {
+  background: var(--v10-bg-tertiary);
+  border-color: var(--v10-border-primary);
+}
+
+[data-theme="dark"] .v10-modal-nav-tab.active {
+  background: var(--v10-bg-primary);
+}
+
+[data-theme="dark"] .v10-modal--guide .v10-modal-header {
+  background: linear-gradient(135deg, var(--v10-bg-secondary) 0%, var(--v10-bg-tertiary) 100%);
+}
+</style>
+
+<!-- Modal JavaScript Initialization -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('{{ modal_id }}');
+  if (!modal) return;
+  
+  const closeBtn = modal.querySelector('#close-{{ modal_id }}');
+  const overlay = modal;
+  const modalElement = modal.querySelector('.v10-modal');
+  
+  // Close button handler
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function() {
+      closeModal();
+    });
+  }
+  
+  // Backdrop close handler
+  {% if backdrop_closable %}
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      closeModal();
+    }
+  });
+  {% endif %}
+  
+  // ESC key handler
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+  
+  // Tab navigation handler
+  {% if has_tabs %}
+  const tabs = modal.querySelectorAll('.v10-modal-nav-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      // Add active class to clicked tab
+      this.classList.add('active');
+      
+      // Fire custom event for tab change
+      modal.dispatchEvent(new CustomEvent('tabChange', {
+        detail: { 
+          tabId: this.dataset.tab,
+          modal: modal 
+        }
+      }));
+    });
+  });
+  {% endif %}
+  
+  // Modal control functions
+  function openModal() {
+    modal.style.display = 'flex';
+    requestAnimationFrame(() => {
+      modal.classList.add('active');
+    });
+    
+    // Focus management
+    const firstFocusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (firstFocusable) {
+      firstFocusable.focus();
+    }
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    
+    // Fire custom open event
+    modal.dispatchEvent(new CustomEvent('modalOpen', { detail: { modal } }));
+  }
+  
+  function closeModal() {
+    modal.classList.remove('active');
+    
+    setTimeout(() => {
+      modal.style.display = 'none';
+      // Restore body scroll
+      document.body.style.overflow = '';
+      
+      // Fire custom close event
+      modal.dispatchEvent(new CustomEvent('modalClose', { detail: { modal } }));
+    }, 200);
+  }
+  
+  // Expose functions globally for external use
+  window['open{{ modal_id | capitalize }}'] = openModal;
+  window['close{{ modal_id | capitalize }}'] = closeModal;
+  
+  // Store modal instance for external access
+  modal.modalInstance = {
+    open: openModal,
+    close: closeModal,
+    element: modal
+  };
+});
+</script>

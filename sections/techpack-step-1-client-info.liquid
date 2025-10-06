@@ -1,0 +1,907 @@
+{% comment %}
+Tech-Pack Pre-Step: Client Registration Check - Premium Design
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
+
+<section id="techpack-step-0" class="techpack-step" data-step="0" style="display: block;">
+  <div class="techpack-entrance-container">
+    <!-- Hero Section -->
+    <div class="techpack-entrance-hero">
+      <div class="techpack-entrance-hero__content">
+        <h1 class="techpack-entrance-hero__title">
+          Professional TechPack Submission
+        </h1>
+        <p class="techpack-entrance-hero__subtitle">
+          Transform your designs into reality with our expert garment development process
+        </p>
+      </div>
+    </div>
+
+    <!-- Requirements Section -->
+    <div class="techpack-entrance-requirements">
+      <h2 class="techpack-section-title">What You Need to Get Started</h2>
+      <p class="techpack-section-subtitle">Ensure you have these essentials for a smooth submission process</p>
+      
+      <div class="techpack-requirements-grid">
+        <div class="techpack-requirement-card">
+          <div class="techpack-requirement-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+              <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="techpack-requirement-card__content">
+            <h3 class="techpack-requirement-card__title">TechPack / Design Files</h3>
+            <p class="techpack-requirement-card__description">Upload your design specifications, technical drawings, or concept sketches</p>
+            <div class="techpack-requirement-card__formats">PDF, AI, PNG, JPG, ZIP</div>
+          </div>
+          <div class="techpack-requirement-card__status">
+            <div class="techpack-status-indicator techpack-status-indicator--required">Required</div>
+          </div>
+        </div>
+
+        <div class="techpack-requirement-card">
+          <div class="techpack-requirement-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="techpack-requirement-card__content">
+            <h3 class="techpack-requirement-card__title">Fitting Measurements</h3>
+            <p class="techpack-requirement-card__description">Provide body measurements or select from our standard sizing patterns</p>
+            <div class="techpack-requirement-card__formats">Size Chart, Custom Measurements</div>
+          </div>
+          <div class="techpack-requirement-card__status">
+            <div class="techpack-status-indicator techpack-status-indicator--optional">Optional*</div>
+          </div>
+        </div>
+
+        <div class="techpack-requirement-card">
+          <div class="techpack-requirement-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+              <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+              <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="techpack-requirement-card__content">
+            <h3 class="techpack-requirement-card__title">Design Measurements</h3>
+            <p class="techpack-requirement-card__description">Garment dimensions and specifications (our experts can assist if needed)</p>
+            <div class="techpack-requirement-card__formats">Spec Sheet, Measurements</div>
+          </div>
+          <div class="techpack-requirement-card__status">
+            <div class="techpack-status-indicator techpack-status-indicator--assisted">Expert Help Available</div>
+          </div>
+        </div>
+
+        <div class="techpack-requirement-card">
+          <div class="techpack-requirement-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="techpack-requirement-card__content">
+            <h3 class="techpack-requirement-card__title">Material Preferences</h3>
+            <p class="techpack-requirement-card__description">Fabric types, colors, quality requirements, and special instructions</p>
+            <div class="techpack-requirement-card__formats">Fabric Specs, Color Codes</div>
+          </div>
+          <div class="techpack-requirement-card__status">
+            <div class="techpack-status-indicator techpack-status-indicator--optional">Optional</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- CTA Section -->
+    <div class="techpack-entrance-cta">
+      <div class="techpack-cta-content">
+        <h2 class="techpack-cta-title">Ready to Start Your TechPack?</h2>
+        
+        <button type="button" class="techpack-btn-hero" id="open-client-modal">
+          <div class="techpack-btn-hero__content">
+            <div class="techpack-btn-hero__icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <span class="techpack-btn-hero__text">Begin Your TechPack Submission</span>
+          </div>
+          <div class="techpack-btn-hero__shimmer"></div>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="techpack-step-1" class="techpack-step" data-step="1" style="display: none;">
+  <div class="techpack-container">
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 50%"></div>
+      </div>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">1</div>
+          <div class="techpack-progress__step-label">Client Info</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">2</div>
+          <div class="techpack-progress__step-label">File Upload</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">3</div>
+          <div class="techpack-progress__step-label">Garment Details</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">4</div>
+          <div class="techpack-progress__step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-content">
+      <h2 class="techpack-title">Client Information</h2>
+      <p class="techpack-subtitle" id="client-info-subtitle">Please provide your business details</p>
+
+      <form class="techpack-form" autocomplete="off" novalidate>
+        <!-- Row 1: Client Name - Company Name -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="client-name" class="techpack-form__label">Contact Name</label>
+            <input
+              type="text"
+              id="client-name"
+              name="clientName"
+              class="techpack-form__input"
+              required
+              data-validate="required"
+              placeholder="Full name of primary contact"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="company-name" class="techpack-form__label">Business/Brand Name</label>
+            <input
+              type="text"
+              id="company-name"
+              name="companyName"
+              class="techpack-form__input"
+              required
+              data-validate="required"
+              placeholder="Registered business or brand name"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Row 2: Email Address - VAT/EIN Number -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="email" class="techpack-form__label">Business Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="techpack-form__input"
+              required
+              data-validate="email"
+              placeholder="contact@company.com"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+
+          <div class="techpack-form__group" id="vat-ein-group">
+            <label for="vat-ein" class="techpack-form__label" id="vat-ein-label">
+              VAT/EIN Number <span class="techpack-form__label-status" id="vat-ein-status">(required for new businesses)</span>
+            </label>
+            <input
+              type="text"
+              id="vat-ein"
+              name="vatEin"
+              class="techpack-form__input"
+              data-validate="vat-ein"
+              placeholder="VAT: GB123456789 or EIN: 12-3456789"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+            <div class="techpack-form__help" id="vat-ein-help">
+              Required to verify your business registration status
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2.5: Delivery Information (Sample & Bulk only) - JavaScript controlled via #delivery-row -->
+        <div id="delivery-row" style="display: none;">
+          <!-- For Sample Request: Delivery Address (Full Width) -->
+          <div class="techpack-form__row" id="delivery-row-sample" style="display: none;">
+            <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
+              <label class="techpack-form__label">Delivery Address</label>
+              <div class="techpack-delivery-options techpack-delivery-options--horizontal">
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="company" checked required>
+                  <span class="techpack-delivery-option__content">
+                    <div class="techpack-delivery-option__icon">🏢</div>
+                    <div class="techpack-delivery-option__text">
+                      <strong>Company Address</strong>
+                      <small>Use business location from above</small>
+                    </div>
+                  </span>
+                </label>
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="different" required>
+                  <span class="techpack-delivery-option__content">
+                    <div class="techpack-delivery-option__icon">📍</div>
+                    <div class="techpack-delivery-option__text">
+                      <strong>Different Address</strong>
+                      <small>Specify alternative delivery location</small>
+                    </div>
+                  </span>
+                </label>
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
+              <!-- Delivery Address Warning -->
+              <div class="techpack-form__help techpack-form__help--delivery">
+                <strong>⚠️ Critical: Delivery address cannot be changed once order processing begins.</strong>
+                Double-check your selection - this is where your garments will be delivered. Any address changes after submission require a new order.
+              </div>
+            </div>
+          </div>
+
+          <!-- For Bulk Request: Delivery Address (full width with side-by-side options) -->
+          <div class="techpack-form__row" id="delivery-row-bulk" style="display: none;">
+            <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
+              <label class="techpack-form__label">Delivery Address</label>
+              <div class="techpack-delivery-options techpack-delivery-options--horizontal">
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="company" checked required>
+                  <span class="techpack-delivery-option__content">
+                    <div class="techpack-delivery-option__icon">🏢</div>
+                    <div class="techpack-delivery-option__text">
+                      <strong>Company Address</strong>
+                      <small>Use business location from above</small>
+                    </div>
+                  </span>
+                </label>
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="different" required>
+                  <span class="techpack-delivery-option__content">
+                    <div class="techpack-delivery-option__icon">📍</div>
+                    <div class="techpack-delivery-option__text">
+                      <strong>Different Address</strong>
+                      <small>Specify alternative delivery location</small>
+                    </div>
+                  </span>
+                </label>
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
+              <!-- Delivery Address Warning -->
+              <div class="techpack-form__help techpack-form__help--delivery">
+                <strong>⚠️ Critical: Delivery address cannot be changed once order processing begins.</strong>
+                Double-check your selection - this is where your garments will be delivered. Any address changes after submission require a new order.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2.6: Different Address Form (conditional) -->
+        <div class="techpack-different-address" id="different-address-form" style="display: none;">
+          <!-- Contact Info Row -->
+          <div class="techpack-form__row">
+            <div class="techpack-form__group techpack-form__group--required">
+              <label for="delivery-contact-name" class="techpack-form__label">Contact Name</label>
+              <input
+                type="text"
+                id="delivery-contact-name"
+                name="deliveryContactName"
+                class="techpack-form__input"
+                data-validate="required-if-different"
+                placeholder="Full name of contact person"
+              >
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+
+            <div class="techpack-form__group techpack-form__group--required">
+              <label for="delivery-phone" class="techpack-form__label">Contact Phone</label>
+              <input
+                type="tel"
+                id="delivery-phone"
+                name="deliveryPhone"
+                class="techpack-form__input"
+                data-validate="required-if-different"
+                placeholder="+1 234 567 8901"
+                maxlength="20"
+              >
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- Address Lines Row -->
+          <div class="techpack-form__row">
+            <div class="techpack-form__group techpack-form__group--required">
+              <label for="delivery-address-1" class="techpack-form__label">Address Line 1</label>
+              <input
+                type="text"
+                id="delivery-address-1"
+                name="deliveryAddress1"
+                class="techpack-form__input"
+                data-validate="required-if-different"
+                placeholder="Street address, building, etc."
+              >
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+
+            <div class="techpack-form__group">
+              <label for="delivery-address-2" class="techpack-form__label">
+                Address Line 2 <span class="techpack-form__label-status">(optional)</span>
+              </label>
+              <input
+                type="text"
+                id="delivery-address-2"
+                name="deliveryAddress2"
+                class="techpack-form__input"
+                placeholder="Apartment, suite, unit, etc."
+              >
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- City & State Row -->
+          <div class="techpack-form__row">
+            <div class="techpack-form__group techpack-form__group--required">
+              <label for="delivery-city" class="techpack-form__label">City</label>
+              <input
+                type="text"
+                id="delivery-city"
+                name="deliveryCity"
+                class="techpack-form__input"
+                data-validate="required-if-different"
+                placeholder="City name"
+              >
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+
+            <div class="techpack-form__group techpack-form__group--required">
+              <label for="delivery-state" class="techpack-form__label">State/Province/Region</label>
+              <input
+                type="text"
+                id="delivery-state"
+                name="deliveryState"
+                class="techpack-form__input"
+                data-validate="required-if-different"
+                placeholder="State, province, or region"
+              >
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- Postal Code & Country Row -->
+          <div class="techpack-form__row">
+            <div class="techpack-form__group techpack-form__group--required">
+              <label for="delivery-postal" class="techpack-form__label">Postal Code</label>
+              <input
+                type="text"
+                id="delivery-postal"
+                name="deliveryPostal"
+                class="techpack-form__input"
+                data-validate="required-if-different"
+                placeholder="ZIP or postal code"
+              >
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+
+            <div class="techpack-form__group techpack-form__group--required">
+              <label for="delivery-country" class="techpack-form__label">Country</label>
+              <div class="techpack-enhanced-country-wrapper">
+                <input
+                  type="text"
+                  id="delivery-country"
+                  name="deliveryCountry"
+                  class="techpack-form__input techpack-enhanced-country-input"
+                  data-validate="required-if-different"
+                  autocomplete="off"
+                  placeholder="Select delivery country"
+                  readonly
+                >
+                <div class="techpack-enhanced-country-flag" id="delivery-country-flag"></div>
+                <div class="techpack-enhanced-country-toggle" id="delivery-country-toggle">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M4 6l4 4 4-4H4z"/>
+                  </svg>
+                </div>
+                <div class="techpack-enhanced-country-dropdown" id="delivery-country-dropdown">
+                  <div class="techpack-enhanced-country-search">
+                    <input
+                      type="text"
+                      class="techpack-enhanced-country-search-input"
+                      placeholder="Search countries..."
+                      id="delivery-country-search"
+                    >
+                  </div>
+                  <div class="techpack-enhanced-country-list" id="delivery-country-list"></div>
+                </div>
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- Delivery Notes Row -->
+          <div class="techpack-form__row">
+            <div class="techpack-form__group techpack-form__group--full">
+              <label for="delivery-notes" class="techpack-form__label">
+                Delivery Notes <span class="techpack-form__label-status">(optional, max 140 characters)</span>
+              </label>
+              <textarea
+                id="delivery-notes"
+                name="deliveryNotes"
+                class="techpack-form__textarea"
+                rows="3"
+                maxlength="140"
+                placeholder="Special delivery instructions, gate codes, best delivery times, etc."
+              ></textarea>
+              <div class="techpack-form__char-count">
+                <span id="delivery-notes-count">0</span>/140 characters
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2.7: Shipping Options (Bulk only) - JavaScript controlled via #shipping-section -->
+        <div class="techpack-shipping-section" id="shipping-section" style="display: none;">
+          <!-- Shipping Method and Insurance Row (2-column layout) -->
+          <div class="techpack-form__row techpack-form__row--shipping-insurance">
+            <!-- Shipping Method -->
+            <div class="techpack-form__group techpack-form__group--required">
+              <label class="techpack-form__label">Preferred Shipping Method</label>
+              <div class="techpack-shipping-methods">
+                <label class="techpack-shipping-method">
+                  <input type="radio" name="shippingMethod" value="air" required>
+                  <span class="techpack-shipping-method__content">
+                    <div class="techpack-shipping-method__icon">✈️</div>
+                    <div class="techpack-shipping-method__text">
+                      <strong>Air Freight</strong>
+                      <small>Faster + Expensive</small>
+                      <div class="techpack-shipping-method__details">5-10 business days</div>
+                    </div>
+                  </span>
+                </label>
+                <label class="techpack-shipping-method">
+                  <input type="radio" name="shippingMethod" value="sea" required>
+                  <span class="techpack-shipping-method__content">
+                    <div class="techpack-shipping-method__icon">🚢</div>
+                    <div class="techpack-shipping-method__text">
+                      <strong>Sea Freight</strong>
+                      <small>Slower + Cheaper</small>
+                      <div class="techpack-shipping-method__details">20-40 business days</div>
+                    </div>
+                  </span>
+                </label>
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+
+            <!-- Insurance -->
+            <div class="techpack-form__group techpack-form__group--required">
+              <label class="techpack-form__label">Shipping Insurance</label>
+              <div class="techpack-insurance-options">
+                <label class="techpack-insurance-option">
+                  <input type="radio" name="insurance" value="yes" required>
+                  <span class="techpack-insurance-option__content">
+                    <div class="techpack-insurance-option__icon">🛡️</div>
+                    <div class="techpack-insurance-option__text">
+                      <strong>Yes, add insurance</strong>
+                      <small>2-6% of invoice value</small>
+                    </div>
+                  </span>
+                </label>
+                <label class="techpack-insurance-option">
+                  <input type="radio" name="insurance" value="no" required>
+                  <span class="techpack-insurance-option__content">
+                    <div class="techpack-insurance-option__icon">⚠️</div>
+                    <div class="techpack-insurance-option__text">
+                      <strong>No insurance</strong>
+                      <small>No protection coverage</small>
+                    </div>
+                  </span>
+                </label>
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- Insurance Help Text Row -->
+          <div class="techpack-form__row">
+            <div class="techpack-form__group techpack-form__group--full">
+              <div class="techpack-form__help techpack-form__help--insurance">
+                <strong>Insurance covers missing or damaged items</strong> up to full invoice value. 
+                Without insurance, there's no protection for lost goods during shipping.
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Row 3: Phone Number - Country -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group">
+            <label for="phone" class="techpack-form__label">
+              Business Phone <span class="techpack-form__label-status">(optional)</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="techpack-form__input"
+              placeholder="+1 234 567 8901"
+              maxlength="20"
+              data-validate="phone"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="country" class="techpack-form__label">Business Location</label>
+            <div class="techpack-form__country-wrapper">
+              <input
+                type="text"
+                id="country"
+                name="country"
+                class="techpack-form__input techpack-form__country-input"
+                required
+                data-validate="required"
+                autocomplete="off"
+                placeholder="Country where business is registered"
+                readonly
+              >
+              <div class="techpack-form__country-toggle" id="country-toggle">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4 6l4 4 4-4H4z"/>
+                </svg>
+              </div>
+              <div class="techpack-form__dropdown" id="country-dropdown"></div>
+            </div>
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Row 3.5: Production Type (All Form Types) -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
+            <label for="production-type" class="techpack-form__label">Production Type</label>
+            <select
+              id="production-type"
+              name="productionType"
+              class="techpack-form__select"
+              required
+              data-validate="required"
+            >
+              <option value="">Select production type...</option>
+              <option value="custom-production">Custom Production</option>
+              <option value="our-blanks">Our Blanks</option>
+            </select>
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Row 4: Additional Notes (Full Width) -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--full">
+            <label for="notes" class="techpack-form__label"
+              >Project Details <span class="techpack-form__label-status">(optional)</span></label
+            >
+            <textarea
+              id="notes"
+              name="notes"
+              class="techpack-form__textarea"
+              rows="4"
+              placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="techpack-form__actions">
+          <button type="button" class="techpack-btn techpack-btn--secondary" id="step-1-back">
+            <svg class="techpack-btn__icon techpack-btn__icon--left" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M10 12l-4-4 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            Back
+          </button>
+          <button type="button" class="techpack-btn techpack-btn--ghost" id="change-submission-type">
+            <svg class="techpack-btn__icon techpack-btn__icon--left" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M8 3a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V10H3a1 1 0 110-2h4V4a1 1 0 011-1z" fill="currentColor"/>
+              <path d="M15 8A7 7 0 111 8a7 7 0 0114 0z" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            Change Submission Type
+          </button>
+          <button type="button" class="techpack-btn techpack-btn--primary" id="step-1-next">
+            Continue to Upload
+            <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Client Verification Modal -->
+<div class="techpack-modal" id="client-verification-modal" style="display: none;">
+  <div class="techpack-modal__backdrop"></div>
+  <div class="techpack-modal__content techpack-modal__content--verification">
+    <div class="techpack-modal__header">
+      <h3 class="techpack-modal__title">Client Verification</h3>
+      <button type="button" class="techpack-modal__close" id="close-client-modal">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15m0-10l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="techpack-modal__body">
+      <div class="techpack-client-verification">
+        <div class="techpack-client-verification__how-it-works">
+          <h4 class="techpack-client-verification__how-it-works-title">How Genuine Blanks Works</h4>
+          <div class="techpack-client-verification__steps">
+            <div class="techpack-client-verification__step">
+              <div class="techpack-client-verification__step-number">1</div>
+              <div class="techpack-client-verification__step-content">
+                <strong>Submit Your Tech Pack</strong>
+                <p>Upload your design files and provide garment specifications through our streamlined process</p>
+              </div>
+            </div>
+            <div class="techpack-client-verification__step">
+              <div class="techpack-client-verification__step-number">2</div>
+              <div class="techpack-client-verification__step-content">
+                <strong>Quote & Approval</strong>
+                <p>We review your requirements and provide a detailed quote within 24-48 hours</p>
+              </div>
+            </div>
+            <div class="techpack-client-verification__step">
+              <div class="techpack-client-verification__step-number">3</div>
+              <div class="techpack-client-verification__step-content">
+                <strong>Sample Production</strong>
+                <p>We create samples for your approval before proceeding to full production</p>
+              </div>
+            </div>
+            <div class="techpack-client-verification__step">
+              <div class="techpack-client-verification__step-number">4</div>
+              <div class="techpack-client-verification__step-content">
+                <strong>Manufacturing & Delivery</strong>
+                <p>Once approved, we manufacture your garments and deliver them to your specifications</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="techpack-client-verification__divider"></div>
+        
+        <p class="techpack-client-verification__description">
+          Please select your client status to continue with the tech-pack submission process.
+        </p>
+        
+        <div class="techpack-client-verification__options">
+          <button type="button" class="techpack-client-verification__option techpack-glass-option" id="registration-yes-btn" data-registration="yes">
+            <div class="techpack-glass-option__content">
+              <div class="techpack-glass-option__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3" fill="currentColor"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-option__text">
+                <h4 class="techpack-glass-option__title">Yes, I'm a Registered Client</h4>
+                <p class="techpack-glass-option__description">
+                  I have worked with Genuine Blanks before and am registered in your system
+                </p>
+              </div>
+            </div>
+            <div class="techpack-glass-option__shimmer"></div>
+          </button>
+          
+          <button type="button" class="techpack-client-verification__option techpack-glass-option" id="registration-no-btn" data-registration="no">
+            <div class="techpack-glass-option__content">
+              <div class="techpack-glass-option__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M12 1v6m0 6v6m-6-6h6m6 0h-6" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-option__text">
+                <h4 class="techpack-glass-option__title">No, I'm a New Client</h4>
+                <p class="techpack-glass-option__description">
+                  This is my first time working with Genuine Blanks
+                </p>
+              </div>
+            </div>
+            <div class="techpack-glass-option__shimmer"></div>
+          </button>
+        </div>
+        
+        <!-- Registration Warning (initially hidden) -->
+        <div class="techpack-warning registration-warning" id="registration-warning" style="display: none;">
+          <div class="techpack-warning__icon">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+              <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="techpack-warning__content">
+            <h5 class="techpack-warning__title">Registration Verification Required</h5>
+            <p class="techpack-warning__message">
+              We will verify your registration status during processing. If you're not registered in our system, 
+              your submission will be automatically rejected. Please ensure you have worked with us before selecting this option.
+            </p>
+          </div>
+        </div>
+        
+        <div class="techpack-client-verification__note">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span>VAT is only required for European countries</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Submission Type Selection Modal -->
+<div class="techpack-modal techpack-modal--submission-type" id="submission-type-modal" style="display: none;">
+  <div class="techpack-modal__backdrop"></div>
+  <div class="techpack-modal__content techpack-modal__content--submission">
+    <div class="techpack-modal__header">
+      <h3 class="techpack-modal__title">Choose Your Submission Type</h3>
+      <button type="button" class="techpack-modal__close" id="close-submission-modal">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15m0-10l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="techpack-modal__body">
+      <div class="techpack-submission-selection">
+        <!-- Registration Verification Notice for REGISTERED Clients -->
+        <div class="techpack-registration-notice" id="registration-notice" style="display: none;">
+          <div class="techpack-registration-notice__icon">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+              <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="techpack-registration-notice__content">
+            <h5 class="techpack-registration-notice__title">Registration Verification Required</h5>
+            <p class="techpack-registration-notice__message">
+              We will verify your registration status during processing. If you're not registered in our system, 
+              your submission will be automatically rejected. Please ensure you have worked with us before.
+            </p>
+          </div>
+        </div>
+        
+        <!-- New Client Notice for NEW Clients -->
+        <div class="techpack-new-client-notice" id="new-client-notice" style="display: none;">
+          <div class="techpack-new-client-notice__icon">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11h-2v-2h2v2zm0-4h-2V5h2v4z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="techpack-new-client-notice__content">
+            <h5 class="techpack-new-client-notice__title">New Client - Registration Required</h5>
+            <div class="techpack-new-client-notice__message">
+              <p>As a new client, you can start with a <strong>Garment Quotation</strong>.</p>
+              <p>Once you proceed with the quotation, we'll guide you through our registration process to unlock sample requests and bulk orders for future submissions.</p>
+            </div>
+          </div>
+        </div>
+        
+        <p class="techpack-submission-selection__description" id="submission-description">
+          Select the type of submission that best matches your current needs. Each option is tailored to different stages of your garment development process.
+        </p>
+        
+        <div class="techpack-submission-options">
+          <!-- Garment Quotation Option -->
+          <button type="button" class="techpack-submission-option techpack-glass-card" id="quotation-btn" data-submission-type="quotation">
+            <div class="techpack-glass-card__content">
+              <div class="techpack-glass-card__icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9c.83 0 1.65-.12 2.41-.35.38-.11.74-.25 1.09-.4.21-.09.42-.2.62-.31L21 22l-1.9-4.88c.74-1.26 1.16-2.73 1.16-4.3C20.26 7.08 16.74 3 12 3z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h4 class="techpack-glass-card__title">Garment Quotation</h4>
+                <p class="techpack-glass-card__description">Get average pricing estimates across different garment types and quantities before committing to samples</p>
+                <div class="techpack-glass-card__features">
+                  <span class="techpack-glass-card__feature">💰 Pricing estimates</span>
+                  <span class="techpack-glass-card__feature">📊 Quantity breakdowns</span>
+                  <span class="techpack-glass-card__feature">⚡ Fast turnaround</span>
+                </div>
+              </div>
+            </div>
+            <div class="techpack-glass-card__shimmer"></div>
+          </button>
+          
+          <!-- Sample Request Option -->
+          <button type="button" class="techpack-submission-option techpack-glass-card" id="sample-btn" data-submission-type="sample-request">
+            <div class="techpack-glass-card__content">
+              <div class="techpack-glass-card__icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M20.38 8.53l-1.45-1.45C18.21 6.36 17.41 6 16.54 6H13V4c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10.54c0-.87-.36-1.67-1.08-2.29z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M12 8v8m4-4H8" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h4 class="techpack-glass-card__title">Request Sample</h4>
+                <p class="techpack-glass-card__description">Create physical prototypes to validate design, fit, and quality before moving to bulk production</p>
+                <div class="techpack-glass-card__features">
+                  <span class="techpack-glass-card__feature">🧵 Physical samples</span>
+                  <span class="techpack-glass-card__feature">✅ Quality validation</span>
+                  <span class="techpack-glass-card__feature">📏 Fit confirmation</span>
+                </div>
+              </div>
+            </div>
+            <div class="techpack-glass-card__shimmer"></div>
+          </button>
+          
+          <!-- Bulk Order Option -->
+          <button type="button" class="techpack-submission-option techpack-glass-card" id="bulk-btn" data-submission-type="bulk-order-request">
+            <div class="techpack-glass-card__content">
+              <div class="techpack-glass-card__icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h4 class="techpack-glass-card__title">Request Bulk Order</h4>
+                <p class="techpack-glass-card__description">Ready for production? Submit detailed specifications for full-scale manufacturing and delivery</p>
+                <div class="techpack-glass-card__features">
+                  <span class="techpack-glass-card__feature">🏭 Full production</span>
+                  <span class="techpack-glass-card__feature">📦 Large quantities</span>
+                  <span class="techpack-glass-card__feature">🚚 Direct delivery</span>
+                </div>
+              </div>
+            </div>
+            <div class="techpack-glass-card__shimmer"></div>
+          </button>
+          
+          <!-- Lab Dips & Brand Accessories Option -->
+          <button type="button" class="techpack-submission-option techpack-glass-card" id="lab-dips-accessories-btn" data-submission-type="lab-dips-accessories">
+            <div class="techpack-glass-card__content">
+              <div class="techpack-glass-card__icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h4 class="techpack-glass-card__title">Lab Dips & Brand Accessories</h4>
+                <p class="techpack-glass-card__description">Order essential approvals and custom brand elements</p>
+                <div class="techpack-glass-card__features">
+                  <span class="techpack-glass-card__feature">🎨 Lab Dips – Ensure perfect color matching</span>
+                  <span class="techpack-glass-card__feature">🏷️ Accessories – Brand labels, hangtags, packaging</span>
+                </div>
+              </div>
+            </div>
+            <div class="techpack-glass-card__shimmer"></div>
+          </button>
+        </div>
+        
+        <div class="techpack-submission-selection__note" id="submission-note">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span>You can change your submission type at any time during the process</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Load Tech Pack Application -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ 'techpack-app.js' | asset_url }}?v=1.8.34" defer="defer"></script>

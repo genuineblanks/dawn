@@ -1,0 +1,446 @@
+{% comment %}
+V10 Registration - Standalone Design
+{% endcomment %}
+
+<link href="{{ 'v10-registration-new.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
+<script src="{{ 'v10-registration.js' | asset_url }}" defer></script>
+
+<style>
+  /* FORCE OVERRIDE SHOPIFY THEME COLORS */
+  body {
+    background-color: #1a1f2e !important;
+    background-image: none !important;
+  }
+
+  /* Override Shopify color scheme variables */
+  #v10-registration {
+    --color-background: 26, 31, 46 !important;
+    --color-foreground: 243, 244, 246 !important;
+    --color-button: 16, 185, 129 !important;
+    --color-button-text: 255, 255, 255 !important;
+  }
+
+  /* Layout overrides */
+  .techpack-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+</style>
+
+<!-- V10 Registration Section - Full Integration -->
+<section id="v10-registration" class="v10-techpack-step">
+  <div class="techpack-container">
+    <div class="techpack-content">
+      <!-- Hero Section -->
+      <div class="v10-landing-hero">
+        <div class="v10-landing-hero-content">
+          <h1 class="v10-landing-title-premium">
+            {{ section.settings.title | default: 'GENUINEBLANKS - Customer Registration' }}
+          </h1>
+          <p class="v10-landing-subtitle-premium">
+            {{ section.settings.subtitle | default: 'Join our exclusive network of premium fashion brands and designers' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Registration Form using V10 Form System -->
+      {%- form 'create_customer', novalidate: 'novalidate', class: 'v10-form-section', id: 'v10-registration-form' -%}
+        {%- if form.errors -%}
+          <div class="v10-alert v10-alert--error" role="alert">
+            <div class="v10-alert-content">
+              <h3>Please correct the following errors:</h3>
+              <ul class="v10-error-list">
+                {%- for field in form.errors -%}
+                  <li>
+                    {%- if field == 'form' -%}
+                      {{ form.errors.messages[field] }}
+                    {%- else -%}
+                      {{ form.errors.translated_fields[field] | capitalize }}: {{ form.errors.messages[field] }}
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <!-- Company Information Section -->
+        <div class="v10-step-section">
+          <h2 class="v10-step-title">Company Information</h2>
+          
+          <div class="v10-form-grid">
+            <!-- Company Name -->
+            <div class="v10-form-group v10-form-group--full">
+              <label for="RegisterForm-CompanyName" class="v10-form-label-enhanced required">
+                Company name
+              </label>
+              <input
+                type="text"
+                name="customer[note][company_name]"
+                id="RegisterForm-CompanyName"
+                class="v10-form-input-enhanced"
+                placeholder="Registered Business Name (or DBA, if applicable)"
+                required
+                aria-required="true"
+              >
+              <div class="v10-form-hint">Registered Business Name (or DBA, if applicable)</div>
+            </div>
+
+            <!-- Company Email -->
+            <div class="v10-form-group v10-form-group--full">
+              <label for="RegisterForm-Email" class="v10-form-label-enhanced required">
+                Company Email
+              </label>
+              <input
+                type="email"
+                name="customer[email]"
+                id="RegisterForm-Email"
+                class="v10-form-input-enhanced"
+                placeholder="Primary Email for Business Correspondence"
+                required
+                aria-required="true"
+                {% if form.email %}value="{{ form.email }}"{% endif %}
+              >
+              <div class="v10-form-hint">Primary Email for Business Correspondence</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Information Section -->
+        <div class="v10-step-section">
+          <h2 class="v10-step-title">Contact Details</h2>
+          
+          <div class="v10-form-grid">
+            <!-- First Name -->
+            <div class="v10-form-group v10-form-group--half">
+              <label for="RegisterForm-FirstName" class="v10-form-label-enhanced required">
+                First Name
+              </label>
+              <input
+                type="text"
+                name="customer[first_name]"
+                id="RegisterForm-FirstName"
+                class="v10-form-input-enhanced"
+                placeholder="Your First Name"
+                required
+                aria-required="true"
+                {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
+              >
+            </div>
+
+            <!-- Last Name -->
+            <div class="v10-form-group v10-form-group--half">
+              <label for="RegisterForm-LastName" class="v10-form-label-enhanced required">
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="customer[last_name]"
+                id="RegisterForm-LastName"
+                class="v10-form-input-enhanced"
+                placeholder="Your Last Name"
+                required
+                aria-required="true"
+                {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
+              >
+            </div>
+
+            <!-- Company Address -->
+            <div class="v10-form-group v10-form-group--full">
+              <label for="RegisterForm-Address" class="v10-form-label-enhanced required">
+                Company Address
+              </label>
+              <input
+                type="text"
+                name="customer[note][address]"
+                id="RegisterForm-Address"
+                class="v10-form-input-enhanced"
+                placeholder="Your Company Address"
+                required
+                aria-required="true"
+              >
+            </div>
+
+            <!-- Address Line 2 -->
+            <div class="v10-form-group v10-form-group--half">
+              <label for="RegisterForm-AddressLine2" class="v10-form-label-enhanced">
+                Address line 2
+              </label>
+              <input
+                type="text"
+                name="customer[note][address_line_2]"
+                id="RegisterForm-AddressLine2"
+                class="v10-form-input-enhanced"
+                placeholder="Address line 2 (optional)"
+              >
+            </div>
+
+            <!-- City, State, Postal -->
+            <div class="v10-form-group v10-form-group--half">
+              <div class="v10-address-grid">
+                <div class="v10-address-field">
+                  <label for="RegisterForm-City" class="v10-form-label-enhanced required">City</label>
+                  <input
+                    type="text"
+                    name="customer[note][city]"
+                    id="RegisterForm-City"
+                    class="v10-form-input-enhanced"
+                    placeholder="City"
+                    required
+                    aria-required="true"
+                  >
+                </div>
+                <div class="v10-address-field">
+                  <label for="RegisterForm-State" class="v10-form-label-enhanced required">State</label>
+                  <input
+                    type="text"
+                    name="customer[note][state]"
+                    id="RegisterForm-State"
+                    class="v10-form-input-enhanced"
+                    placeholder="State"
+                    required
+                    aria-required="true"
+                  >
+                </div>
+                <div class="v10-address-field">
+                  <label for="RegisterForm-PostalCode" class="v10-form-label-enhanced required">Postal code</label>
+                  <input
+                    type="text"
+                    name="customer[note][postal_code]"
+                    id="RegisterForm-PostalCode"
+                    class="v10-form-input-enhanced"
+                    placeholder="Postal"
+                    required
+                    aria-required="true"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Country -->
+            <div class="v10-form-group v10-form-group--full">
+              <label for="RegisterForm-Country" class="v10-form-label-enhanced required">
+                Country
+              </label>
+              <select
+                name="customer[note][country]"
+                id="RegisterForm-Country"
+                class="v10-form-select"
+                required
+                aria-required="true"
+              >
+                <option value="">Select a country</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="PT">Portugal</option>
+                <option value="ES">Spain</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+                <option value="IT">Italy</option>
+                <option value="NL">Netherlands</option>
+                <option value="BE">Belgium</option>
+                <option value="CH">Switzerland</option>
+                <option value="AT">Austria</option>
+                <option value="SE">Sweden</option>
+                <option value="NO">Norway</option>
+                <option value="DK">Denmark</option>
+                <option value="FI">Finland</option>
+                <option value="AU">Australia</option>
+                <option value="NZ">New Zealand</option>
+                <option value="JP">Japan</option>
+                <option value="CN">China</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Business Information Section -->
+        <div class="v10-step-section">
+          <h2 class="v10-step-title">Business Details</h2>
+
+          <div class="v10-form-grid">
+            <!-- VAT Number (EU Only - Conditional) -->
+            <div class="v10-form-group v10-form-group--half" data-conditional-field="vat" id="vat-field-wrapper">
+              <label for="RegisterForm-VatNumber" class="v10-form-label-enhanced required">
+                VAT Number (EU Only)
+              </label>
+              <input
+                type="text"
+                name="customer[note][vat_number]"
+                id="RegisterForm-VatNumber"
+                class="v10-form-input-enhanced"
+                placeholder="Enter your VAT number"
+                aria-required="false"
+              >
+              <div class="v10-form-hint">Required for European Union businesses only</div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="v10-form-group v10-form-group--half">
+              <label for="RegisterForm-Phone" class="v10-form-label-enhanced required">
+                Phone number
+              </label>
+              <input
+                type="tel"
+                name="customer[note][phone]"
+                id="RegisterForm-Phone"
+                class="v10-form-input-enhanced"
+                placeholder="Your Company or Personal Phone Number"
+                required
+                aria-required="true"
+              >
+              <div class="v10-form-hint">Your Company or Personal Phone Number</div>
+            </div>
+
+            <!-- Website -->
+            <div class="v10-form-group v10-form-group--half">
+              <label for="RegisterForm-Website" class="v10-form-label-enhanced">
+                Website
+              </label>
+              <input
+                type="url"
+                name="customer[note][website]"
+                id="RegisterForm-Website"
+                class="v10-form-input-enhanced"
+                placeholder="Include your website for higher chances to being accepted & contacted"
+              >
+              <div class="v10-form-hint">Include your website for higher chances to being accepted & contacted</div>
+            </div>
+
+            <!-- Brand Social Network -->
+            <div class="v10-form-group v10-form-group--half">
+              <label for="RegisterForm-Social" class="v10-form-label-enhanced">
+                Brand Social Network
+              </label>
+              <input
+                type="text"
+                name="customer[note][social_network]"
+                id="RegisterForm-Social"
+                class="v10-form-input-enhanced"
+                placeholder="Instagram / LinkedIn / Other"
+              >
+              <div class="v10-form-hint">Your main social @ for networking</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms & Conditions Section -->
+        <div class="v10-step-section v10-agreement-section">
+          <div class="v10-checkbox-group">
+            <input
+              type="checkbox"
+              id="RegisterForm-Terms"
+              name="customer[accepts_marketing]"
+              class="v10-checkbox-input"
+              required
+              aria-required="true"
+            >
+            <label for="RegisterForm-Terms" class="v10-checkbox-label">
+              I agree to the <button type="button" class="v10-link-button" data-modal="v10-terms-modal">Terms & conditions</button>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="v10-form-actions">
+          <button type="submit" class="v10-btn v10-btn--primary v10-btn-hero">
+            <div class="v10-btn-hero-content">
+              <span>Submit Access Request</span>
+              <div class="v10-btn-hero-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 18l6-6-6-6"/>
+                </svg>
+              </div>
+            </div>
+            <div class="v10-btn-hero-shimmer"></div>
+          </button>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+<!-- Success Modal -->
+<div class="v10-modal-overlay" id="registration-success-modal">
+  <div class="v10-modal v10-modal--success">
+    <div class="v10-modal-header">
+      <div class="v10-modal-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22,4 12,14.01 9,11.01"/>
+        </svg>
+      </div>
+      <h3 class="v10-modal-title">Application Submitted Successfully!</h3>
+      <button type="button" class="v10-modal-close" id="success-modal-close" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="v10-modal-body">
+      <p class="v10-modal-message">
+        Thank you for your interest in partnering with GenuineBlanks! Your application has been successfully submitted. Our team will carefully review your brand profile and business information. We'll be in touch via email within 2-3 business days to discuss the next steps in our partnership process.
+      </p>
+    </div>
+    <div class="v10-modal-actions">
+      <button type="button" class="v10-btn v10-btn--primary" id="success-modal-continue">
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Terms & Conditions Modal -->
+{% render 'v10-terms-modal' %}
+
+{% schema %}
+{
+  "name": "V10 Registration",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "GENUINEBLANKS - Customer Registration"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Join our exclusive network of premium fashion brands and designers"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "V10 Registration"
+    }
+  ]
+}
+{% endschema %}
