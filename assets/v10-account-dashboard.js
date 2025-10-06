@@ -348,9 +348,9 @@ const V10_AccountDashboard = {
         }
       }
 
-      // Fallback to neutral gray
-      console.log('⚠️ No color found, using fallback gray');
-      return '#555555';
+      // Fallback to multi-colored gradient (matches V10 TechPack App)
+      console.log('⚠️ No color found, using multi-colored fallback');
+      return 'MULTI_COLOR';
     };
 
     // Generate darker shade for beautiful gradient effect (matches V10 TechPack App)
@@ -373,15 +373,26 @@ const V10_AccountDashboard = {
     };
 
     // Generate beautiful gradient background like V10 TechPack App
-    const getGradientBackground = (hex) => {
-      const darkerShade = getDarkerShade(hex);
-      return `linear-gradient(135deg, ${hex}, ${darkerShade})`;
+    const getGradientBackground = (color) => {
+      // Multi-colored conic gradient for items without color data
+      if (color === 'MULTI_COLOR') {
+        return 'conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b)';
+      }
+
+      // Regular diagonal gradient for specific colors
+      const darkerShade = getDarkerShade(color);
+      return `linear-gradient(135deg, ${color}, ${darkerShade})`;
     };
 
     // Generate box shadow for depth (matches V10 TechPack App)
-    const getColorShadow = (hex) => {
+    const getColorShadow = (color) => {
+      // Multi-colored items get neutral shadow
+      if (color === 'MULTI_COLOR') {
+        return '0 2px 8px rgba(150, 150, 150, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
+      }
+
       // Remove # for rgba conversion
-      const cleanHex = hex.replace('#', '');
+      const cleanHex = color.replace('#', '');
       const r = parseInt(cleanHex.slice(0, 2), 16);
       const g = parseInt(cleanHex.slice(2, 4), 16);
       const b = parseInt(cleanHex.slice(4, 6), 16);
