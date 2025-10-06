@@ -20,7 +20,7 @@
 }
 
 .customer.account h1 {
-  background: #000 !important;
+  background: #3a3a3a !important;
   color: white !important;
   margin: 0 !important;
   padding: 2rem 3rem !important;
@@ -185,7 +185,7 @@
 }
 
 .addresses h1 {
-  background: #000 !important;
+  background: #3a3a3a !important;
   color: white !important;
   margin: -3rem -3rem 3rem -3rem !important;
   padding: 2rem 3rem !important;
