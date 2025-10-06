@@ -168,12 +168,14 @@ const V10_AccountDashboard = {
 
     // Show empty state if no submissions
     if (filtered.length === 0) {
-      this.showEmpty();
+      this.showEmpty(this.currentFilter);
       this.submissionsGrid.innerHTML = '';
+      this.submissionsGrid.style.display = 'none';
       return;
     }
 
     this.hideEmpty();
+    this.submissionsGrid.style.display = 'grid';
 
     // Sort by date (newest first)
     filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -408,10 +410,47 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Show empty state
+   * Show empty state with context-specific message
    */
-  showEmpty() {
-    if (this.emptyState) this.emptyState.style.display = 'block';
+  showEmpty(filter = 'all') {
+    if (!this.emptyState) return;
+
+    // Update empty state message based on filter
+    const emptyMessages = {
+      'all': {
+        title: 'No submissions yet',
+        message: 'Start your first garment development project by creating a new submission'
+      },
+      'quotation': {
+        title: 'No quotations found',
+        message: 'You haven\'t submitted any quotation requests yet'
+      },
+      'sample-request': {
+        title: 'No sample requests found',
+        message: 'You haven\'t submitted any sample requests yet'
+      },
+      'bulk-order-request': {
+        title: 'No bulk orders found',
+        message: 'You haven\'t submitted any bulk order requests yet'
+      }
+    };
+
+    const msg = emptyMessages[filter] || emptyMessages['all'];
+
+    // Update empty state content
+    const titleEl = this.emptyState.querySelector('h3');
+    const messageEl = this.emptyState.querySelector('p');
+
+    if (titleEl) titleEl.textContent = msg.title;
+    if (messageEl) messageEl.textContent = msg.message;
+
+    // Show/hide "Create First Submission" button only for 'all' filter
+    const buttonEl = this.emptyState.querySelector('a, .v10-btn-primary');
+    if (buttonEl) {
+      buttonEl.style.display = (filter === 'all' && this.submissions.length === 0) ? 'inline-block' : 'none';
+    }
+
+    this.emptyState.style.display = 'block';
     if (this.submissionsGrid) this.submissionsGrid.style.display = 'none';
   },
 
