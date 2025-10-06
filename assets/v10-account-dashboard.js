@@ -438,7 +438,7 @@ const V10_AccountDashboard = {
               <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
 
                 <!-- Colored Square (V10 Beautiful Style) -->
-                <div style="width: 48px; height: 48px; min-width: 48px; min-height: 48px; background: ${getGradientBackground(garmentColor)}; border-radius: 10px; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(garmentColor)}; display: block;"></div>
+                <div style="width: 20px; height: 20px; min-width: 20px; min-height: 20px; background: ${getGradientBackground(garmentColor)}; border-radius: 0; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(garmentColor)}; display: block;"></div>
 
                 <!-- Full Description from Costs -->
                 <div style="flex: 1; min-width: 0;">
@@ -451,7 +451,7 @@ const V10_AccountDashboard = {
               const garmentColor = getGarmentColor(garment);
               return `
               <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
-                <div style="width: 48px; height: 48px; min-width: 48px; min-height: 48px; background: ${getGradientBackground(garmentColor)}; border-radius: 10px; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(garmentColor)}; display: block;"></div>
+                <div style="width: 20px; height: 20px; min-width: 20px; min-height: 20px; background: ${getGradientBackground(garmentColor)}; border-radius: 0; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(garmentColor)}; display: block;"></div>
                 <div style="flex: 1;">
                   <p style="margin: 0; font-size: 0.9375rem; font-weight: 600; color: #ffffff;">${index + 1}. ${garment.type} - ${garment.fabricType}</p>
                 </div>
@@ -478,7 +478,7 @@ const V10_AccountDashboard = {
                   const dipColor = dip.hex || '#555555';
                   return `
                   <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
-                    <div style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background: ${getGradientBackground(dipColor)}; border-radius: 8px; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(dipColor)}; display: block;"></div>
+                    <div style="width: 26px; height: 26px; min-width: 26px; min-height: 26px; background: ${getGradientBackground(dipColor)}; border-radius: 0; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(dipColor)}; display: block;"></div>
                     <div style="flex: 1; min-width: 0;">
                       <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff;">${dip.pantone || dip.name || 'Unnamed'}</p>
                       ${dip.hex ? `<p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${dip.hex.toUpperCase()}</p>` : ''}
