@@ -39,18 +39,11 @@ const V10_AccountDashboard = {
 
     this.setupEventListeners();
 
-    // ✅ NEW: Only fetch if user has submissions (check metafield)
-    // This prevents unnecessary API calls - metafield shows summary instantly
-    const hasSubmissions = this.dashboard.dataset.hasSubmissions;
-    if (hasSubmissions && parseInt(hasSubmissions) > 0) {
-      console.log('📊 Customer has', hasSubmissions, 'submissions - ready to load details on demand');
-      // Don't auto-fetch - wait for user to click "View All Details"
-      this.hideLoading();
-    } else {
-      console.log('📊 No submissions found - showing empty state');
-      this.hideLoading();
-      this.showEmpty();
-    }
+    // ✅ FIXED: Always fetch from API to show submissions
+    // Metafield is just for displaying instant count in header
+    // Full submission data always comes from API
+    console.log('📊 Fetching submissions from API...');
+    this.fetchSubmissions();
   },
 
   /**
