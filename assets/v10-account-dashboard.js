@@ -384,18 +384,28 @@ const V10_AccountDashboard = {
           <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">GARMENT SPECIFICATIONS</h4>
           <div style="display: grid; gap: 0.75rem;">
             ${data.costs?.items?.filter(item => item.garment).map((costItem, index) => {
-              const garment = costItem.garment;
+              // Get the cost item garment
+              const costGarment = costItem.garment;
+
+              // Cross-reference with records.garments to get full garment object with sampleSubValue and assignedLabDips
+              const fullGarment = data.records?.garments?.find(g => g.id === costGarment.id) || costGarment;
+
+              // Split fullDescription at first " - " to separate title from description
               const fullDesc = costItem.fullDescription || '';
+              const dashIndex = fullDesc.indexOf(' - ');
+              const title = dashIndex > 0 ? fullDesc.substring(0, dashIndex) : fullDesc;
+              const description = dashIndex > 0 ? fullDesc.substring(dashIndex + 3) : '';
 
               return `
               <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
 
                 <!-- Colored Square -->
-                <div style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: ${getGarmentColor(garment)}; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); display: block;"></div>
+                <div style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: ${getGarmentColor(fullGarment)}; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); display: block;"></div>
 
                 <!-- Full Description from Costs -->
                 <div style="flex: 1; min-width: 0;">
-                  <p style="margin: 0; font-size: 0.9375rem; font-weight: 600; color: #ffffff; line-height: 1.5;">${fullDesc}</p>
+                  <p style="margin: 0 0 0.25rem 0; font-size: 0.9375rem; font-weight: 700; color: #ffffff; line-height: 1.3;">${title}</p>
+                  ${description ? `<p style="margin: 0; font-size: 0.875rem; font-weight: 400; color: #cccccc; line-height: 1.5;">${description}</p>` : ''}
                 </div>
               </div>
               `;
@@ -420,9 +430,8 @@ const V10_AccountDashboard = {
 
           return `
           <div>
-            <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">FABRIC SWATCHES & LAB DIPS</h4>
+            <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">FABRIC SWATCHES & LAB DIPS (${unassignedLabDips.length})</h4>
             <div>
-              <p style="font-size: 0.75rem; color: #cccccc; margin: 0 0 0.75rem 0; font-weight: 600;">Unassigned Lab Dips (${unassignedLabDips.length})</p>
               <div style="display: grid; gap: 0.5rem;">
                 ${unassignedLabDips.map(dip => `
                   <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
