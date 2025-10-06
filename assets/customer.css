@@ -1,10 +1,10 @@
 /* ===================================
-   TECHPACK CUSTOMER ACCOUNT STYLES
+   TECHPACK CUSTOMER ACCOUNT STYLES - V10 DARK THEME
    =================================== */
 
 /* Main Account Page Layout */
 .customer_account {
-  background: #f8f9fa !important;
+  background: #0f0f0f !important;
   min-height: 100vh !important;
   padding: 2rem !important;
 }
@@ -12,10 +12,11 @@
 .customer.account {
   max-width: 1200px !important;
   margin: 0 auto !important;
-  background: white !important;
+  background: #1a1a1a !important;
   border-radius: 8px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
   overflow: hidden !important;
+  border: 1px solid #3a3a3a !important;
 }
 
 .customer.account h1 {
@@ -47,6 +48,7 @@
 
 .account-content {
   padding: 3rem !important;
+  background: #1a1a1a !important;
 }
 
 .account-grid {
@@ -59,29 +61,29 @@
 .account-section h2 {
   font-size: 1.25rem !important;
   font-weight: 600 !important;
-  color: #1f2937 !important;
+  color: #ffffff !important;
   margin: 0 0 1.5rem 0 !important;
   padding-bottom: 0.75rem !important;
-  border-bottom: 1px solid #e5e7eb !important;
+  border-bottom: 1px solid #3a3a3a !important;
 }
 
 .account-section p {
-  color: #6b7280 !important;
+  color: #cccccc !important;
   margin: 0 0 1rem 0 !important;
   font-size: 1rem !important;
 }
 
 .account-details {
-  background: #f8f9fa !important;
+  background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%) !important;
   border-radius: 8px !important;
   padding: 2rem !important;
-  border: 1px solid #e5e7eb !important;
+  border: 1px solid #3a3a3a !important;
 }
 
 .account-details h3 {
   font-size: 1rem !important;
   font-weight: 600 !important;
-  color: #1f2937 !important;
+  color: #ffffff !important;
   margin: 0 0 1rem 0 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
@@ -89,11 +91,11 @@
 
 .account-details p {
   margin: 0 0 0.5rem 0 !important;
-  color: #374151 !important;
+  color: #cccccc !important;
 }
 
 .account-details a {
-  color: #3b82f6 !important;
+  color: #10b981 !important;
   text-decoration: none !important;
   font-weight: 500 !important;
   border-bottom: 1px solid transparent !important;
@@ -101,7 +103,7 @@
 }
 
 .account-details a:hover {
-  border-bottom-color: #3b82f6 !important;
+  border-bottom-color: #10b981 !important;
 }
 
 /* Order Table Styling */
@@ -115,28 +117,28 @@
 .order-table td {
   padding: 1rem !important;
   text-align: left !important;
-  border-bottom: 1px solid #e5e7eb !important;
+  border-bottom: 1px solid #3a3a3a !important;
 }
 
 .order-table th {
-  background: #f8f9fa !important;
+  background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%) !important;
   font-weight: 600 !important;
-  color: #374151 !important;
+  color: #ffffff !important;
   font-size: 0.875rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
 }
 
 .order-table td {
-  color: #1f2937 !important;
+  color: #cccccc !important;
 }
 
 .order-table tr:hover {
-  background: #f8f9fa !important;
+  background: #242424 !important;
 }
 
 .order-table a {
-  color: #3b82f6 !important;
+  color: #10b981 !important;
   text-decoration: none !important;
   font-weight: 500 !important;
   padding: 0.25rem 0.5rem !important;
@@ -145,13 +147,13 @@
 }
 
 .order-table a:hover {
-  background: rgba(59, 130, 246, 0.1) !important;
+  background: rgba(16, 185, 129, 0.1) !important;
 }
 
 .empty-state {
   text-align: center !important;
   padding: 3rem 2rem !important;
-  color: #6b7280 !important;
+  color: #999999 !important;
 }
 
 .empty-state svg {
@@ -159,6 +161,7 @@
   height: 4rem !important;
   margin: 0 auto 1rem !important;
   opacity: 0.5 !important;
+  color: #999999 !important;
 }
 
 /* ===================================
@@ -166,7 +169,7 @@
    =================================== */
 
 .addresses {
-  background: #f8f9fa !important;
+  background: #0f0f0f !important;
   min-height: 100vh !important;
   padding: 2rem !important;
 }
@@ -174,10 +177,11 @@
 .addresses .customer {
   max-width: 800px !important;
   margin: 0 auto !important;
-  background: white !important;
+  background: #1a1a1a !important;
   border-radius: 8px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
   padding: 3rem !important;
+  border: 1px solid #3a3a3a !important;
 }
 
 .addresses h1 {
@@ -192,17 +196,17 @@
 .addresses h2 {
   font-size: 1.25rem !important;
   font-weight: 600 !important;
-  color: #1f2937 !important;
+  color: #ffffff !important;
   margin: 2rem 0 1rem 0 !important;
   padding-bottom: 0.75rem !important;
-  border-bottom: 1px solid #e5e7eb !important;
+  border-bottom: 1px solid #3a3a3a !important;
 }
 
 .addresses form {
-  background: #f8f9fa !important;
+  background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%) !important;
   padding: 2rem !important;
   border-radius: 8px !important;
-  border: 1px solid #e5e7eb !important;
+  border: 1px solid #3a3a3a !important;
   margin-bottom: 2rem !important;
 }
 
@@ -214,7 +218,7 @@
   display: block !important;
   font-size: 0.875rem !important;
   font-weight: 600 !important;
-  color: #374151 !important;
+  color: #ffffff !important;
   margin-bottom: 0.5rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
@@ -224,22 +228,23 @@
 .addresses select {
   width: 100% !important;
   padding: 0.75rem !important;
-  border: 1px solid #d1d5db !important;
+  border: 1px solid #3a3a3a !important;
   border-radius: 6px !important;
   font-size: 1rem !important;
-  background: white !important;
+  background: #1a1a1a !important;
+  color: #ffffff !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .addresses input:focus,
 .addresses select:focus {
   outline: none !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
 
 .addresses button {
-  background: #000 !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: white !important;
   border: none !important;
   padding: 0.75rem 2rem !important;
@@ -247,30 +252,31 @@
   font-size: 0.875rem !important;
   font-weight: 600 !important;
   cursor: pointer !important;
-  transition: background-color 0.2s ease !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
   margin-right: 1rem !important;
 }
 
 .addresses button:hover {
-  background: #374151 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 .addresses button[name='decline'],
 .addresses .button--secondary {
-  background: #6b7280 !important;
+  background: #3a3a3a !important;
 }
 
 .addresses button[name='decline']:hover,
 .addresses .button--secondary:hover {
-  background: #4b5563 !important;
+  background: #4a4a4a !important;
 }
 
 /* Address List Items */
 .addresses li[data-address] {
-  background: #f8f9fa !important;
-  border: 1px solid #e5e7eb !important;
+  background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%) !important;
+  border: 1px solid #3a3a3a !important;
   border-radius: 8px !important;
   padding: 2rem !important;
   margin-bottom: 2rem !important;
@@ -283,7 +289,7 @@
 
 .addresses ul p {
   margin: 0.25rem 0 !important;
-  color: #374151 !important;
+  color: #cccccc !important;
 }
 
 /* ===================================
@@ -378,12 +384,12 @@
 }
 
 /* ===================================
-   SIMPLE REGISTRATION STYLING - Add to end of customer.css
+   SIMPLE REGISTRATION STYLING
    =================================== */
 
 /* TechPack Registration Form Styling */
 .customer.register {
-  background: #f8f9fa !important;
+  background: #0f0f0f !important;
   min-height: 100vh !important;
   padding: 2rem !important;
   max-width: none !important;
@@ -393,17 +399,18 @@
   text-align: center !important;
   font-size: 1.5rem !important;
   font-weight: 600 !important;
-  color: #1f2937 !important;
+  color: #ffffff !important;
   margin-bottom: 3rem !important;
 }
 
 .customer.register form {
   max-width: 500px !important;
   margin: 0 auto !important;
-  background: white !important;
+  background: #1a1a1a !important;
   padding: 3rem !important;
   border-radius: 8px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid #3a3a3a !important;
 }
 
 .customer.register .field {
@@ -414,7 +421,7 @@
   display: block !important;
   font-size: 0.875rem !important;
   font-weight: 600 !important;
-  color: #374151 !important;
+  color: #ffffff !important;
   margin-bottom: 0.5rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
@@ -423,22 +430,23 @@
 .customer.register .field input {
   width: 100% !important;
   padding: 0.75rem !important;
-  border: 1px solid #d1d5db !important;
+  border: 1px solid #3a3a3a !important;
   border-radius: 6px !important;
   font-size: 1rem !important;
-  background: white !important;
+  background: #2d2d2d !important;
+  color: #ffffff !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   box-sizing: border-box !important;
 }
 
 .customer.register .field input:focus {
   outline: none !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
 
 .customer.register button {
-  background: #000 !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: white !important;
   border: none !important;
   padding: 1rem 3rem !important;
@@ -446,7 +454,7 @@
   font-size: 1rem !important;
   font-weight: 600 !important;
   cursor: pointer !important;
-  transition: background-color 0.2s ease, transform 0.2s ease !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
   width: 100% !important;
@@ -454,24 +462,25 @@
 }
 
 .customer.register button:hover {
-  background: #374151 !important;
-  transform: translateY(-1px) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 /* Clean Error Styling */
 .customer.register .form__message {
-  background: #fef2f2 !important;
-  border: 1px solid #fecaca !important;
+  background: #2d1a1a !important;
+  border: 1px solid #5a3a3a !important;
   border-radius: 6px !important;
   padding: 1rem !important;
   margin-bottom: 2rem !important;
-  color: #dc2626 !important;
+  color: #ff6b6b !important;
 }
 
 .customer.register .form__message h2 {
   font-size: 1rem !important;
   font-weight: 600 !important;
   margin: 0 0 0.5rem 0 !important;
+  color: #ff6b6b !important;
 }
 
 .customer.register .form__message ul {
@@ -486,7 +495,7 @@
 }
 
 .customer.register .form__message a {
-  color: #dc2626 !important;
+  color: #ff6b6b !important;
   text-decoration: underline !important;
 }
 
@@ -503,7 +512,7 @@
 
 /* Reset Password TechPack Styling */
 .customer.reset-password {
-  background: #f8f9fa !important;
+  background: #0f0f0f !important;
   min-height: 100vh !important;
   padding: 2rem !important;
 }
@@ -512,21 +521,22 @@
   text-align: center !important;
   font-size: 1.5rem !important;
   font-weight: 600 !important;
-  color: #1f2937 !important;
+  color: #ffffff !important;
   margin-bottom: 1rem !important;
 }
 
 .customer.reset-password p {
   text-align: center !important;
-  color: #6b7280 !important;
+  color: #cccccc !important;
   margin-bottom: 3rem !important;
 }
 
 .customer.reset-password .account-content > div {
-  background: white !important;
+  background: #1a1a1a !important;
   padding: 3rem !important;
   border-radius: 8px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid #3a3a3a !important;
 }
 
 .customer.reset-password .field {
@@ -537,7 +547,7 @@
   display: block !important;
   font-size: 0.875rem !important;
   font-weight: 600 !important;
-  color: #374151 !important;
+  color: #ffffff !important;
   margin-bottom: 0.5rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
@@ -546,22 +556,23 @@
 .customer.reset-password .field input {
   width: 100% !important;
   padding: 0.75rem !important;
-  border: 1px solid #d1d5db !important;
+  border: 1px solid #3a3a3a !important;
   border-radius: 6px !important;
   font-size: 1rem !important;
-  background: white !important;
+  background: #2d2d2d !important;
+  color: #ffffff !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   box-sizing: border-box !important;
 }
 
 .customer.reset-password .field input:focus {
   outline: none !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
 
 .customer.reset-password button {
-  background: #000 !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: white !important;
   border: none !important;
   padding: 1rem 3rem !important;
@@ -569,7 +580,7 @@
   font-size: 1rem !important;
   font-weight: 600 !important;
   cursor: pointer !important;
-  transition: background-color 0.2s ease, transform 0.2s ease !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
   width: 100% !important;
@@ -577,13 +588,13 @@
 }
 
 .customer.reset-password button:hover {
-  background: #374151 !important;
-  transform: translateY(-1px) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 /* Login TechPack Styling - WIDER VERSION WITH CLASSES */
 .customer.login {
-  background: #f8f9fa !important;
+  background: #0f0f0f !important;
   min-height: 100vh !important;
   padding: 2rem !important;
 }
@@ -592,24 +603,25 @@
   text-align: center !important;
   font-size: 1.5rem !important;
   font-weight: 600 !important;
-  color: #1f2937 !important;
+  color: #ffffff !important;
   margin-bottom: 1rem !important;
 }
 
 .login-subtitle {
   text-align: center !important;
-  color: #6b7280 !important;
+  color: #cccccc !important;
   margin-bottom: 3rem !important;
 }
 
 /* WIDER LOGIN FORM CONTAINER */
 .login-form-container {
-  max-width: 900px !important; /* INCREASED FROM 700px TO 900px */
+  max-width: 900px !important;
   margin: 0 auto !important;
-  background: white !important;
-  padding: 4rem !important; /* Keep existing padding */
+  background: #1a1a1a !important;
+  padding: 4rem !important;
   border-radius: 8px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid #3a3a3a !important;
 }
 
 .customer.login .field {
@@ -620,7 +632,7 @@
   display: block !important;
   font-size: 0.875rem !important;
   font-weight: 600 !important;
-  color: #374151 !important;
+  color: #ffffff !important;
   margin-bottom: 0.75rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
@@ -628,31 +640,32 @@
 
 .customer.login .field input {
   width: 100% !important;
-  padding: 1.2rem !important; /* Slightly larger inputs */
-  border: 1px solid #d1d5db !important;
+  padding: 1.2rem !important;
+  border: 1px solid #3a3a3a !important;
   border-radius: 6px !important;
-  font-size: 1.2rem !important; /* Slightly larger text */
-  background: white !important;
+  font-size: 1.2rem !important;
+  background: #2d2d2d !important;
+  color: #ffffff !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   box-sizing: border-box !important;
 }
 
 .customer.login .field input:focus {
   outline: none !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
 
 .customer.login button {
-  background: #000 !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: white !important;
   border: none !important;
-  padding: 1.5rem 3rem !important; /* Larger button */
+  padding: 1.5rem 3rem !important;
   border-radius: 6px !important;
-  font-size: 1.2rem !important; /* Larger button text */
+  font-size: 1.2rem !important;
   font-weight: 600 !important;
   cursor: pointer !important;
-  transition: background-color 0.2s ease, transform 0.2s ease !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
   width: 100% !important;
@@ -660,8 +673,8 @@
 }
 
 .customer.login button:hover {
-  background: #374151 !important;
-  transform: translateY(-1px) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 .forgot-password {
@@ -670,21 +683,29 @@
 }
 
 .forgot-password a {
-  color: #6b7280 !important;
+  color: #999999 !important;
   text-decoration: none !important;
   font-size: 0.875rem !important;
+}
+
+.forgot-password a:hover {
+  color: #10b981 !important;
 }
 
 .signup-link {
   text-align: center !important;
   margin-top: 1.5rem !important;
-  color: #6b7280 !important;
+  color: #cccccc !important;
 }
 
 .register-link {
-  color: #3b82f6 !important;
+  color: #10b981 !important;
   text-decoration: none !important;
   font-weight: 500 !important;
+}
+
+.register-link:hover {
+  text-decoration: underline !important;
 }
 
 .login-cancel {
@@ -693,9 +714,13 @@
 }
 
 .cancel-link {
-  color: #6b7280 !important;
+  color: #999999 !important;
   text-decoration: none !important;
   font-size: 0.875rem !important;
+}
+
+.cancel-link:hover {
+  color: #10b981 !important;
 }
 
 .guest-login-section {
@@ -704,7 +729,7 @@
 
 .login-divider {
   border: none !important;
-  border-top: 1px solid #e5e7eb !important;
+  border-top: 1px solid #3a3a3a !important;
   margin-bottom: 2rem !important;
 }
 
@@ -712,12 +737,16 @@
   text-align: center !important;
   font-size: 1.125rem !important;
   font-weight: 600 !important;
-  color: #1f2937 !important;
+  color: #ffffff !important;
   margin-bottom: 1.5rem !important;
 }
 
 .guest-button {
-  background: #6b7280 !important;
+  background: #3a3a3a !important;
+}
+
+.guest-button:hover {
+  background: #4a4a4a !important;
 }
 
 /* Mobile responsive */
