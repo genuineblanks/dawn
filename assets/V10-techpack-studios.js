@@ -17271,54 +17271,30 @@ class V10_ReviewManager {
   }
 
   /**
-   * Store submission in Vercel Postgres database
-   * Enables wholesale customers to view submission history in their account
+   * ✅ NEW: Store submission in Vercel Postgres + Update Shopify Metafields
+   * Single API call handles both database storage and metafield updates
    */
   async storeSubmissionInDatabase(submissionData) {
     try {
-      console.log('📊 ============ DATABASE STORAGE DEBUG ============');
-      console.log('📊 Storing submission in database...');
+      console.log('📊 ============ DATABASE STORAGE + SHOPIFY UPDATE ============');
+      console.log('📊 Storing submission in database AND updating Shopify metafields...');
       console.log('📧 Customer Email:', submissionData.client_data.email);
       console.log('🏢 Company:', submissionData.client_data.company);
       console.log('📝 Submission Type:', submissionData.request_type);
       console.log('🆔 Request ID:', submissionData.submission_id);
 
-      const databaseUrl = 'https://dawn-main-theme.vercel.app/api/submissions';
+      // ✅ NEW: Use store-submission API (handles Postgres + Shopify metafields)
+      const apiUrl = 'https://dawn-main-theme.vercel.app/api/store-submission';
 
-      // Prepare database payload
-      const payload = {
-        customer_email: submissionData.client_data.email,
-        customer_id: null, // Will be populated if customer is logged in
-        access_code: submissionData.client_data.access_code || 'PENDING',
-        submission_type: submissionData.request_type,
-        request_id: submissionData.submission_id,
-        status: 'pending',
-        data: submissionData,
-        files: submissionData.files.map(file => ({
-          file_type: file.type || 'unknown',
-          file_name: file.name,
-          file_url: file.url || file.dataUrl || '', // Will need to upload files to Vercel Blob
-          file_size: file.size
-        }))
-      };
+      console.log('📦 Sending complete submission data...');
+      console.log('🌐 POST request to:', apiUrl);
 
-      console.log('📦 Payload Summary:', {
-        email: payload.customer_email,
-        type: payload.submission_type,
-        request_id: payload.request_id,
-        access_code: payload.access_code,
-        files_count: payload.files.length,
-        garments_count: submissionData.records?.garments?.length || 0
-      });
-
-      console.log('🌐 Sending POST request to:', databaseUrl);
-
-      const response = await fetch(databaseUrl, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(submissionData)
       });
 
       console.log('📡 Response Status:', response.status, response.statusText);
@@ -17326,30 +17302,31 @@ class V10_ReviewManager {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('❌ Response Error Body:', errorText);
-        throw new Error(`Database storage failed: ${response.status} ${response.statusText} - ${errorText}`);
+        throw new Error(`Storage failed: ${response.status} ${response.statusText}`);
       }
 
       const result = await response.json();
 
-      console.log('✅ SUCCESS! Submission stored in database:', {
+      console.log('✅ SUCCESS! Submission stored:', {
         id: result.data.id,
         request_id: result.data.request_id,
-        email: submissionData.client_data.email,
-        created_at: result.data.created_at
+        created_at: result.data.created_at,
+        shopify_updated: result.data.shopify_updated
       });
-      console.log('📊 ============================================');
+      console.log('✅ Database: Stored in Postgres');
+      console.log('✅ Shopify: Metafields updated with summary');
+      console.log('📊 ========================================================');
 
       return result;
 
     } catch (error) {
-      // Don't fail the entire submission if database storage fails
-      // Google Sheets backup is the primary source of truth
-      console.error('❌ ============ DATABASE STORAGE FAILED ============');
+      // Don't fail the entire submission if database/Shopify storage fails
+      // Google Sheets is the backup source of truth
+      console.error('❌ ============ STORAGE FAILED ============');
       console.error('⚠️ Error Type:', error.name);
       console.error('⚠️ Error Message:', error.message);
-      console.error('⚠️ Full Error:', error);
-      console.error('⚠️ Submission still saved to Google Sheets');
-      console.error('❌ ===============================================');
+      console.error('⚠️ Submission still saved to Google Sheets (backup)');
+      console.error('❌ ==========================================');
     }
   }
 
@@ -21069,66 +21046,50 @@ class V10_ModalManager {
       validationMsg.textContent = '⏳ Validating Request ID...';
       validationMsg.className = 'v10-validation-message v10-validation--loading';
 
-      console.log('🔍 Validating Request ID:', requestId);
+      console.log('🔍 Validating Request ID via database:', requestId);
 
-      // Step 1: Format validation
-      const fullFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/;
-      const partialFormat = /^[A-Z]{3,8}-\d{2}$/; // ASDS-33 (samples only)
-      const tempFormat = /^[A-Z]{3,8}-\d{2}-TEMP$/; // GNBL-47-TEMP
-      const quoteFormat = /^[A-Z]{3,8}-QUOTE$/; // GNBL-QUOTE
+      // Get customer email for verification
+      const customerEmail = this.getClientEmail() || window.V10_LOGGED_IN_CUSTOMER?.email;
 
-      let isValidFormat = false;
-
-      if (fullFormat.test(requestId)) {
-        // Full format accepted for both sample and bulk requests
-        isValidFormat = true;
-      } else if (partialFormat.test(requestId) && this.pendingSubmissionType === 'sample-request') {
-        // Partial format accepted ONLY for sample requests
-        isValidFormat = true;
-      } else if (tempFormat.test(requestId) || quoteFormat.test(requestId)) {
-        // TEMP and QUOTE formats also valid
-        isValidFormat = true;
-      }
-
-      if (!isValidFormat) {
-        if (this.pendingSubmissionType === 'bulk-order-request') {
-          this.showValidationError('Bulk orders require full Request ID (e.g., GNBL-47-001)');
-        } else {
-          this.showValidationError('Invalid Request ID format. Expected format: GNBL-47 or GNBL-47-001');
-        }
+      if (!customerEmail) {
+        console.error('❌ No customer email available for validation');
+        this.showValidationError('Unable to verify Request ID. Please ensure you are logged in.');
         return false;
       }
 
-      // ✅ Step 2: Database validation - Check if Request ID exists
-      console.log('📡 Checking database for Request ID:', requestId);
+      // ✅ NEW: Database-only validation (no format checking)
+      // Call secure verification API
+      console.log('📡 Calling verification API...');
+      console.log('📧 Customer email:', customerEmail);
 
-      const apiUrl = `https://dawn-main-theme.vercel.app/api/submissions?request_id=${encodeURIComponent(requestId)}`;
+      const apiUrl = `https://dawn-main-theme.vercel.app/api/verify-request-id?` +
+        `request_id=${encodeURIComponent(requestId)}&` +
+        `customer_email=${encodeURIComponent(customerEmail)}`;
 
       const response = await fetch(apiUrl);
       const data = await response.json();
 
-      console.log('📊 Database response:', data);
+      console.log('📊 Verification response:', data);
 
-      if (data.success && data.data && data.data.length > 0) {
-        // ✅ Request ID found in database
-        const submission = data.data[0];
-        console.log('✅ Request ID verified in database:', submission);
+      if (data.success && data.valid) {
+        // ✅ Request ID found in database and belongs to this customer
+        console.log('✅ Request ID verified:', data.submission);
 
         // Store the validated submission data for later use
-        this.validatedSubmission = submission;
+        this.validatedSubmission = data.submission;
 
         this.showValidationSuccess({
-          requestId,
-          status: 'approved',
-          submissionType: submission.submission_type,
-          customerEmail: submission.customer_email
+          requestId: data.submission.request_id,
+          status: data.submission.status,
+          submissionType: data.submission.submission_type,
+          customerEmail: customerEmail
         });
 
         return true;
       } else {
-        // ❌ Request ID not found in database
-        console.warn('❌ Request ID not found in database:', requestId);
-        this.showValidationError('Request ID not found in our system. Please check your Request ID and try again.');
+        // ❌ Request ID not found or doesn't belong to customer
+        console.warn('❌ Verification failed:', data.error);
+        this.showValidationError(data.message || 'Request ID verification failed. Please check your Request ID and try again.');
         return false;
       }
 

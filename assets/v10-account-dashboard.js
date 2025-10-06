@@ -38,7 +38,19 @@ const V10_AccountDashboard = {
     this.modalClose = document.getElementById('modal-close');
 
     this.setupEventListeners();
-    this.fetchSubmissions();
+
+    // ✅ NEW: Only fetch if user has submissions (check metafield)
+    // This prevents unnecessary API calls - metafield shows summary instantly
+    const hasSubmissions = this.dashboard.dataset.hasSubmissions;
+    if (hasSubmissions && parseInt(hasSubmissions) > 0) {
+      console.log('📊 Customer has', hasSubmissions, 'submissions - ready to load details on demand');
+      // Don't auto-fetch - wait for user to click "View All Details"
+      this.hideLoading();
+    } else {
+      console.log('📊 No submissions found - showing empty state');
+      this.hideLoading();
+      this.showEmpty();
+    }
   },
 
   /**
