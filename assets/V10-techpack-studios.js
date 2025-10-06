@@ -20768,6 +20768,23 @@ class V10_ModalManager {
   }
 
   selectClientType(clientType) {
+    // ✅ NEW: Validate wholesale authentication for registered clients
+    if (clientType === 'registered') {
+      // Check if customer is logged in
+      if (!window.V10_LOGGED_IN_CUSTOMER) {
+        alert('⚠️ Authentication Required\n\nPlease log in to your wholesale account to continue as a registered client.\n\nIf you don\'t have a wholesale account, please select "NEW CLIENT" instead.');
+        return; // Block navigation
+      }
+
+      // Check if customer is a wholesale brand client (has 'brand-client' tag)
+      if (!window.V10_LOGGED_IN_CUSTOMER.isWholesale) {
+        alert('⚠️ Wholesale Account Required\n\nThis option is only available for wholesale brand clients.\n\nRetail customers should select "NEW CLIENT" or contact us to upgrade your account to wholesale.');
+        return; // Block navigation
+      }
+
+      console.log('✅ Wholesale authentication verified for:', window.V10_LOGGED_IN_CUSTOMER.email);
+    }
+
     this.currentClientType = clientType;
     this.closeModal('client-verification');
 
@@ -21049,15 +21066,16 @@ class V10_ModalManager {
 
     try {
       // Show loading state
-      validationMsg.textContent = 'Validating...';
+      validationMsg.textContent = '⏳ Validating Request ID...';
       validationMsg.className = 'v10-validation-message v10-validation--loading';
 
-      // ✅ Validation now uses format validation only
-      // Real API validation will be available through NEW Request ID system
-      // For now, using client-side format validation
+      console.log('🔍 Validating Request ID:', requestId);
 
+      // Step 1: Format validation
       const fullFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/;
       const partialFormat = /^[A-Z]{3,8}-\d{2}$/; // ASDS-33 (samples only)
+      const tempFormat = /^[A-Z]{3,8}-\d{2}-TEMP$/; // GNBL-47-TEMP
+      const quoteFormat = /^[A-Z]{3,8}-QUOTE$/; // GNBL-QUOTE
 
       let isValidFormat = false;
 
@@ -21067,20 +21085,57 @@ class V10_ModalManager {
       } else if (partialFormat.test(requestId) && this.pendingSubmissionType === 'sample-request') {
         // Partial format accepted ONLY for sample requests
         isValidFormat = true;
+      } else if (tempFormat.test(requestId) || quoteFormat.test(requestId)) {
+        // TEMP and QUOTE formats also valid
+        isValidFormat = true;
       }
 
-      if (isValidFormat) {
-        this.showValidationSuccess({ requestId, status: 'approved' });
-      } else {
+      if (!isValidFormat) {
         if (this.pendingSubmissionType === 'bulk-order-request') {
-          this.showValidationError('Bulk orders require full Request ID (e.g., ASDS-33-001)');
+          this.showValidationError('Bulk orders require full Request ID (e.g., GNBL-47-001)');
         } else {
-          this.showValidationError('Invalid Request ID format');
+          this.showValidationError('Invalid Request ID format. Expected format: GNBL-47 or GNBL-47-001');
         }
+        return false;
+      }
+
+      // ✅ Step 2: Database validation - Check if Request ID exists
+      console.log('📡 Checking database for Request ID:', requestId);
+
+      const apiUrl = `https://dawn-main-theme.vercel.app/api/submissions?request_id=${encodeURIComponent(requestId)}`;
+
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      console.log('📊 Database response:', data);
+
+      if (data.success && data.data && data.data.length > 0) {
+        // ✅ Request ID found in database
+        const submission = data.data[0];
+        console.log('✅ Request ID verified in database:', submission);
+
+        // Store the validated submission data for later use
+        this.validatedSubmission = submission;
+
+        this.showValidationSuccess({
+          requestId,
+          status: 'approved',
+          submissionType: submission.submission_type,
+          customerEmail: submission.customer_email
+        });
+
+        return true;
+      } else {
+        // ❌ Request ID not found in database
+        console.warn('❌ Request ID not found in database:', requestId);
+        this.showValidationError('Request ID not found in our system. Please check your Request ID and try again.');
+        return false;
       }
 
     } catch (error) {
-      this.showValidationError('Validation service unavailable');
+      console.error('❌ Validation error:', error);
+      this.showValidationError('Unable to validate Request ID. Please try again or contact support.');
+      return false;
     }
   }
 
