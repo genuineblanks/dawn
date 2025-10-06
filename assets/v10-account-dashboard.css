@@ -184,16 +184,28 @@
   }
 }
 
-/* Primary Action (New Submission) */
+/* Primary Action (New Submission) - Light Theme */
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-primary {
   grid-column: 1 / -1 !important;
   border-color: #10b981 !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.02)) !important;
+  background: #ffffff !important;
 }
 
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-primary:hover {
   border-color: #10b981 !important;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15) !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.03), #ffffff) !important;
+}
+
+/* Primary Action (New Submission) - Dark Theme */
+@media (prefers-color-scheme: dark) {
+  .v10-wholesale-dashboard .v10-quick-actions .v10-action-primary {
+    background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%) !important;
+  }
+
+  .v10-wholesale-dashboard .v10-quick-actions .v10-action-primary:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, #2d2d2d 50%, #242424 100%) !important;
+  }
 }
 
 /* Action Icon - SUPER STRONG */
