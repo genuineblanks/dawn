@@ -16849,43 +16849,28 @@ class V10_ReviewManager {
       return;
     }
 
-    // Show loading modal with progress tracking
+    // Show loading modal with REAL progress tracking (no fake delays)
     this.showLoadingModal();
 
     try {
-      // Step 1: Animate 0% → 25% smoothly over 5 seconds
-      let progressInterval = this.animateProgressSlowly(0, 25, 5000);
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      clearInterval(progressInterval);
+      // Step 1: Prepare submission data (0% → 33%)
+      this.updateLoadingProgress('step-prepare', 'Preparing your submission...', 0);
       const submissionData = await this.prepareEnhancedSubmissionData();
+      this.updateLoadingProgress('step-prepare', 'Data prepared', 33);
 
-      // Step 2: Animate 25% → 50% smoothly over 5 seconds
-      progressInterval = this.animateProgressSlowly(25, 50, 5000);
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      clearInterval(progressInterval);
+      // Step 2: Process files (33% → 66%)
+      this.updateLoadingProgress('step-files', 'Processing files...', 33);
       await this.processFilesForSubmission(submissionData);
+      this.updateLoadingProgress('step-files', 'Files processed', 66);
 
-      // Step 2.5: Animate 50% → 75% smoothly over 5 seconds
-      progressInterval = this.animateProgressSlowly(50, 75, 5000);
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      clearInterval(progressInterval);
+      // Step 3: Send to server (66% → 99%)
+      this.updateLoadingProgress('step-submit', 'Sending to server...', 66);
+      const response = await this.sendToWebhook(submissionData);
+      this.updateLoadingProgress('step-submit', 'Submission complete', 99);
 
-      // Step 3: Send to webhook (75% → 99% animated during request)
-      // Start slow progress animation while waiting for network response
-      progressInterval = this.animateProgressSlowly(75, 99, 8000); // Animate to 99% over max 8 seconds
-
-      let response;
-      try {
-        response = await this.sendToWebhook(submissionData);
-        clearInterval(progressInterval); // Stop animation when request completes
-      } catch (webhookError) {
-        clearInterval(progressInterval); // Stop animation on error
-        throw webhookError; // Re-throw to outer catch
-      }
-
-      // Step 4: Confirm (100%)
-      this.updateLoadingProgress('step-confirm', 'Finalizing submission...', 100);
-      await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for UX
+      // Step 4: Finalize (100%)
+      this.updateLoadingProgress('step-confirm', 'Finalizing...', 100);
+      await new Promise(resolve => setTimeout(resolve, 300)); // Brief pause for UX
 
       // Hide loading modal
       this.hideLoadingModal();
@@ -16904,22 +16889,8 @@ class V10_ReviewManager {
     }
   }
 
-  prepareSubmissionData() {
-    return {
-      requestType: V10_State.requestType,
-      clientInfo: this.getClientData(),
-      uploadedFiles: this.getUploadedFiles(),
-      garments: Array.from(V10_State.garments.values()),
-      labDips: Array.from(V10_State.labDips.values()),
-      designSamples: Array.from(V10_State.designSamples.values()),
-      assignments: {
-        labDips: Object.fromEntries(V10_State.assignments.labDips),
-        designs: Object.fromEntries(V10_State.assignments.designs)
-      },
-      costs: this.calculateCosts(),
-      submittedAt: new Date().toISOString()
-    };
-  }
+  // Removed: prepareSubmissionData() - duplicate function
+  // Using prepareEnhancedSubmissionData() as the single source of truth
 
   async prepareEnhancedSubmissionData() {
     // Get basic data components first
