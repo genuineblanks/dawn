@@ -16924,6 +16924,15 @@ class V10_ReviewManager {
   async prepareEnhancedSubmissionData() {
     // Get basic data components first
     const clientData = this.getClientData();
+    console.log('🎯 DEBUG [prepareEnhancedSubmissionData] - clientData after getClientData():', JSON.stringify({
+      hasAccessCode: 'access_code' in clientData,
+      accessCode: clientData.access_code,
+      hasClientType: 'client_type' in clientData,
+      clientType: clientData.client_type,
+      email: clientData.email,
+      company: clientData.company
+    }));
+
     const uploadedFiles = this.getUploadedFiles();
     const garments = Array.from(V10_State.garments.values());
     const costs = this.calculateCosts();
@@ -16965,6 +16974,13 @@ class V10_ReviewManager {
         session_id: sessionStorage.getItem('v10_session_id') || 'unknown'
       }
     };
+
+    console.log('🎯 DEBUG [prepareEnhancedSubmissionData] - baseSubmission.client_data after creation:', JSON.stringify({
+      hasAccessCode: 'access_code' in baseSubmission.client_data,
+      accessCode: baseSubmission.client_data.access_code,
+      hasClientType: 'client_type' in baseSubmission.client_data,
+      clientType: baseSubmission.client_data.client_type
+    }));
 
     // Filter data based on request type
     if (requestType === 'quotation') {
@@ -17091,6 +17107,13 @@ class V10_ReviewManager {
       };
     }
 
+    console.log('🎯 DEBUG [prepareEnhancedSubmissionData] - baseSubmission.client_data BEFORE RETURN:', JSON.stringify({
+      hasAccessCode: 'access_code' in baseSubmission.client_data,
+      accessCode: baseSubmission.client_data.access_code,
+      hasClientType: 'client_type' in baseSubmission.client_data,
+      clientType: baseSubmission.client_data.client_type
+    }));
+
     return baseSubmission;
   }
 
@@ -17205,10 +17228,11 @@ class V10_ReviewManager {
     });
 
     // 🐛 DEBUG: Log what we're actually sending RIGHT BEFORE the fetch
-    console.log('🐛 DEBUG - About to send to Vercel');
-    console.log('🐛 DEBUG - client_data:', submissionData.client_data);
-    console.log('🐛 DEBUG - client_data.access_code:', submissionData.client_data?.access_code);
-    console.log('🐛 DEBUG - client_data.client_type:', submissionData.client_data?.client_type);
+    console.log('🐛 DEBUG [sendToWebhook] - About to send to Vercel');
+    console.log('🐛 DEBUG [sendToWebhook] - client_data:', submissionData.client_data);
+    console.log('🐛 DEBUG [sendToWebhook] - client_data.access_code:', submissionData.client_data?.access_code);
+    console.log('🐛 DEBUG [sendToWebhook] - client_data.client_type:', submissionData.client_data?.client_type);
+    console.log('🐛 DEBUG [sendToWebhook] - FULL client_data JSON:', JSON.stringify(submissionData.client_data));
 
     try {
       const response = await fetch(secureProxyUrl, {
@@ -19590,9 +19614,23 @@ class V10_ClientManager {
 
   getClientData() {
     const baseData = JSON.parse(localStorage.getItem('v10_step1_data') || '{}');
+    console.log('🔍 DEBUG [getClientData] - baseData from localStorage:', JSON.stringify({
+      hasAccessCode: 'access_code' in baseData,
+      accessCode: baseData.access_code,
+      hasClientType: 'client_type' in baseData,
+      clientType: baseData.client_type,
+      keys: Object.keys(baseData)
+    }));
 
     // ENHANCED: Read real-time form values to ensure current data
     const realTimeData = this.collectCurrentFormData();
+    console.log('🔍 DEBUG [getClientData] - realTimeData from form:', JSON.stringify({
+      hasAccessCode: 'access_code' in realTimeData,
+      accessCode: realTimeData.access_code,
+      hasClientType: 'client_type' in realTimeData,
+      clientType: realTimeData.client_type,
+      keys: Object.keys(realTimeData)
+    }));
 
     // NEW CLIENT DETECTION: Add isNewClient property based on modal manager state
     // This is the same detection logic from the main getClientData function
@@ -19637,13 +19675,14 @@ class V10_ClientManager {
     };
 
     // 🐛 DEBUG: Log what we're about to return
-    console.log('🔍 DEBUG - Client data being returned:', {
+    console.log('🔍 DEBUG [getClientData] - Client data being returned:', {
       isNewClient: clientData.isNewClient,
       access_code: clientData.access_code,
       client_type: clientData.client_type,
       email: clientData.email,
       company: clientData.company
     });
+    console.log('🔍 DEBUG [getClientData] - FULL clientData JSON:', JSON.stringify(clientData));
 
     return clientData;
   }
