@@ -52,31 +52,13 @@
   <!-- Submissions Section -->
   <div class="v10-submissions-section">
 
-    <!-- Section Header with Filters -->
-    <div class="v10-submissions-header">
-      <div class="v10-header-left">
-        <h2 class="v10-section-title">Your Submissions</h2>
-        <div class="v10-stat-badges">
-          <div class="v10-stat-badge">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-              <line x1="16" y1="2" x2="16" y2="6"/>
-              <line x1="8" y1="2" x2="8" y2="6"/>
-              <line x1="3" y1="10" x2="21" y2="10"/>
-            </svg>
-            <span>Total:</span>
-            <span class="v10-stat-value" id="v10-total-submissions">{{ summary.total | default: 0 }}</span>
-          </div>
-          <div class="v10-stat-badge">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-            </svg>
-            <span>In Progress:</span>
-            <span class="v10-stat-value" id="v10-in-progress">{{ summary.pending | default: 0 }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="v10-filter-tabs" id="v10-filter-tabs">
+    <!-- Title -->
+    <h2 class="v10-section-title-standalone">Your Submissions</h2>
+
+    <!-- Filters Container (Type Filters LEFT | Status Filters RIGHT) -->
+    <div class="v10-filters-container">
+      <!-- Type Filters (LEFT) -->
+      <div class="v10-type-filters" id="v10-filter-tabs">
         <button class="v10-filter-tab active" data-filter="all">
           All
           <span class="v10-tab-count" id="count-all">0</span>
@@ -94,11 +76,9 @@
           <span class="v10-tab-count" id="count-bulk">0</span>
         </button>
       </div>
-    </div>
 
-    <!-- Status Filter Tabs -->
-    <div class="v10-status-filter-section" style="margin-bottom: 1.5rem;">
-      <div class="v10-status-filter-tabs">
+      <!-- Status Filters (RIGHT) -->
+      <div class="v10-status-filters">
         <button class="v10-status-filter-tab active" data-status-filter="pending">
           Pending
         </button>
