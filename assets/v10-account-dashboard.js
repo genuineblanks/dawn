@@ -39,9 +39,8 @@ const V10_AccountDashboard = {
 
     this.setupEventListeners();
 
-    // ✅ FIXED: Always fetch from API to show submissions
-    // Metafield is just for displaying instant count in header
-    // Full submission data always comes from API
+    // ✅ Fetch submissions directly (no authentication required)
+    // Security: API validates email ownership server-side
     console.log('📊 Fetching submissions from API...');
     this.fetchSubmissions();
   },

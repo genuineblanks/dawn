@@ -19607,11 +19607,20 @@ class V10_ClientManager {
     const isNewClient = modalManagerIsNew || isNewClientFromDOM;
 
 
+    // Add access code from logged-in customer (if available)
+    let accessCode = null;
+    if (window.V10_LOGGED_IN_CUSTOMER?.accessCode) {
+      accessCode = window.V10_LOGGED_IN_CUSTOMER.accessCode;
+      console.log('✅ Including customer access code in client data:', accessCode);
+    }
+
     // Merge localStorage data with real-time form data (real-time takes priority)
     return {
       ...baseData,
       ...realTimeData,
-      isNewClient: isNewClient
+      isNewClient: isNewClient,
+      access_code: accessCode,
+      client_type: isNewClient ? 'new' : 'registered'
     };
   }
 
