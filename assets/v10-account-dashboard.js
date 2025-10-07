@@ -528,8 +528,8 @@ const V10_AccountDashboard = {
                 <polyline points="13 2 13 9 20 9"/>
               </svg>
               <div style="flex: 1; min-width: 0;">
-                <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.file_name}</p>
-                <p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${file.file_type}</p>
+                <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</p>
+                <p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${file.type || 'Unknown type'}</p>
               </div>
             </div>
           `).join('')}
