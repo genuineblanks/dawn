@@ -21679,6 +21679,15 @@ class V10_ModalManager {
         if (deliveryAddressField) {
           deliveryAddressField.style.display = 'block';
         }
+
+        // NEW: Show quantity slider ONLY for new sample requests (no parent)
+        // If user selected "From Previous Quotation", quantity is already in the quotation data
+        if (quantitySliderField && !this.selectedParentRequestId) {
+          quantitySliderField.style.display = 'block';
+          console.log('✅ Showing quantity slider for new sample request (no parent)');
+        } else if (this.selectedParentRequestId) {
+          console.log('✅ Hiding quantity slider for sample from quotation:', this.selectedParentRequestId);
+        }
         break;
         
       case 'bulk-order-request':
