@@ -310,6 +310,7 @@ const V10_QUANTITY_CONFIG = {
 
 const V10_State = {
   requestType: null, // 'quotation', 'sample-request', 'bulk-order-request'
+  parentRequestId: null, // Parent request ID for sample/bulk requests (backup storage)
   currentStudio: 'garment',
   currentMode: 'labdips', // 'labdips' or 'designs' within design studio
   garments: new Map(),
@@ -16934,9 +16935,12 @@ class V10_ReviewManager {
       console.log('📋 Quotation request - Backend will assign final ID');
     }
 
-    // NEW: Get parent request ID from modal manager (if set)
-    const parentRequestId = window.v10ModalManager?.selectedParentRequestId || null;
-    console.log('🔗 Parent Request ID:', parentRequestId);
+    // NEW: Get parent request ID from modal manager (with V10_State fallback)
+    const parentRequestId = window.v10ModalManager?.selectedParentRequestId || V10_State.parentRequestId || null;
+    console.log('🔗 DEBUG - Reading parent request ID at submission time:');
+    console.log('   - From modalManager:', window.v10ModalManager?.selectedParentRequestId);
+    console.log('   - From V10_State:', V10_State.parentRequestId);
+    console.log('   - Final value:', parentRequestId);
 
     // Prepare base submission structure
     const baseSubmission = {
@@ -20992,6 +20996,8 @@ class V10_ModalManager {
       modal.remove();
       // Proceed with sample request (no parent)
       this.selectedParentRequestId = null;
+      V10_State.parentRequestId = null; // Clear backup in global state
+      console.log('✅ New sample request (no parent) - cleared parent IDs');
       this.selectSubmissionType('sample-request');
     });
 
@@ -21085,6 +21091,10 @@ class V10_ModalManager {
         btn.addEventListener('click', () => {
           const requestId = btn.getAttribute('data-request-id');
           this.selectedParentRequestId = requestId;
+          V10_State.parentRequestId = requestId; // Backup in global state
+          console.log('✅ Selected quotation parent ID:', requestId);
+          console.log('✅ Stored in modalManager:', this.selectedParentRequestId);
+          console.log('✅ Stored in V10_State:', V10_State.parentRequestId);
           modal.remove();
           this.selectSubmissionType('sample-request');
         });
@@ -21210,6 +21220,10 @@ class V10_ModalManager {
         btn.addEventListener('click', () => {
           const requestId = btn.getAttribute('data-request-id');
           this.selectedParentRequestId = requestId;
+          V10_State.parentRequestId = requestId; // Backup in global state
+          console.log('✅ Selected sample parent ID:', requestId);
+          console.log('✅ Stored in modalManager:', this.selectedParentRequestId);
+          console.log('✅ Stored in V10_State:', V10_State.parentRequestId);
           modal.remove();
           this.selectSubmissionType('bulk-order-request');
         });
