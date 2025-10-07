@@ -16849,28 +16849,32 @@ class V10_ReviewManager {
       return;
     }
 
-    // Show loading modal with REAL progress tracking (no fake delays)
+    // Show loading modal with SMOOTH progress animation
     this.showLoadingModal();
 
+    // Start smooth progress animation (0% → 90% over ~5 seconds)
+    let currentProgress = 0;
+    const progressInterval = setInterval(() => {
+      if (currentProgress < 90) {
+        currentProgress += 1;
+        this.updateLoadingProgress(null, 'Processing your submission...', currentProgress);
+      }
+    }, 50); // Update every 50ms for smooth animation
+
     try {
-      // Step 1: Prepare submission data (0% → 33%)
-      this.updateLoadingProgress('step-prepare', 'Preparing your submission...', 0);
+      // Step 1: Prepare submission data
       const submissionData = await this.prepareEnhancedSubmissionData();
-      this.updateLoadingProgress('step-prepare', 'Data prepared', 33);
 
-      // Step 2: Process files (33% → 66%)
-      this.updateLoadingProgress('step-files', 'Processing files...', 33);
+      // Step 2: Process files
       await this.processFilesForSubmission(submissionData);
-      this.updateLoadingProgress('step-files', 'Files processed', 66);
 
-      // Step 3: Send to server (66% → 99%)
-      this.updateLoadingProgress('step-submit', 'Sending to server...', 66);
+      // Step 3: Send to server
       const response = await this.sendToWebhook(submissionData);
-      this.updateLoadingProgress('step-submit', 'Submission complete', 99);
 
-      // Step 4: Finalize (100%)
-      this.updateLoadingProgress('step-confirm', 'Finalizing...', 100);
-      await new Promise(resolve => setTimeout(resolve, 300)); // Brief pause for UX
+      // Stop simulation, jump to 100%
+      clearInterval(progressInterval);
+      this.updateLoadingProgress('step-confirm', 'Submission complete!', 100);
+      await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause to show 100%
 
       // Hide loading modal
       this.hideLoadingModal();
@@ -16880,6 +16884,9 @@ class V10_ReviewManager {
 
     } catch (error) {
       console.error('Submission failed:', error);
+
+      // Stop progress animation
+      clearInterval(progressInterval);
 
       // Hide loading modal
       this.hideLoadingModal();
@@ -17097,10 +17104,13 @@ class V10_ReviewManager {
     const uploadedFiles = this.getUploadedFiles();
     console.log(`📁 Retrieved ${uploadedFiles.length} files from file manager`);
 
-    // Clear existing files array and rebuild with actual file data for Google Apps Script upload
-    submissionData.files = [];
+    // Create TWO separate arrays:
+    // 1. filesWithData - for Google Apps Script (includes base64 data)
+    // 2. files - for Vercel Postgres (names only, no heavy data)
+    const filesWithData = [];
+    const filesNamesOnly = [];
 
-    // Process each file from file manager and add file data for upload
+    // Process each file from file manager
     for (let i = 0; i < uploadedFiles.length; i++) {
       const fileInfo = uploadedFiles[i];
       console.log(`📎 Processing file ${i + 1}: ${fileInfo.name}`);
@@ -17119,21 +17129,32 @@ class V10_ReviewManager {
         }
       }
 
-      // Add file to submission data with file data for Google Apps Script upload
-      // Note: Google Apps Script will create clean JSON without this file data
-      submissionData.files.push({
+      // Add to filesWithData (for Google Apps Script upload)
+      filesWithData.push({
         name: fileInfo.name,
         size: fileInfo.size || fileInfo.actualSize || 0,
         type: fileInfo.type || 'unknown',
         data: fileData
       });
+
+      // Add to filesNamesOnly (for Vercel Postgres - lightweight)
+      filesNamesOnly.push({
+        name: fileInfo.name,
+        size: fileInfo.size || fileInfo.actualSize || 0,
+        type: fileInfo.type || 'unknown'
+        // NO data field - keeps Vercel JSON small
+      });
     }
 
-    console.log(`📊 Files prepared for Google Apps Script upload: ${submissionData.files.length} files`);
+    // Store both versions
+    submissionData.filesWithData = filesWithData; // For Google Apps Script
+    submissionData.files = filesNamesOnly; // For Vercel Postgres (will show in dashboard)
 
-    // Add processing metadata
-    const filesWithData = submissionData.files.filter(f => f.data);
-    console.log(`📊 File processing complete: ${filesWithData.length}/${submissionData.files.length} files have data for upload`);
+    console.log(`📊 Files with data (for Google Script): ${filesWithData.length} files`);
+    console.log(`📊 Files names only (for Vercel): ${filesNamesOnly.length} files`);
+
+    const filesHaveData = filesWithData.filter(f => f.data);
+    console.log(`📊 File processing complete: ${filesHaveData.length}/${filesWithData.length} files have data for upload`);
   }
 
   async convertFileToBase64(file) {
