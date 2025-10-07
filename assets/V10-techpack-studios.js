@@ -20978,18 +20978,18 @@ class V10_ModalManager {
 
     try {
       // Fetch quotations
-      const response = await fetch(\`https://dawn-main-theme.vercel.app/api/submissions?email=\${encodeURIComponent(customerEmail)}&type=quotation\`);
+      const response = await fetch(`https://dawn-main-theme.vercel.app/api/submissions?email=${encodeURIComponent(customerEmail)}&type=quotation`);
       const data = await response.json();
 
       if (!data.success || !data.data || data.data.length === 0) {
         // No quotations found
-        modal.querySelector('.v10-modal-body').innerHTML = \`
+        modal.querySelector('.v10-modal-body').innerHTML = `
           <div style="text-align: center; padding: 2rem;">
             <p style="margin-bottom: 1rem;">❌ No quotations found</p>
             <p style="color: var(--gb-neutral-600); font-size: 0.875rem;">You need to submit a quotation first before creating a sample request from it.</p>
             <button type="button" class="v10-btn v10-btn--secondary" id="v10-back-to-options">Go Back</button>
           </div>
-        \`;
+        `;
 
         modal.querySelector('#v10-back-to-options').addEventListener('click', () => {
           modal.remove();
@@ -21003,27 +21003,27 @@ class V10_ModalManager {
         const garmentCount = quotation.data?.records?.garments?.length || 0;
         const date = new Date(quotation.created_at).toLocaleDateString();
 
-        return \`
-          <button type="button" class="v10-submission-card-btn" data-request-id="\${quotation.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
+        return `
+          <button type="button" class="v10-submission-card-btn" data-request-id="${quotation.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">\${quotation.request_id}</div>
-                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">\${garmentCount} garment\${garmentCount !== 1 ? 's' : ''} • \${date}</div>
+                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">${quotation.request_id}</div>
+                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date}</div>
               </div>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="9 18 15 12 9 6"/>
               </svg>
             </div>
           </button>
-        \`;
+        `;
       }).join('');
 
-      modal.querySelector('.v10-modal-body').innerHTML = \`
+      modal.querySelector('.v10-modal-body').innerHTML = `
         <p style="margin-bottom: 1rem; color: var(--gb-neutral-600);">Select a quotation to create a sample request from:</p>
         <div style="max-height: 400px; overflow-y: auto;">
-          \${quotationsHTML}
+          ${quotationsHTML}
         </div>
-      \`;
+      `;
 
       // Add click handlers
       modal.querySelectorAll('.v10-submission-card-btn').forEach(btn => {
@@ -21047,13 +21047,13 @@ class V10_ModalManager {
 
     } catch (error) {
       console.error('❌ Error fetching quotations:', error);
-      modal.querySelector('.v10-modal-body').innerHTML = \`
+      modal.querySelector('.v10-modal-body').innerHTML = `
         <div style="text-align: center; padding: 2rem;">
           <p style="margin-bottom: 1rem;">❌ Error loading quotations</p>
-          <p style="color: var(--gb-neutral-600); font-size: 0.875rem; margin-bottom: 1.5rem;">\${error.message}</p>
+          <p style="color: var(--gb-neutral-600); font-size: 0.875rem; margin-bottom: 1.5rem;">${error.message}</p>
           <button type="button" class="v10-btn v10-btn--secondary" id="v10-retry-btn">Retry</button>
         </div>
-      \`;
+      `;
 
       modal.querySelector('#v10-retry-btn').addEventListener('click', () => {
         modal.remove();
@@ -21083,7 +21083,7 @@ class V10_ModalManager {
     }
 
     // Create loading modal
-    const loadingHTML = \`
+    const loadingHTML = `
       <div class="v10-modal-overlay" id="v10-sample-selection-modal" style="display: flex;">
         <div class="v10-modal-dialog" style="max-width: 700px;">
           <div class="v10-modal-header">
@@ -21095,25 +21095,25 @@ class V10_ModalManager {
           </div>
         </div>
       </div>
-    \`;
+    `;
 
     document.body.insertAdjacentHTML('beforeend', loadingHTML);
     const modal = document.getElementById('v10-sample-selection-modal');
 
     try {
       // Fetch sample requests
-      const response = await fetch(\`https://dawn-main-theme.vercel.app/api/submissions?email=\${encodeURIComponent(customerEmail)}&type=sample-request\`);
+      const response = await fetch(`https://dawn-main-theme.vercel.app/api/submissions?email=${encodeURIComponent(customerEmail)}&type=sample-request`);
       const data = await response.json();
 
       if (!data.success || !data.data || data.data.length === 0) {
         // No samples found
-        modal.querySelector('.v10-modal-body').innerHTML = \`
+        modal.querySelector('.v10-modal-body').innerHTML = `
           <div style="text-align: center; padding: 2rem;">
             <p style="margin-bottom: 1rem;">❌ No sample requests found</p>
             <p style="color: var(--gb-neutral-600); font-size: 0.875rem;">You need to submit and approve a sample request before creating a bulk order.</p>
             <button type="button" class="v10-btn v10-btn--secondary" id="v10-back-to-submission">Go Back</button>
           </div>
-        \`;
+        `;
 
         modal.querySelector('#v10-back-to-submission').addEventListener('click', () => {
           modal.remove();
@@ -21128,27 +21128,27 @@ class V10_ModalManager {
         const date = new Date(sample.created_at).toLocaleDateString();
         const status = sample.status || 'pending';
 
-        return \`
-          <button type="button" class="v10-submission-card-btn" data-request-id="\${sample.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
+        return `
+          <button type="button" class="v10-submission-card-btn" data-request-id="${sample.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">\${sample.request_id}</div>
-                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">\${garmentCount} garment\${garmentCount !== 1 ? 's' : ''} • \${date} • \${status}</div>
+                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">${sample.request_id}</div>
+                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date} • ${status}</div>
               </div>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="9 18 15 12 9 6"/>
               </svg>
             </div>
           </button>
-        \`;
+        `;
       }).join('');
 
-      modal.querySelector('.v10-modal-body').innerHTML = \`
+      modal.querySelector('.v10-modal-body').innerHTML = `
         <p style="margin-bottom: 1rem; color: var(--gb-neutral-600);">Select a sample to create a bulk order from:</p>
         <div style="max-height: 400px; overflow-y: auto;">
-          \${samplesHTML}
+          ${samplesHTML}
         </div>
-      \`;
+      `;
 
       // Add click handlers
       modal.querySelectorAll('.v10-submission-card-btn').forEach(btn => {
@@ -21172,13 +21172,13 @@ class V10_ModalManager {
 
     } catch (error) {
       console.error('❌ Error fetching samples:', error);
-      modal.querySelector('.v10-modal-body').innerHTML = \`
+      modal.querySelector('.v10-modal-body').innerHTML = `
         <div style="text-align: center; padding: 2rem;">
           <p style="margin-bottom: 1rem;">❌ Error loading sample requests</p>
-          <p style="color: var(--gb-neutral-600); font-size: 0.875rem; margin-bottom: 1.5rem;">\${error.message}</p>
+          <p style="color: var(--gb-neutral-600); font-size: 0.875rem; margin-bottom: 1.5rem;">${error.message}</p>
           <button type="button" class="v10-btn v10-btn--secondary" id="v10-retry-btn">Retry</button>
         </div>
-      \`;
+      `;
 
       modal.querySelector('#v10-retry-btn').addEventListener('click', () => {
         modal.remove();
