@@ -239,13 +239,13 @@ const V10_AccountDashboard = {
             </svg>
             <span>${garmentCount} garment${garmentCount !== 1 ? 's' : ''}</span>
           </div>
-          ${submission.files && submission.files.length > 0 ? `
+          ${submission.data?.files && submission.data.files.length > 0 ? `
           <div class="v10-meta-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
               <polyline points="13 2 13 9 20 9"/>
             </svg>
-            <span>${submission.files.length} file${submission.files.length !== 1 ? 's' : ''}</span>
+            <span>${submission.data.files.length} file${submission.data.files.length !== 1 ? 's' : ''}</span>
           </div>
           ` : ''}
         </div>
@@ -291,7 +291,7 @@ const V10_AccountDashboard = {
     const data = submission.data;
     const client = data?.client_data || {};
     const garments = data?.records?.garments || [];
-    const files = submission.files || [];
+    const files = data?.files || []; // Files are stored in data.files, not submission.files
 
     // DEBUG: Log submission structure
     console.log('🔍 ============ MODAL DATA DEBUG ============');
