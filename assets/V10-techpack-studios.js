@@ -16934,10 +16934,15 @@ class V10_ReviewManager {
       console.log('📋 Quotation request - Backend will assign final ID');
     }
 
+    // NEW: Get parent request ID from modal manager (if set)
+    const parentRequestId = window.v10ModalManager?.selectedParentRequestId || null;
+    console.log('🔗 Parent Request ID:', parentRequestId);
+
     // Prepare base submission structure
     const baseSubmission = {
       submission_id: submissionId,
       request_type: requestType,
+      parent_request_id: parentRequestId, // NEW: Send to backend for sample/bulk requests
       submitted_at: new Date().toISOString(),
       client_data: clientData,
       files: uploadedFiles.map(file => ({
@@ -20690,15 +20695,19 @@ class V10_ModalManager {
       });
     }
 
-    // Submission type selection with validation intercept
+    // Submission type selection with NEW modal system
     const submissionBtns = document.querySelectorAll('.v10-submission-option');
     submissionBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const submissionType = btn.getAttribute('data-submission-type');
         if (submissionType && !btn.disabled) {
-          // Check if this requires Request ID validation
-          if (submissionType === 'sample-request' || submissionType === 'bulk-order-request') {
-            this.openRequestIdValidation(submissionType);
+          // NEW SYSTEM: Different flows for each type
+          if (submissionType === 'sample-request') {
+            // Sample: Show 2-option modal (new or from quotation)
+            this.openSampleRequestOptions();
+          } else if (submissionType === 'bulk-order-request') {
+            // Bulk: Show sample selection modal
+            this.openBulkOrderSampleSelection();
           } else {
             // Quotation and other types proceed normally
             this.selectSubmissionType(submissionType);
@@ -20715,8 +20724,8 @@ class V10_ModalManager {
       });
     }
 
-    // Request ID validation modal events
-    this.setupRequestIdValidation();
+    // NEW: Setup selection modals (no validation needed anymore)
+    this.setupSelectionModals();
   }
 
   selectClientType(clientType) {
@@ -20851,6 +20860,351 @@ class V10_ModalManager {
     this.showClientForm();
     this.updateFormForSubmissionType(submissionType);
   }
+
+  // ========================================
+  // NEW MODAL SYSTEM: Sample/Bulk Selection
+  // ========================================
+
+  /**
+   * Open 2-option modal for sample requests:
+   * 1. New Sample Request (auto-generate ID)
+   * 2. From Previous Quotation (select quotation)
+   */
+  async openSampleRequestOptions() {
+    this.closeModal('submission-type');
+
+    // Create and show inline modal with 2 buttons
+    const modalHTML = `
+      <div class="v10-modal-overlay" id="v10-sample-options-modal" style="display: flex;">
+        <div class="v10-modal-dialog">
+          <div class="v10-modal-header">
+            <h3 class="v10-modal-title">Sample Request Options</h3>
+            <button type="button" class="v10-modal-close" aria-label="Close">×</button>
+          </div>
+          <div class="v10-modal-body">
+            <p style="margin-bottom: 1.5rem; color: var(--gb-neutral-600);">Choose how you want to create your sample request:</p>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <button type="button" class="v10-btn v10-btn--primary" id="v10-sample-new-btn" style="padding: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  <div style="text-align: left;">
+                    <div style="font-weight: 600; font-size: 1rem;">New Sample Request</div>
+                    <div style="font-size: 0.875rem; opacity: 0.9;">Start fresh (auto-generated ID)</div>
+                  </div>
+                </div>
+              </button>
+
+              <button type="button" class="v10-btn v10-btn--secondary" id="v10-sample-from-quotation-btn" style="padding: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <div style="text-align: left;">
+                    <div style="font-weight: 600; font-size: 1rem;">From Previous Quotation</div>
+                    <div style="font-size: 0.875rem; opacity: 0.8;">Select an existing quotation</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Remove old modal if exists
+    const oldModal = document.getElementById('v10-sample-options-modal');
+    if (oldModal) oldModal.remove();
+
+    // Append to body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Setup event listeners
+    const modal = document.getElementById('v10-sample-options-modal');
+    const closeBtn = modal.querySelector('.v10-modal-close');
+    const newBtn = document.getElementById('v10-sample-new-btn');
+    const fromQuotationBtn = document.getElementById('v10-sample-from-quotation-btn');
+
+    closeBtn.addEventListener('click', () => {
+      modal.remove();
+      this.openModal('submission-type'); // Go back
+    });
+
+    newBtn.addEventListener('click', () => {
+      modal.remove();
+      // Proceed with sample request (no parent)
+      this.selectedParentRequestId = null;
+      this.selectSubmissionType('sample-request');
+    });
+
+    fromQuotationBtn.addEventListener('click', async () => {
+      modal.remove();
+      await this.openQuotationSelectionModal();
+    });
+  }
+
+  /**
+   * Open quotation selection modal
+   * Fetches all quotations for logged-in customer and displays for selection
+   */
+  async openQuotationSelectionModal() {
+    // Get customer email
+    const customerEmail = window.V10_LOGGED_IN_CUSTOMER?.email;
+    if (!customerEmail) {
+      alert('⚠️ Error: Customer email not found. Please log in.');
+      return;
+    }
+
+    // Create loading modal
+    const loadingHTML = `
+      <div class="v10-modal-overlay" id="v10-quotation-selection-modal" style="display: flex;">
+        <div class="v10-modal-dialog" style="max-width: 700px;">
+          <div class="v10-modal-header">
+            <h3 class="v10-modal-title">Select Quotation</h3>
+            <button type="button" class="v10-modal-close" aria-label="Close">×</button>
+          </div>
+          <div class="v10-modal-body">
+            <p style="text-align: center; padding: 2rem;">Loading your quotations...</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', loadingHTML);
+    const modal = document.getElementById('v10-quotation-selection-modal');
+
+    try {
+      // Fetch quotations
+      const response = await fetch(\`https://dawn-main-theme.vercel.app/api/submissions?email=\${encodeURIComponent(customerEmail)}&type=quotation\`);
+      const data = await response.json();
+
+      if (!data.success || !data.data || data.data.length === 0) {
+        // No quotations found
+        modal.querySelector('.v10-modal-body').innerHTML = \`
+          <div style="text-align: center; padding: 2rem;">
+            <p style="margin-bottom: 1rem;">❌ No quotations found</p>
+            <p style="color: var(--gb-neutral-600); font-size: 0.875rem;">You need to submit a quotation first before creating a sample request from it.</p>
+            <button type="button" class="v10-btn v10-btn--secondary" id="v10-back-to-options">Go Back</button>
+          </div>
+        \`;
+
+        modal.querySelector('#v10-back-to-options').addEventListener('click', () => {
+          modal.remove();
+          this.openSampleRequestOptions();
+        });
+        return;
+      }
+
+      // Display quotations
+      const quotationsHTML = data.data.map(quotation => {
+        const garmentCount = quotation.data?.records?.garments?.length || 0;
+        const date = new Date(quotation.created_at).toLocaleDateString();
+
+        return \`
+          <button type="button" class="v10-submission-card-btn" data-request-id="\${quotation.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">\${quotation.request_id}</div>
+                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">\${garmentCount} garment\${garmentCount !== 1 ? 's' : ''} • \${date}</div>
+              </div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </button>
+        \`;
+      }).join('');
+
+      modal.querySelector('.v10-modal-body').innerHTML = \`
+        <p style="margin-bottom: 1rem; color: var(--gb-neutral-600);">Select a quotation to create a sample request from:</p>
+        <div style="max-height: 400px; overflow-y: auto;">
+          \${quotationsHTML}
+        </div>
+      \`;
+
+      // Add click handlers
+      modal.querySelectorAll('.v10-submission-card-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const requestId = btn.getAttribute('data-request-id');
+          this.selectedParentRequestId = requestId;
+          modal.remove();
+          this.selectSubmissionType('sample-request');
+        });
+
+        // Hover effect
+        btn.addEventListener('mouseenter', () => {
+          btn.style.borderColor = 'var(--gb-neutral-700)';
+          btn.style.background = 'var(--gb-neutral-200)';
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.borderColor = 'var(--gb-neutral-300)';
+          btn.style.background = 'var(--gb-neutral-100)';
+        });
+      });
+
+    } catch (error) {
+      console.error('❌ Error fetching quotations:', error);
+      modal.querySelector('.v10-modal-body').innerHTML = \`
+        <div style="text-align: center; padding: 2rem;">
+          <p style="margin-bottom: 1rem;">❌ Error loading quotations</p>
+          <p style="color: var(--gb-neutral-600); font-size: 0.875rem; margin-bottom: 1.5rem;">\${error.message}</p>
+          <button type="button" class="v10-btn v10-btn--secondary" id="v10-retry-btn">Retry</button>
+        </div>
+      \`;
+
+      modal.querySelector('#v10-retry-btn').addEventListener('click', () => {
+        modal.remove();
+        this.openQuotationSelectionModal();
+      });
+    }
+
+    // Close button handler
+    modal.querySelector('.v10-modal-close').addEventListener('click', () => {
+      modal.remove();
+      this.openSampleRequestOptions();
+    });
+  }
+
+  /**
+   * Open sample selection modal for bulk orders
+   * Fetches all sample requests for logged-in customer and displays for selection
+   */
+  async openBulkOrderSampleSelection() {
+    this.closeModal('submission-type');
+
+    // Get customer email
+    const customerEmail = window.V10_LOGGED_IN_CUSTOMER?.email;
+    if (!customerEmail) {
+      alert('⚠️ Error: Customer email not found. Please log in.');
+      return;
+    }
+
+    // Create loading modal
+    const loadingHTML = \`
+      <div class="v10-modal-overlay" id="v10-sample-selection-modal" style="display: flex;">
+        <div class="v10-modal-dialog" style="max-width: 700px;">
+          <div class="v10-modal-header">
+            <h3 class="v10-modal-title">Select Sample</h3>
+            <button type="button" class="v10-modal-close" aria-label="Close">×</button>
+          </div>
+          <div class="v10-modal-body">
+            <p style="text-align: center; padding: 2rem;">Loading your sample requests...</p>
+          </div>
+        </div>
+      </div>
+    \`;
+
+    document.body.insertAdjacentHTML('beforeend', loadingHTML);
+    const modal = document.getElementById('v10-sample-selection-modal');
+
+    try {
+      // Fetch sample requests
+      const response = await fetch(\`https://dawn-main-theme.vercel.app/api/submissions?email=\${encodeURIComponent(customerEmail)}&type=sample-request\`);
+      const data = await response.json();
+
+      if (!data.success || !data.data || data.data.length === 0) {
+        // No samples found
+        modal.querySelector('.v10-modal-body').innerHTML = \`
+          <div style="text-align: center; padding: 2rem;">
+            <p style="margin-bottom: 1rem;">❌ No sample requests found</p>
+            <p style="color: var(--gb-neutral-600); font-size: 0.875rem;">You need to submit and approve a sample request before creating a bulk order.</p>
+            <button type="button" class="v10-btn v10-btn--secondary" id="v10-back-to-submission">Go Back</button>
+          </div>
+        \`;
+
+        modal.querySelector('#v10-back-to-submission').addEventListener('click', () => {
+          modal.remove();
+          this.openModal('submission-type');
+        });
+        return;
+      }
+
+      // Display samples
+      const samplesHTML = data.data.map(sample => {
+        const garmentCount = sample.data?.records?.garments?.length || 0;
+        const date = new Date(sample.created_at).toLocaleDateString();
+        const status = sample.status || 'pending';
+
+        return \`
+          <button type="button" class="v10-submission-card-btn" data-request-id="\${sample.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">\${sample.request_id}</div>
+                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">\${garmentCount} garment\${garmentCount !== 1 ? 's' : ''} • \${date} • \${status}</div>
+              </div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </button>
+        \`;
+      }).join('');
+
+      modal.querySelector('.v10-modal-body').innerHTML = \`
+        <p style="margin-bottom: 1rem; color: var(--gb-neutral-600);">Select a sample to create a bulk order from:</p>
+        <div style="max-height: 400px; overflow-y: auto;">
+          \${samplesHTML}
+        </div>
+      \`;
+
+      // Add click handlers
+      modal.querySelectorAll('.v10-submission-card-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const requestId = btn.getAttribute('data-request-id');
+          this.selectedParentRequestId = requestId;
+          modal.remove();
+          this.selectSubmissionType('bulk-order-request');
+        });
+
+        // Hover effect
+        btn.addEventListener('mouseenter', () => {
+          btn.style.borderColor = 'var(--gb-neutral-700)';
+          btn.style.background = 'var(--gb-neutral-200)';
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.borderColor = 'var(--gb-neutral-300)';
+          btn.style.background = 'var(--gb-neutral-100)';
+        });
+      });
+
+    } catch (error) {
+      console.error('❌ Error fetching samples:', error);
+      modal.querySelector('.v10-modal-body').innerHTML = \`
+        <div style="text-align: center; padding: 2rem;">
+          <p style="margin-bottom: 1rem;">❌ Error loading sample requests</p>
+          <p style="color: var(--gb-neutral-600); font-size: 0.875rem; margin-bottom: 1.5rem;">\${error.message}</p>
+          <button type="button" class="v10-btn v10-btn--secondary" id="v10-retry-btn">Retry</button>
+        </div>
+      \`;
+
+      modal.querySelector('#v10-retry-btn').addEventListener('click', () => {
+        modal.remove();
+        this.openBulkOrderSampleSelection();
+      });
+    }
+
+    // Close button handler
+    modal.querySelector('.v10-modal-close').addEventListener('click', () => {
+      modal.remove();
+      this.openModal('submission-type');
+    });
+  }
+
+  /**
+   * Setup selection modals - placeholder for any initialization needed
+   */
+  setupSelectionModals() {
+    // Initialize selectedParentRequestId
+    this.selectedParentRequestId = null;
+    console.log('✅ Selection modals initialized');
+  }
+
+  // ========================================
+  // OLD VALIDATION SYSTEM (DEPRECATED - keeping for compatibility)
+  // ========================================
 
   // NEW: Request ID validation methods
   openRequestIdValidation(submissionType) {
