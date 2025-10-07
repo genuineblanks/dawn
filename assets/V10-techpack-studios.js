@@ -19609,19 +19609,37 @@ class V10_ClientManager {
 
     // Add access code from logged-in customer (if available)
     let accessCode = null;
+
+    // 🐛 DEBUG: Check if V10_LOGGED_IN_CUSTOMER exists
+    console.log('🔍 DEBUG - window.V10_LOGGED_IN_CUSTOMER exists?', !!window.V10_LOGGED_IN_CUSTOMER);
+    console.log('🔍 DEBUG - window.V10_LOGGED_IN_CUSTOMER value:', window.V10_LOGGED_IN_CUSTOMER);
+
     if (window.V10_LOGGED_IN_CUSTOMER?.accessCode) {
       accessCode = window.V10_LOGGED_IN_CUSTOMER.accessCode;
       console.log('✅ Including customer access code in client data:', accessCode);
+    } else {
+      console.warn('⚠️ No access code found in window.V10_LOGGED_IN_CUSTOMER');
     }
 
     // Merge localStorage data with real-time form data (real-time takes priority)
-    return {
+    const clientData = {
       ...baseData,
       ...realTimeData,
       isNewClient: isNewClient,
       access_code: accessCode,
       client_type: isNewClient ? 'new' : 'registered'
     };
+
+    // 🐛 DEBUG: Log what we're about to return
+    console.log('🔍 DEBUG - Client data being returned:', {
+      isNewClient: clientData.isNewClient,
+      access_code: clientData.access_code,
+      client_type: clientData.client_type,
+      email: clientData.email,
+      company: clientData.company
+    });
+
+    return clientData;
   }
 
   /**
