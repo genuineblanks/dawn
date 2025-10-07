@@ -7,6 +7,7 @@ const V10_AccountDashboard = {
   // State
   submissions: [],
   currentFilter: 'all',
+  currentStatusFilter: 'all', // New: 'all', 'pending', 'in_progress'
   customerEmail: null,
 
   // DOM Elements
@@ -49,12 +50,21 @@ const V10_AccountDashboard = {
    * Setup event listeners
    */
   setupEventListeners() {
-    // Filter tabs
+    // Type filter tabs
     const filterTabs = document.querySelectorAll('.v10-filter-tab');
     filterTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         const filter = tab.dataset.filter;
         this.setFilter(filter);
+      });
+    });
+
+    // Status filter tabs
+    const statusTabs = document.querySelectorAll('.v10-status-filter-tab');
+    statusTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const statusFilter = tab.dataset.statusFilter;
+        this.setStatusFilter(statusFilter);
       });
     });
 
@@ -164,10 +174,17 @@ const V10_AccountDashboard = {
   renderSubmissions() {
     if (!this.submissionsGrid) return;
 
-    // Filter submissions
+    // Filter submissions by type
     let filtered = this.submissions;
     if (this.currentFilter !== 'all') {
       filtered = this.submissions.filter(s => s.submission_type === this.currentFilter);
+    }
+
+    // Filter submissions by status
+    if (this.currentStatusFilter === 'pending') {
+      filtered = filtered.filter(s => s.status === 'pending');
+    } else if (this.currentStatusFilter === 'in_progress') {
+      filtered = filtered.filter(s => s.status === 'sample_in_progress' || s.status === 'bulk_in_progress');
     }
 
     // Show empty state if no submissions
@@ -572,6 +589,21 @@ const V10_AccountDashboard = {
     // Update active tab
     document.querySelectorAll('.v10-filter-tab').forEach(tab => {
       tab.classList.toggle('active', tab.dataset.filter === filter);
+    });
+
+    // Re-render submissions
+    this.renderSubmissions();
+  },
+
+  /**
+   * Set status filter
+   */
+  setStatusFilter(statusFilter) {
+    this.currentStatusFilter = statusFilter;
+
+    // Update active tab
+    document.querySelectorAll('.v10-status-filter-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.statusFilter === statusFilter);
     });
 
     // Re-render submissions

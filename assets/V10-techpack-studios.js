@@ -17471,8 +17471,12 @@ class V10_ReviewManager {
     if (!modal) return;
 
     const requestType = V10_State.requestType;
-    const submissionId = response?.submissionId || `TP-${Date.now()}`;
+    // FIX: Backend returns 'requestId' (not 'submissionId')
+    const submissionId = response?.requestId || response?.submissionId || `TP-${Date.now()}`;
     const isUsingParentId = window.v10ClientManager && window.v10ClientManager.parentRequestId;
+
+    console.log('📋 Success Modal - Request ID:', submissionId);
+    console.log('📋 Success Modal - Response:', response);
 
     const messages = {
       'quotation': `Quotation submitted! We'll send you a detailed quote within 24-48 hours.`,
@@ -20749,15 +20753,66 @@ class V10_ModalManager {
     this.currentClientType = clientType;
     this.closeModal('client-verification');
 
-    // Show/hide email warning based on client type
-    const emailWarning = document.getElementById('v10-registered-email-warning');
-    if (emailWarning) {
-      emailWarning.style.display = (clientType === 'registered') ? 'block' : 'none';
+    // NEW: Lock/unlock company and email fields based on client type
+    if (clientType === 'registered') {
+      this.lockRegisteredClientFields();
+    } else {
+      this.unlockRegisteredClientFields();
     }
 
     // Update submission modal for client type
     this.updateSubmissionModalForClientType(clientType);
     this.openModal('submission-type');
+  }
+
+  /**
+   * Lock company name and email fields for registered clients
+   * Makes fields read-only with visual indication
+   */
+  lockRegisteredClientFields() {
+    const companyField = document.querySelector('input[name="company_name"]');
+    const emailField = document.querySelector('input[name="email"]');
+
+    if (companyField) {
+      companyField.readOnly = true;
+      companyField.style.backgroundColor = 'var(--gb-neutral-200)';
+      companyField.style.cursor = 'not-allowed';
+      companyField.style.opacity = '0.7';
+    }
+
+    if (emailField) {
+      emailField.readOnly = true;
+      emailField.style.backgroundColor = 'var(--gb-neutral-200)';
+      emailField.style.cursor = 'not-allowed';
+      emailField.style.opacity = '0.7';
+    }
+
+    console.log('🔒 Locked company/email fields for registered client');
+  }
+
+  /**
+   * Unlock company name and email fields for new clients
+   * Restores fields to editable state
+   */
+  unlockRegisteredClientFields() {
+    const companyField = document.querySelector('input[name="company_name"]');
+    const emailField = document.querySelector('input[name="email"]');
+
+    if (companyField) {
+      companyField.readOnly = false;
+      companyField.style.backgroundColor = '';
+      companyField.style.cursor = '';
+      companyField.style.opacity = '';
+    }
+
+    if (emailField) {
+      emailField.readOnly = false;
+      emailField.style.backgroundColor = '';
+      emailField.style.cursor = '';
+      emailField.style.opacity = '';
+    }
+
+    console.log('🔓 Unlocked company/email fields for new client');
   }
 
   updateSubmissionModalForClientType(clientType) {
@@ -20977,8 +21032,8 @@ class V10_ModalManager {
     const modal = document.getElementById('v10-quotation-selection-modal');
 
     try {
-      // Fetch quotations
-      const response = await fetch(`https://dawn-main-theme.vercel.app/api/submissions?email=${encodeURIComponent(customerEmail)}&type=quotation`);
+      // Fetch quotations (only pending ones)
+      const response = await fetch(`https://dawn-main-theme.vercel.app/api/submissions?email=${encodeURIComponent(customerEmail)}&type=quotation&status=pending`);
       const data = await response.json();
 
       if (!data.success || !data.data || data.data.length === 0) {
@@ -21101,8 +21156,8 @@ class V10_ModalManager {
     const modal = document.getElementById('v10-sample-selection-modal');
 
     try {
-      // Fetch sample requests
-      const response = await fetch(`https://dawn-main-theme.vercel.app/api/submissions?email=${encodeURIComponent(customerEmail)}&type=sample-request`);
+      // Fetch sample requests (only pending ones)
+      const response = await fetch(`https://dawn-main-theme.vercel.app/api/submissions?email=${encodeURIComponent(customerEmail)}&type=sample-request&status=pending`);
       const data = await response.json();
 
       if (!data.success || !data.data || data.data.length === 0) {

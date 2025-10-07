@@ -346,6 +346,45 @@
 }
 
 /* ==============================================
+   STATUS FILTER TABS
+   ============================================== */
+
+.v10-status-filter-section {
+  margin-bottom: 1.5rem;
+}
+
+.v10-status-filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.v10-wholesale-dashboard .v10-status-filter-tab {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.5rem 1rem !important;
+  background: #242424 !important;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 4px !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: #cccccc !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.v10-wholesale-dashboard .v10-status-filter-tab:hover {
+  background: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+.v10-wholesale-dashboard .v10-status-filter-tab.active {
+  background: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* ==============================================
    LOADING & EMPTY STATES
    ============================================== */
 
