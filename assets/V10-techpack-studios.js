@@ -16923,7 +16923,9 @@ class V10_ReviewManager {
 
   async prepareEnhancedSubmissionData() {
     // Get basic data components first
-    const clientData = this.getClientData();
+    // ✅ FIX: Call v10ClientManager.getClientData() instead of this.getClientData()
+    // V10_ReviewManager doesn't have getClientData() - it belongs to V10_ClientManager
+    const clientData = window.v10ClientManager.getClientData();
     console.log('🎯 DEBUG [prepareEnhancedSubmissionData] - clientData after getClientData():', JSON.stringify({
       hasAccessCode: 'access_code' in clientData,
       accessCode: clientData.access_code,
