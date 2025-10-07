@@ -7,7 +7,7 @@ const V10_AccountDashboard = {
   // State
   submissions: [],
   currentFilter: 'all',
-  currentStatusFilter: 'all', // New: 'all', 'pending', 'in_progress'
+  currentStatusFilter: 'pending', // Default to 'pending', options: 'pending', 'completed'
   customerEmail: null,
 
   // DOM Elements
@@ -149,13 +149,11 @@ const V10_AccountDashboard = {
    */
   updateStatistics() {
     const total = this.submissions.length;
-    const inProgress = this.submissions.filter(s =>
-      s.status === 'pending' || s.status === 'in-review' || s.status === 'approved' || s.status === 'in-production'
-    ).length;
+    const pending = this.submissions.filter(s => s.status === 'pending').length;
 
     // Update counts
     document.getElementById('v10-total-submissions').textContent = total;
-    document.getElementById('v10-in-progress').textContent = inProgress;
+    document.getElementById('v10-in-progress').textContent = pending;
 
     // Update filter tab counts
     const quotations = this.submissions.filter(s => s.submission_type === 'quotation').length;
@@ -183,8 +181,8 @@ const V10_AccountDashboard = {
     // Filter submissions by status
     if (this.currentStatusFilter === 'pending') {
       filtered = filtered.filter(s => s.status === 'pending');
-    } else if (this.currentStatusFilter === 'in_progress') {
-      filtered = filtered.filter(s => s.status === 'sample_in_progress' || s.status === 'bulk_in_progress');
+    } else if (this.currentStatusFilter === 'completed') {
+      filtered = filtered.filter(s => s.status === 'completed');
     }
 
     // Show empty state if no submissions
@@ -232,6 +230,13 @@ const V10_AccountDashboard = {
       'bulk-order-request': 'Bulk Order'
     };
 
+    // Get status label and format
+    const statusLabels = {
+      'pending': 'Pending',
+      'completed': 'Completed',
+      'rejected': 'Rejected'
+    };
+
     // Count garments
     const garmentCount = submission.data?.records?.garments?.length || 0;
 
@@ -241,8 +246,8 @@ const V10_AccountDashboard = {
           <span class="v10-submission-type-badge ${submission.submission_type}">
             ${typeLabels[submission.submission_type] || submission.submission_type}
           </span>
-          <span class="v10-submission-status ${submission.status}">
-            ${submission.status}
+          <span class="v10-submission-status v10-status-${submission.status}">
+            ${statusLabels[submission.status] || submission.status}
           </span>
         </div>
 

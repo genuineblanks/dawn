@@ -518,30 +518,23 @@
   text-transform: uppercase;
 }
 
-.v10-submission-status.pending {
-  background: rgba(251, 191, 36, 0.1);
+/* Status badge colors */
+.v10-status-pending {
+  background: rgba(251, 191, 36, 0.15);
   color: #f59e0b;
+  border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
-.v10-submission-status.in-review {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-}
-
-.v10-submission-status.approved,
-.v10-submission-status.in-production {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-}
-
-.v10-submission-status.completed {
-  background: rgba(34, 197, 94, 0.1);
+.v10-status-completed {
+  background: rgba(34, 197, 94, 0.15);
   color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-.v10-submission-status.rejected {
-  background: rgba(239, 68, 68, 0.1);
+.v10-status-rejected {
+  background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .v10-submission-id {
