@@ -149,11 +149,6 @@ const V10_AccountDashboard = {
    */
   updateStatistics() {
     const total = this.submissions.length;
-    const pending = this.submissions.filter(s => s.status === 'pending').length;
-
-    // Update counts
-    document.getElementById('v10-total-submissions').textContent = total;
-    document.getElementById('v10-in-progress').textContent = pending;
 
     // Update filter tab counts
     const quotations = this.submissions.filter(s => s.submission_type === 'quotation').length;
