@@ -181,6 +181,8 @@ const V10_AccountDashboard = {
     // Filter submissions by status
     if (this.currentStatusFilter === 'pending') {
       filtered = filtered.filter(s => s.status === 'pending');
+    } else if (this.currentStatusFilter === 'in_progress') {
+      filtered = filtered.filter(s => s.status === 'in_progress');
     } else if (this.currentStatusFilter === 'completed') {
       filtered = filtered.filter(s => s.status === 'completed');
     }
@@ -233,6 +235,7 @@ const V10_AccountDashboard = {
     // Get status label and format
     const statusLabels = {
       'pending': 'Pending',
+      'in_progress': 'In Progress',
       'completed': 'Completed',
       'rejected': 'Rejected'
     };
