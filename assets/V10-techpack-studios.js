@@ -17204,6 +17204,12 @@ class V10_ReviewManager {
       garmentsCount: submissionData.records.garments.length
     });
 
+    // 🐛 DEBUG: Log what we're actually sending RIGHT BEFORE the fetch
+    console.log('🐛 DEBUG - About to send to Vercel');
+    console.log('🐛 DEBUG - client_data:', submissionData.client_data);
+    console.log('🐛 DEBUG - client_data.access_code:', submissionData.client_data?.access_code);
+    console.log('🐛 DEBUG - client_data.client_type:', submissionData.client_data?.client_type);
+
     try {
       const response = await fetch(secureProxyUrl, {
         method: 'POST',
