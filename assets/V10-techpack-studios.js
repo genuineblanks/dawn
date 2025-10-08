@@ -20659,7 +20659,15 @@ class V10_ModalManager {
       heroBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.openModal('client-verification');
+
+        // Check if user is logged in as wholesale customer
+        if (window.V10_LOGGED_IN_CUSTOMER && window.V10_LOGGED_IN_CUSTOMER.isWholesale) {
+          console.log('✅ Logged-in wholesale customer - skipping client verification modal');
+          this.selectClientType('registered'); // Go directly to submission type modal
+        } else {
+          console.log('ℹ️ Not logged in or not wholesale - showing client verification modal');
+          this.openModal('client-verification'); // Show "New or Registered" modal
+        }
       });
     }
 
