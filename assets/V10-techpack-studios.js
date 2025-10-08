@@ -20867,9 +20867,9 @@ class V10_ModalManager {
       }
       
     } else if (clientType === 'registered') {
-      // Show warning for registered clients
+      // Hide notices for registered clients (already verified via login)
       if (registrationNotice) registrationNotice.style.display = 'none';
-      if (registrationWarning) registrationWarning.style.display = 'flex';
+      if (registrationWarning) registrationWarning.style.display = 'none';
       
       // Update description
       if (submissionDescription) {

@@ -3222,6 +3222,8 @@ body[style*="overflow: hidden"] {
 .v10-warning-icon {
   font-size: var(--v10-text-lg);
   flex-shrink: 0;
+  margin-top: 2px; /* Align icon with heading text baseline */
+  line-height: 1;
 }
 
 .v10-warning-content {
