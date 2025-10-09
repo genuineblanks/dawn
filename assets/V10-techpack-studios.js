@@ -16869,8 +16869,18 @@ class V10_ReviewManager {
       // Step 2: Process files
       await this.processFilesForSubmission(submissionData);
 
-      // Step 3: Send to server
+      // Step 3: Send metadata to Vercel (get Request ID)
       const response = await this.sendToWebhook(submissionData);
+
+      // Step 4: Upload files to Google Drive (if files exist)
+      // This bypasses Vercel's 4.5MB payload limit by sending files separately
+      if (submissionData.filesWithData && submissionData.filesWithData.length > 0) {
+        console.log('📤 Uploading files to Google Drive...');
+        await this.uploadFilesToGoogleScript(submissionData, response.requestId);
+        console.log('✅ Files uploaded successfully');
+      } else {
+        console.log('ℹ️ No files to upload');
+      }
 
       // Stop simulation, jump to 100%
       clearInterval(progressInterval);
@@ -17222,20 +17232,21 @@ class V10_ReviewManager {
     // And allows fast response (3s) while background processing continues
     const secureProxyUrl = 'https://dawn-main-theme.vercel.app/api/submit-techpack';
 
+    // Create clean payload for Vercel (metadata only, no file data)
+    // Files will be uploaded directly to Google Apps Script to avoid 413 payload errors
+    const vercelPayload = {
+      ...submissionData,
+      files: submissionData.files // Only file names/types/sizes, no base64 data
+    };
+    delete vercelPayload.filesWithData; // Remove heavy base64 data (prevents 413 error)
+
     console.log('⚡ FAST SUBMISSION: Sending to secure proxy:', {
       url: secureProxyUrl,
-      submissionId: submissionData.submission_id,
-      requestType: submissionData.request_type,
-      filesCount: submissionData.files.length,
-      garmentsCount: submissionData.records.garments.length
+      submissionId: vercelPayload.submission_id,
+      requestType: vercelPayload.request_type,
+      filesCount: vercelPayload.files.length,
+      garmentsCount: vercelPayload.records.garments.length
     });
-
-    // 🐛 DEBUG: Log what we're actually sending RIGHT BEFORE the fetch
-    console.log('🐛 DEBUG [sendToWebhook] - About to send to Vercel');
-    console.log('🐛 DEBUG [sendToWebhook] - client_data:', submissionData.client_data);
-    console.log('🐛 DEBUG [sendToWebhook] - client_data.access_code:', submissionData.client_data?.access_code);
-    console.log('🐛 DEBUG [sendToWebhook] - client_data.client_type:', submissionData.client_data?.client_type);
-    console.log('🐛 DEBUG [sendToWebhook] - FULL client_data JSON:', JSON.stringify(submissionData.client_data));
 
     try {
       const response = await fetch(secureProxyUrl, {
@@ -17243,7 +17254,7 @@ class V10_ReviewManager {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(submissionData)
+        body: JSON.stringify(vercelPayload) // Send clean payload without filesWithData
       });
 
       console.log('📡 Response Status:', response.status);
@@ -17268,6 +17279,63 @@ class V10_ReviewManager {
 
     } catch (error) {
       console.error('❌ Submission failed:', error.message);
+      throw error;
+    }
+  }
+
+  async uploadFilesToGoogleScript(submissionData, requestId) {
+    // Upload files directly to Google Apps Script (bypasses Vercel's 4.5MB limit)
+    // Called AFTER Vercel returns the Request ID
+    const uploadEndpoint = 'https://dawn-main-theme.vercel.app/api/upload-files-to-google';
+
+    // Create complete payload with all submission data + files
+    // Google Apps Script needs: records, costs, metadata, client_data, files
+    const uploadPayload = {
+      request_id: requestId,
+      submission_id: requestId,
+      request_type: submissionData.request_type,
+      submitted_at: submissionData.submitted_at,
+      client_data: submissionData.client_data,
+      records: submissionData.records, // Garments, lab dips, etc.
+      costs: submissionData.costs, // Total costs
+      metadata: submissionData.metadata, // Form metadata
+      files: submissionData.filesWithData || [] // Files with base64 data
+    };
+
+    console.log('📤 Uploading files to Google Drive:', {
+      requestId: requestId,
+      filesCount: uploadPayload.files.length,
+      totalSize: uploadPayload.files.reduce((sum, f) => sum + (f.data?.length || 0), 0)
+    });
+
+    try {
+      const response = await fetch(uploadEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(uploadPayload)
+      });
+
+      console.log('📡 File upload response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ File upload error:', errorText);
+        throw new Error(`File upload failed: ${response.status} - ${errorText}`);
+      }
+
+      const result = await response.json();
+
+      console.log('✅ FILES UPLOADED TO GOOGLE DRIVE:', {
+        success: result.success,
+        filesUploaded: result.filesUploaded
+      });
+
+      return result;
+
+    } catch (error) {
+      console.error('❌ File upload failed:', error.message);
       throw error;
     }
   }
@@ -19833,7 +19901,7 @@ class V10_FileManager {
   constructor() {
     this.uploadedFiles = new Map();
     this.maxFileSize = 10 * 1024 * 1024; // 10MB
-    this.maxFiles = 10;
+    this.maxFiles = 5;
     this.allowedTypes = ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'];
     
     // Initialize step 2 if present
@@ -20033,9 +20101,12 @@ class V10_FileManager {
 
     // Check total file count
     if (this.uploadedFiles.size + fileArray.length > this.maxFiles) {
-      this.showError(`Maximum ${this.maxFiles} files allowed`);
+      this.showMaxFilesWarning();
       return;
     }
+
+    // Hide max files warning if it was showing
+    this.hideMaxFilesWarning();
 
     // Process files sequentially to avoid overwhelming the system
     for (const file of fileArray) {
@@ -20043,7 +20114,7 @@ class V10_FileManager {
         await this.addFile(file);
       }
     }
-    
+
     this.validateStep();
   }
 
@@ -20131,12 +20202,17 @@ class V10_FileManager {
 
   removeFile(fileId) {
     this.uploadedFiles.delete(fileId);
-    
+
     const fileCard = document.querySelector(`[data-file-id="${fileId}"]`);
     if (fileCard) {
       fileCard.remove();
     }
-    
+
+    // Hide max files warning if user is now below the limit
+    if (this.uploadedFiles.size < this.maxFiles) {
+      this.hideMaxFilesWarning();
+    }
+
     this.validateStep();
     this.saveData();
   }
@@ -20328,6 +20404,22 @@ class V10_FileManager {
     // You could implement a toast notification system here
     console.error(message);
     alert(message); // Simple fallback
+  }
+
+  showMaxFilesWarning() {
+    const warningBox = document.getElementById('v10-max-files-warning');
+    if (warningBox) {
+      warningBox.style.display = 'flex';
+      // Auto-scroll to warning
+      warningBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  hideMaxFilesWarning() {
+    const warningBox = document.getElementById('v10-max-files-warning');
+    if (warningBox) {
+      warningBox.style.display = 'none';
+    }
   }
 
   saveData() {
