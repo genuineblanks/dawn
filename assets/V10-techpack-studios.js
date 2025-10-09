@@ -17311,9 +17311,10 @@ class V10_ReviewManager {
   }
 
   async uploadFilesToGoogleScript(submissionData, requestId) {
-    // Upload files directly to Google Apps Script (bypasses Vercel's 4.5MB limit)
+    // Upload files DIRECTLY to Google Apps Script (bypasses Vercel's 4.5MB limit completely)
     // Called AFTER Vercel returns the Request ID
-    const uploadEndpoint = 'https://dawn-main-theme.vercel.app/api/upload-files-to-google';
+    // Google Apps Script has no size limits - can handle 50MB+ files
+    const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbyVQ5NQX7BaL8ZuE3CO0MBWkBvk73G32MLDJIGqDvLcpby4bzLJlxDcJoK7VJWhMvPaNg/exec';
 
     // Create complete payload with all submission data + files
     // Google Apps Script needs: records, costs, metadata, client_data, files
@@ -17329,14 +17330,17 @@ class V10_ReviewManager {
       files: submissionData.filesWithData || [] // Files with base64 data
     };
 
-    console.log('📤 Uploading files to Google Drive:', {
+    const totalSizeMB = (uploadPayload.files.reduce((sum, f) => sum + (f.data?.length || 0), 0) / 1024 / 1024).toFixed(2);
+
+    console.log('📤 Uploading files DIRECTLY to Google Drive (bypassing Vercel):', {
       requestId: requestId,
       filesCount: uploadPayload.files.length,
-      totalSize: uploadPayload.files.reduce((sum, f) => sum + (f.data?.length || 0), 0)
+      totalSize: totalSizeMB + ' MB',
+      directUpload: true
     });
 
     try {
-      const response = await fetch(uploadEndpoint, {
+      const response = await fetch(googleAppsScriptUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -17344,7 +17348,7 @@ class V10_ReviewManager {
         body: JSON.stringify(uploadPayload)
       });
 
-      console.log('📡 File upload response status:', response.status);
+      console.log('📡 Google Apps Script response status:', response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
