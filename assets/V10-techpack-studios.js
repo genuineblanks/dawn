@@ -15,7 +15,7 @@ const V10_CONFIG = {
   // Webhook URLs Configuration
   WEBHOOKS: {
     // Main submission webhook (handles file uploads, JSON creation, and triggers NEW Request ID system)
-    SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec'
+    SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyoc7AyQ9oOa6h0MKAHQrZGiwvCSR_4JB77aOb394YhDA9BztO5vumCugz0AkIuMXGilA/exec'
     // ✅ Removed REQUEST_ID webhook - now handled automatically by main Apps Script
   },
 
@@ -17187,7 +17187,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyoc7AyQ9oOa6h0MKAHQrZGiwvCSR_4JB77aOb394YhDA9BztO5vumCugz0AkIuMXGilA/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -17314,7 +17314,7 @@ class V10_ReviewManager {
     // Upload files DIRECTLY to Google Apps Script (bypasses Vercel's 4.5MB limit completely)
     // Called AFTER Vercel returns the Request ID
     // Google Apps Script has no size limits - can handle 50MB+ files
-    const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbyVQ5NQX7BaL8ZuE3CO0MBWkBvk73G32MLDJIGqDvLcpby4bzLJlxDcJoK7VJWhMvPaNg/exec';
+    const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbyoc7AyQ9oOa6h0MKAHQrZGiwvCSR_4JB77aOb394YhDA9BztO5vumCugz0AkIuMXGilA/exec';
 
     // Create complete payload with all submission data + files
     // Google Apps Script needs: records, costs, metadata, client_data, files
