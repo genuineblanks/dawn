@@ -17233,12 +17233,39 @@ class V10_ReviewManager {
     const secureProxyUrl = 'https://dawn-main-theme.vercel.app/api/submit-techpack';
 
     // Create clean payload for Vercel (metadata only, no file data)
-    // Files will be uploaded directly to Google Apps Script to avoid 413 payload errors
+    // IMPORTANT: Explicitly construct payload to avoid copying filesWithData
+    // Using spread operator would copy the 8MB+ base64 data causing 413 errors
     const vercelPayload = {
-      ...submissionData,
-      files: submissionData.files // Only file names/types/sizes, no base64 data
+      submission_id: submissionData.submission_id,
+      request_type: submissionData.request_type,
+      parent_request_id: submissionData.parent_request_id,
+      submitted_at: submissionData.submitted_at,
+      client_data: submissionData.client_data,
+      records: submissionData.records,
+      costs: submissionData.costs,
+      metadata: submissionData.metadata,
+      files: submissionData.files  // Only file metadata (names, types, sizes), NO base64 data
     };
-    delete vercelPayload.filesWithData; // Remove heavy base64 data (prevents 413 error)
+    // filesWithData is NEVER copied - stays in submissionData for later upload to Google
+
+    // Debug logging to verify payload is small
+    const payloadString = JSON.stringify(vercelPayload);
+    const payloadSizeKB = (payloadString.length / 1024).toFixed(2);
+    const payloadSizeMB = (payloadString.length / 1024 / 1024).toFixed(2);
+
+    console.log('📊 Payload size check:', {
+      sizeKB: payloadSizeKB + ' KB',
+      sizeMB: payloadSizeMB + ' MB',
+      hasFilesWithData: 'filesWithData' in vercelPayload,
+      filesMetadataCount: vercelPayload.files.length
+    });
+
+    if (payloadString.length > 4.5 * 1024 * 1024) {
+      console.error('❌ PAYLOAD TOO LARGE!', {
+        sizeMB: payloadSizeMB,
+        limit: '4.5 MB'
+      });
+    }
 
     console.log('⚡ FAST SUBMISSION: Sending to secure proxy:', {
       url: secureProxyUrl,
