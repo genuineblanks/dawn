@@ -7110,8 +7110,8 @@ class V10_GarmentUIManager {
 
     // Enable/disable fabric selection based on garment type OR if it's a tour demo garment
     if (garmentData.type || isTourActive || isDemoGarment) {
-      // If we have parent fabrics, don't clear lock state (will be re-applied)
-      const shouldPreserveLockState = allowedFabrics && allowedFabrics.length > 0;
+      // Only preserve lock state if exactly 1 fabric from parent (will be re-locked immediately)
+      const shouldPreserveLockState = allowedFabrics && allowedFabrics.length === 1;
       this.enableFabricSelection(garmentCard, !shouldPreserveLockState);
       // Populate fabric options - use demo fabrics for tour demo garments
       if (garmentData.type && !isDemoGarment) {
@@ -8018,6 +8018,18 @@ class V10_GarmentManager {
     return isComplete;
   }
 
+  /**
+   * Get parent request fabric constraints for a garment type
+   * @param {string} garmentType - The garment type to check
+   * @returns {Array|null} - Array of allowed fabric types or null
+   */
+  getParentFabrics(garmentType) {
+    if (!garmentType) return null;
+    const fabricMapping = window.v10ModalManager?.getParentGarmentFabricMapping?.();
+    if (!fabricMapping || !fabricMapping.has(garmentType)) return null;
+    return fabricMapping.get(garmentType);
+  }
+
   destroy() {
     this.removing = false;
     // Clean up would go here if needed
@@ -8206,7 +8218,8 @@ class V10_GarmentStudio {
         if (addedGarmentCard) {
           // Initialize UI workflow
           this.uiManager.initializeSelectionWorkflow(addedGarmentCard);
-          this.uiManager.updateSelectionDependencies(addedGarmentCard, garmentData);
+          const parentFabrics = this.getParentFabrics(garmentData.type);
+          this.uiManager.updateSelectionDependencies(addedGarmentCard, garmentData, parentFabrics);
           
           // Update compact selections after DOM insertion for existing garment data
           if (garmentData.sampleType) {
@@ -8365,41 +8378,36 @@ class V10_GarmentStudio {
 
       garmentData.type = newValue;
 
-      // Check for parent request fabric constraints
-      let parentFabrics = null;
-      const fabricMapping = window.v10ModalManager?.getParentGarmentFabricMapping?.();
-      if (fabricMapping && fabricMapping.has(newValue)) {
-        parentFabrics = fabricMapping.get(newValue);
-      }
-      this.uiManager.populateFabricOptions(garmentCard, newValue, parentFabrics);
-      
+      // Get parent request fabric constraints
+      const parentFabrics = this.getParentFabrics(newValue);
+
       // COMPLETE STATE CLEARING - Clear all dependent selections when garment type changes
       garmentData.fabricType = null; // Use null to completely clear
       garmentData.sampleType = null; // Use null to completely clear
       garmentData.sampleSubValue = null; // Use null to completely clear
-      
+
       // Reset sample reference for bulk orders
       const requestType = V10_State.requestType;
       if (requestType === 'bulk-order-request') {
         garmentData.sampleReference = null; // Use null to completely clear
         this.uiManager.resetSampleReferenceSelection(garmentCard);
       }
-      
+
       // Clear any Lab Dip assignments since fabric/sample are changing
       if (garmentData.assignedLabDipIds && garmentData.assignedLabDipIds.length > 0) {
         garmentData.assignedLabDipIds = [];
         console.log(`🎨 Cleared lab dip assignments from garment ${garmentId} due to garment type change`);
       }
-      
+
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
         this.updateCompactSelection('garment', newValue, garmentCard);
         this.uiManager.resetFabricSelection(garmentCard);
         this.uiManager.resetSampleSelection(garmentCard);
       }
-      
-      // Update selection dependencies through UI Manager
-      this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+
+      // Update selection dependencies through UI Manager (with parent fabric filter)
+      this.uiManager.updateSelectionDependencies(garmentCard, garmentData, parentFabrics);
       
       // Update sample type prices based on new garment selection
       V10_Utils.updateSampleTypePrices(garmentCard);
@@ -8447,7 +8455,8 @@ class V10_GarmentStudio {
       
       // Reset sample selection and update dependencies
       this.uiManager.resetSampleSelection(garmentCard);
-      this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+      const parentFabrics = this.getParentFabrics(garmentData.type);
+      this.uiManager.updateSelectionDependencies(garmentCard, garmentData, parentFabrics);
       
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
@@ -11608,7 +11617,8 @@ class V10_GarmentStudio {
         const garmentId = garmentCard.dataset?.garmentId;
         if (garmentId) {
           const garmentData = V10_State.garments.get(garmentId);
-          this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+          const parentFabrics = this.getParentFabrics(garmentData.type);
+          this.uiManager.updateSelectionDependencies(garmentCard, garmentData, parentFabrics);
         }
       }, 300);
       
