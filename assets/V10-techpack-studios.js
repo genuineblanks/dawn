@@ -4111,8 +4111,17 @@ class V10_QuantityStudioManager {
       div.classList.add('garment-quantity-card--complete');
     }
     
-    // Determine what to show: fabric or sample reference
-    const subtitle = garment.sampleReference || garment.fabricType || 'with-design-applied';
+    // Determine what to show: design name, sample reference, or fabric type
+    let subtitle = garment.fabricType || 'with-design-applied';
+
+    // For bulk orders, show sample reference or design name
+    if (garment.sampleReference) {
+      if (garment.sampleReference === 'with-design-applied' && garment.designName) {
+        subtitle = garment.designName;
+      } else {
+        subtitle = garment.sampleReference;
+      }
+    }
     
     // Unified professional dark layout with cohesive structure
     div.innerHTML = `
@@ -4230,13 +4239,13 @@ class V10_QuantityStudioManager {
     // Check if modal already exists
     let modal = document.getElementById('v10-color-picker-modal');
     if (!modal) {
-      // Create modal HTML
+      // Create modal HTML with enhanced 3-source selection
       modal = document.createElement('div');
       modal.id = 'v10-color-picker-modal';
       modal.className = 'v10-modal-overlay';
       modal.style.display = 'none';
       modal.innerHTML = `
-        <div class="v10-modal-content v10-color-picker-content" style="background: #1a1a1a !important; max-width: 500px;">
+        <div class="v10-modal-content v10-color-picker-content" style="background: #1a1a1a !important; max-width: 550px;">
           <div class="v10-modal-header" style="background: #252525; padding: 20px; border-bottom: 1px solid #404040;">
             <h2 style="color: #ffffff;">Add Colorway</h2>
             <button type="button" class="v10-modal-close" onclick="window.v10QuantityStudio.closeColorPicker()" style="background: #333333; padding: 8px; border-radius: 0;">
@@ -4246,66 +4255,110 @@ class V10_QuantityStudioManager {
               </svg>
             </button>
           </div>
-          
+
           <div class="v10-modal-body" style="padding: 24px; background: #1a1a1a;">
-            <!-- Required: Pantone/Lab-Dip Code -->
+            <!-- Colorway Source Selection -->
             <div style="margin-bottom: 24px;">
-              <h3 style="color: #10b981; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
-                Step 1: Enter Pantone/Lab-Dip Code (Required)
+              <h3 style="color: #10b981; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-bottom: 16px;">
+                Select Colorway Source
               </h3>
-              <div style="background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 0; padding: 16px;">
-                <input type="text" 
-                       id="v10-color-code" 
-                       placeholder="e.g., 19-4005 TPX, TCX-2134, or LAB-001"
-                       style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 0; color: #fff; font-size: 14px;"
-                       oninput="window.v10QuantityStudio.checkBothFieldsFilled()">
-                <p style="color: #888; font-size: 12px; margin-top: 8px;">
-                  Enter the official Pantone TPX/TCX code or your Lab-Dip reference code
-                </p>
+
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <label style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #0f0f0f; border: 2px solid #2a2a2a; border-radius: 0; cursor: pointer; transition: all 0.2s;">
+                  <input type="radio" name="colorway-source" value="import"
+                         onchange="window.v10QuantityStudio.switchColorwaySource('import')"
+                         style="width: 18px; height: 18px; cursor: pointer;">
+                  <div style="flex: 1;">
+                    <div style="color: #fff; font-weight: 600; font-size: 14px;">Import from Sample Request</div>
+                    <div style="color: #888; font-size: 12px;">Use Lab Dips from previous samples</div>
+                  </div>
+                </label>
+
+                <label style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #0f0f0f; border: 2px solid #2a2a2a; border-radius: 0; cursor: pointer; transition: all 0.2s;">
+                  <input type="radio" name="colorway-source" value="stock"
+                         onchange="window.v10QuantityStudio.switchColorwaySource('stock')"
+                         style="width: 18px; height: 18px; cursor: pointer;">
+                  <div style="flex: 1;">
+                    <div style="color: #fff; font-weight: 600; font-size: 14px;">Stock Fabric Color</div>
+                    <div style="color: #888; font-size: 12px;">Black, White, or Approximate colors</div>
+                  </div>
+                </label>
+
+                <label style="display: flex; align-items: center; gap: 12px; padding: 14px; background: #0f0f0f; border: 2px solid #2a2a2a; border-radius: 0; cursor: pointer; transition: all 0.2s;">
+                  <input type="radio" name="colorway-source" value="custom"
+                         onchange="window.v10QuantityStudio.switchColorwaySource('custom')"
+                         checked
+                         style="width: 18px; height: 18px; cursor: pointer;">
+                  <div style="flex: 1;">
+                    <div style="color: #fff; font-weight: 600; font-size: 14px;">Create New Custom Color</div>
+                    <div style="color: #888; font-size: 12px;">Enter Pantone code + visual color</div>
+                  </div>
+                </label>
               </div>
             </div>
-            
-            <!-- Required: Color Selection -->
-            <div>
-              <h3 style="color: #10b981; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
-                Step 2: Select Color (Required)
-              </h3>
-              
-              <div style="background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px;">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                  <input type="color" 
-                         id="v10-visual-color-picker" 
-                         value="#808080"
-                         style="width: 100px; height: 100px; border: 2px solid #404040; border-radius: 0; cursor: pointer; background: transparent;"
-                         oninput="window.v10QuantityStudio.updateVisualColorDisplay(this.value); window.v10QuantityStudio.checkBothFieldsFilled()">
-                  <div style="flex: 1;">
-                    <div id="v10-visual-color-display" 
-                         style="padding: 12px 20px; background: #808080; color: #fff; border-radius: 0; font-weight: 600; margin-bottom: 12px; text-align: center; font-size: 14px;">
-                      Click to select color
+
+            <!-- Import from Sample Content -->
+            <div id="import-source-content" style="display: none; margin-bottom: 24px;">
+              <div id="import-labdips-list" style="max-height: 300px; overflow-y: auto;">
+                <!-- Lab Dips will be populated here -->
+              </div>
+            </div>
+
+            <!-- Stock Color Content -->
+            <div id="stock-source-content" style="display: none; margin-bottom: 24px;">
+              <div id="stock-colors-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                <!-- Stock colors will be populated here -->
+              </div>
+            </div>
+
+            <!-- Custom Color Content (existing) -->
+            <div id="custom-source-content" style="display: block;">
+              <div style="margin-bottom: 20px;">
+                <h3 style="color: #10b981; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
+                  Pantone/Lab-Dip Code
+                </h3>
+                <div style="background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 0; padding: 16px;">
+                  <input type="text"
+                         id="v10-color-code"
+                         placeholder="e.g., 19-4005 TPX, TCX-2134, or LAB-001"
+                         style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 0; color: #fff; font-size: 14px;"
+                         oninput="window.v10QuantityStudio.validateColorwayInput()">
+                </div>
+              </div>
+
+              <div>
+                <h3 style="color: #10b981; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
+                  Visual Color
+                </h3>
+                <div style="background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px;">
+                  <div style="display: flex; align-items: center; gap: 20px;">
+                    <input type="color"
+                           id="v10-visual-color-picker"
+                           value="#808080"
+                           style="width: 100px; height: 100px; border: 2px solid #404040; border-radius: 0; cursor: pointer; background: transparent;"
+                           oninput="window.v10QuantityStudio.updateVisualColorDisplay(this.value); window.v10QuantityStudio.validateColorwayInput()">
+                    <div style="flex: 1;">
+                      <div id="v10-visual-color-display"
+                           style="padding: 12px 20px; background: #808080; color: #fff; border-radius: 0; font-weight: 600; text-align: center; font-size: 14px;">
+                        Click to select color
+                      </div>
                     </div>
-                    <p style="color: #888; font-size: 13px;">
-                      Visual reference for digital display only
-                    </p>
                   </div>
                 </div>
               </div>
-              
-              <p style="color: #666; font-size: 11px; margin-top: 16px; padding: 12px; background: #0f0f0f; border-radius: 0; border-left: 3px solid #f59e0b;">
-                <strong>Note:</strong> Both Pantone code and color selection are required. The visual color helps with digital representation while the Pantone code ensures accurate production matching.
-              </p>
             </div>
-            
+
             <!-- Action Buttons -->
             <div style="display: flex; gap: 12px; margin-top: 24px;">
-              <button type="button" 
-                      class="v10-btn v10-btn--secondary" 
+              <button type="button"
+                      class="v10-btn v10-btn--secondary"
                       onclick="window.v10QuantityStudio.closeColorPicker()"
                       style="flex: 1; padding: 14px; background: #2a2a2a; color: #9ca3af; border: 1px solid #404040; border-radius: 0; font-weight: 700;">
                 Cancel
               </button>
-              <button type="button" 
+              <button type="button"
                       id="apply-colorway-btn"
-                      class="v10-btn v10-btn--primary" 
+                      class="v10-btn v10-btn--primary"
                       onclick="window.v10QuantityStudio.applyColorway()"
                       disabled
                       style="flex: 1; padding: 14px; background: #6b7280; color: #ffffff; border: none; border-radius: 0; font-weight: 700; cursor: not-allowed;">
@@ -4319,28 +4372,77 @@ class V10_QuantityStudioManager {
     }
   }
   
-  checkBothFieldsFilled() {
-    const codeInput = document.getElementById('v10-color-code');
-    const colorPicker = document.getElementById('v10-visual-color-picker');
+  switchColorwaySource(source) {
+    // Hide all content sections
+    const importContent = document.getElementById('import-source-content');
+    const stockContent = document.getElementById('stock-source-content');
+    const customContent = document.getElementById('custom-source-content');
+
+    if (importContent) importContent.style.display = 'none';
+    if (stockContent) stockContent.style.display = 'none';
+    if (customContent) customContent.style.display = 'none';
+
+    // Show selected content and populate
+    if (source === 'import') {
+      if (importContent) {
+        importContent.style.display = 'block';
+        this.populateLabDipsList();
+      }
+    } else if (source === 'stock') {
+      if (stockContent) {
+        stockContent.style.display = 'block';
+        this.populateStockColors();
+      }
+    } else if (source === 'custom') {
+      if (customContent) customContent.style.display = 'block';
+    }
+
+    // Store current source
+    this.currentColorwaySource = source;
+
+    // Validate input
+    this.validateColorwayInput();
+  }
+
+  validateColorwayInput() {
     const applyBtn = document.getElementById('apply-colorway-btn');
-    
-    // Check if both fields are filled
-    const hasCode = codeInput && codeInput.value.trim().length > 0;
-    const hasColor = colorPicker && colorPicker.value !== '#808080';
-    
+    const source = this.currentColorwaySource || 'custom';
+    let isValid = false;
+
+    if (source === 'import') {
+      // Check if a lab dip is selected
+      const selectedLabDip = document.querySelector('input[name="import-labdip"]:checked');
+      isValid = !!selectedLabDip;
+    } else if (source === 'stock') {
+      // Check if a stock color is selected
+      const selectedStock = document.querySelector('input[name="stock-color"]:checked');
+      isValid = !!selectedStock;
+    } else if (source === 'custom') {
+      // Check if both code and color are filled
+      const codeInput = document.getElementById('v10-color-code');
+      const colorPicker = document.getElementById('v10-visual-color-picker');
+      const hasCode = codeInput && codeInput.value.trim().length > 0;
+      const hasColor = colorPicker && colorPicker.value !== '#808080';
+      isValid = hasCode && hasColor;
+    }
+
+    // Enable/disable apply button
     if (applyBtn) {
-      if (hasCode && hasColor) {
-        // Enable button when both fields are filled
+      if (isValid) {
         applyBtn.disabled = false;
         applyBtn.style.background = '#10b981';
         applyBtn.style.cursor = 'pointer';
       } else {
-        // Disable button if either field is missing
         applyBtn.disabled = true;
         applyBtn.style.background = '#6b7280';
         applyBtn.style.cursor = 'not-allowed';
       }
     }
+  }
+
+  checkBothFieldsFilled() {
+    // Backward compatibility - redirect to new validation
+    this.validateColorwayInput();
   }
   
   updateVisualColorDisplay(hex) {
@@ -8511,21 +8613,60 @@ class V10_GarmentStudio {
     if (e.target.name.includes('sampleReference')) {
       const previousValue = garmentData.sampleReference;
       const newValue = e.target.value;
-      
+
       garmentData.sampleReference = newValue;
-      
+
+      // Show/hide design name input based on selection
+      const designNameSection = garmentCard.querySelector('#design-name-section');
+      const designNameInput = garmentCard.querySelector('#design-name-input');
+
+      if (newValue === 'with-design-applied') {
+        // Show design name input
+        if (designNameSection) {
+          designNameSection.style.display = 'block';
+        }
+        // Focus the input for better UX
+        if (designNameInput) {
+          setTimeout(() => designNameInput.focus(), 100);
+        }
+      } else {
+        // Hide design name input and clear value
+        if (designNameSection) {
+          designNameSection.style.display = 'none';
+        }
+        if (designNameInput) {
+          designNameInput.value = '';
+        }
+        // Clear design name from garment data
+        garmentData.designName = null;
+      }
+
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
         this.updateCompactSelection('sampleReference', newValue, garmentCard);
       }
-      
+
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
-      
+
       console.log(`🔄 Sample reference ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
-      
+
       // Update garment status and summary display
       this.updateGarmentStatus(garmentId);
+    }
+
+    // Handle design name input (for WITH DESIGN APPLIED option)
+    if (e.target.id === 'design-name-input') {
+      const newDesignName = e.target.value.trim();
+      garmentData.designName = newDesignName || null;
+
+      // Mark finalize button as changed
+      this.markEditButtonAsChanged(garmentCard);
+
+      // Update garment summary to show design name
+      this.updateGarmentSummary(garmentCard, garmentData);
+
+      console.log(`✏️ Design name updated: ${newDesignName || '(cleared)'}`);
     }
 
 
@@ -8993,9 +9134,15 @@ class V10_GarmentStudio {
       const requestType = V10_State.requestType;
       
       if (requestType === 'bulk-order-request') {
-        // For bulk orders: show sample reference
+        // For bulk orders: show sample reference (with design name if applicable)
         if (garmentData.sampleReference) {
-          const displayName = this.getSampleReferenceDisplayName(garmentData.sampleReference);
+          let displayName = this.getSampleReferenceDisplayName(garmentData.sampleReference);
+
+          // If WITH DESIGN APPLIED and design name exists, append it
+          if (garmentData.sampleReference === 'with-design-applied' && garmentData.designName) {
+            displayName = `${garmentData.designName}`;
+          }
+
           console.log('📤 [GARMENT_DEBUG] Setting fabric span text to sample reference:', displayName);
           fabricSpan.textContent = displayName;
           console.log('[GARMENT_DEBUG] Fabric span text after update:', fabricSpan.textContent);
