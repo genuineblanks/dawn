@@ -8218,7 +8218,7 @@ class V10_GarmentStudio {
         if (addedGarmentCard) {
           // Initialize UI workflow
           this.uiManager.initializeSelectionWorkflow(addedGarmentCard);
-          const parentFabrics = this.getParentFabrics(garmentData.type);
+          const parentFabrics = this.garmentManager.getParentFabrics(garmentData.type);
           this.uiManager.updateSelectionDependencies(addedGarmentCard, garmentData, parentFabrics);
           
           // Update compact selections after DOM insertion for existing garment data
@@ -8379,7 +8379,7 @@ class V10_GarmentStudio {
       garmentData.type = newValue;
 
       // Get parent request fabric constraints
-      const parentFabrics = this.getParentFabrics(newValue);
+      const parentFabrics = this.garmentManager.getParentFabrics(newValue);
 
       // COMPLETE STATE CLEARING - Clear all dependent selections when garment type changes
       garmentData.fabricType = null; // Use null to completely clear
@@ -8455,7 +8455,7 @@ class V10_GarmentStudio {
       
       // Reset sample selection and update dependencies
       this.uiManager.resetSampleSelection(garmentCard);
-      const parentFabrics = this.getParentFabrics(garmentData.type);
+      const parentFabrics = this.garmentManager.getParentFabrics(garmentData.type);
       this.uiManager.updateSelectionDependencies(garmentCard, garmentData, parentFabrics);
       
       // Mark finalize button as changed (even if same value, user made an edit action)
@@ -11617,7 +11617,7 @@ class V10_GarmentStudio {
         const garmentId = garmentCard.dataset?.garmentId;
         if (garmentId) {
           const garmentData = V10_State.garments.get(garmentId);
-          const parentFabrics = this.getParentFabrics(garmentData.type);
+          const parentFabrics = this.garmentManager.getParentFabrics(garmentData.type);
           this.uiManager.updateSelectionDependencies(garmentCard, garmentData, parentFabrics);
         }
       }, 300);
