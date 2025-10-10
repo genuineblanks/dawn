@@ -4460,44 +4460,234 @@ class V10_QuantityStudioManager {
     }
     this.selectedVisualColor = hex;
   }
-  
-  
+
+  populateLabDipsList() {
+    const container = document.getElementById('import-labdips-list');
+    if (!container) return;
+
+    // Get all Lab Dips from V10_State
+    const labDips = V10_State.labDips;
+
+    if (!labDips || labDips.size === 0) {
+      container.innerHTML = `
+        <div style="padding: 20px; text-align: center; color: #888; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 0;">
+          <p>No Lab Dips found from sample requests.</p>
+          <p style="font-size: 12px; margin-top: 8px;">Create colorways in Color Studio first, or use Custom Color option.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Get current garment to check assignments
+    const currentGarment = this.garments.get(this.currentGarmentId);
+    const assignedLabDipIds = currentGarment?.assignedLabDips || new Set();
+
+    // Build Lab Dips list
+    let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+
+    // First show assigned Lab Dips
+    const assignedDips = [];
+    const unassignedDips = [];
+
+    labDips.forEach((labDip, labDipId) => {
+      if (assignedLabDipIds.has(labDipId) || labDip.isFabricSwatch === false) {
+        assignedDips.push({ id: labDipId, data: labDip });
+      } else if (labDip.isFabricSwatch === true) {
+        unassignedDips.push({ id: labDipId, data: labDip });
+      }
+    });
+
+    // Assigned Lab Dips section
+    if (assignedDips.length > 0) {
+      html += '<div style="margin-bottom: 8px;"><h4 style="color: #10b981; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Assigned to Garment</h4>';
+
+      assignedDips.forEach(({ id, data }) => {
+        html += this.createLabDipRadioCard(id, data, 'Assigned');
+      });
+
+      html += '</div>';
+    }
+
+    // Fabric Swatches section
+    if (unassignedDips.length > 0) {
+      html += '<div><h4 style="color: #888; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Fabric Swatches</h4>';
+
+      unassignedDips.forEach(({ id, data }) => {
+        html += this.createLabDipRadioCard(id, data, 'Fabric Swatch');
+      });
+
+      html += '</div>';
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    // Add event listeners for radio buttons
+    container.querySelectorAll('input[name="import-labdip"]').forEach(input => {
+      input.addEventListener('change', () => this.validateColorwayInput());
+    });
+  }
+
+  createLabDipRadioCard(labDipId, labDip, badge) {
+    const isCustomText = labDip.isCustomCode && labDip.hex === '#8B5CF6';
+    const colorStyle = isCustomText
+      ? 'background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b);'
+      : `background-color: ${labDip.hex};`;
+
+    return `
+      <label style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #0f0f0f; border: 2px solid #2a2a2a; border-radius: 0; cursor: pointer; transition: all 0.2s;"
+             onmouseover="this.style.borderColor='#10b981'" onmouseout="this.style.borderColor='#2a2a2a'">
+        <input type="radio" name="import-labdip" value="${labDipId}" data-labdip-id="${labDipId}"
+               style="width: 18px; height: 18px; cursor: pointer;">
+        <div style="width: 32px; height: 32px; ${colorStyle} border: 2px solid rgba(255,255,255,0.2); border-radius: 0; flex-shrink: 0;"></div>
+        <div style="flex: 1;">
+          <div style="color: #fff; font-weight: 600; font-size: 13px;">${labDip.pantone}</div>
+          <div style="color: #888; font-size: 11px;">${badge}</div>
+        </div>
+      </label>
+    `;
+  }
+
+  populateStockColors() {
+    const container = document.getElementById('stock-colors-grid');
+    if (!container) return;
+
+    const stockColors = [
+      { name: 'Black', hex: '#000000' },
+      { name: 'White', hex: '#FFFFFF' },
+      { name: 'Navy', hex: '#001f3f' },
+      { name: 'Gray', hex: '#808080' },
+      { name: 'Charcoal', hex: '#36454F' },
+      { name: 'Beige', hex: '#F5F5DC' }
+    ];
+
+    let html = '';
+    stockColors.forEach((color, index) => {
+      const textColor = color.name === 'White' || color.name === 'Beige' ? '#000' : '#fff';
+      html += `
+        <label style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; background: #0f0f0f; border: 2px solid #2a2a2a; border-radius: 0; cursor: pointer; transition: all 0.2s;"
+               onmouseover="this.style.borderColor='#10b981'" onmouseout="this.style.borderColor='#2a2a2a'">
+          <input type="radio" name="stock-color" value="${color.name}" data-color-hex="${color.hex}"
+                 style="width: 18px; height: 18px; cursor: pointer;">
+          <div style="width: 60px; height: 60px; background-color: ${color.hex}; border: 2px solid rgba(255,255,255,0.2); border-radius: 0;"></div>
+          <div style="color: #fff; font-weight: 600; font-size: 13px; text-align: center;">${color.name}</div>
+        </label>
+      `;
+    });
+
+    container.innerHTML = html;
+
+    // Add event listeners
+    container.querySelectorAll('input[name="stock-color"]').forEach(input => {
+      input.addEventListener('change', () => this.validateColorwayInput());
+    });
+  }
+
+
   applyColorway() {
+    if (!this.currentGarmentId) {
+      console.error('Cannot apply colorway: no garment selected');
+      return;
+    }
+
+    const source = this.currentColorwaySource || 'custom';
+    let colorwayData = {};
+
+    if (source === 'import') {
+      // Import from Lab Dip
+      const selectedInput = document.querySelector('input[name="import-labdip"]:checked');
+      if (!selectedInput) {
+        alert('Please select a Lab Dip');
+        return;
+      }
+
+      const labDipId = selectedInput.value;
+      const labDip = V10_State.labDips.get(labDipId);
+
+      if (!labDip) {
+        console.error('Lab Dip not found:', labDipId);
+        return;
+      }
+
+      colorwayData = {
+        name: labDip.pantone,
+        color: labDip.hex,
+        pantone: labDip.pantone,
+        source: 'labdip',
+        labDipId: labDipId
+      };
+
+    } else if (source === 'stock') {
+      // Stock fabric color
+      const selectedInput = document.querySelector('input[name="stock-color"]:checked');
+      if (!selectedInput) {
+        alert('Please select a stock color');
+        return;
+      }
+
+      const colorName = selectedInput.value;
+      const colorHex = selectedInput.dataset.colorHex;
+
+      colorwayData = {
+        name: colorName,
+        color: colorHex,
+        pantone: null, // Stock colors don't have pantone
+        source: 'stock'
+      };
+
+    } else if (source === 'custom') {
+      // Custom color
+      const codeInput = document.getElementById('v10-color-code');
+      const colorPicker = document.getElementById('v10-visual-color-picker');
+
+      if (!codeInput?.value.trim() || !colorPicker?.value || colorPicker.value === '#808080') {
+        alert('Please enter both Pantone code and select a color');
+        return;
+      }
+
+      const code = codeInput.value.trim().toUpperCase();
+      const color = colorPicker.value;
+
+      colorwayData = {
+        name: code,
+        color: color,
+        pantone: code,
+        source: 'custom'
+      };
+    }
+
+    // Add the colorway
+    this.addColorway(this.currentGarmentId, colorwayData);
+
+    // Reset modal
+    this.resetColorPickerModal();
+    this.closeColorPicker();
+  }
+
+  resetColorPickerModal() {
+    // Reset custom inputs
     const codeInput = document.getElementById('v10-color-code');
     const colorPicker = document.getElementById('v10-visual-color-picker');
-    
-    // Validate both fields are filled
-    if (!this.currentGarmentId || !codeInput?.value.trim() || !colorPicker?.value) {
-      console.error('Cannot apply colorway: missing required fields');
-      return;
-    }
-    
-    const code = codeInput.value.trim().toUpperCase();
-    const color = colorPicker.value;
-    
-    // Make sure we're not using default grey
-    if (color === '#808080') {
-      alert('Please select a color before adding the colorway');
-      return;
-    }
-    
-    this.addColorway(this.currentGarmentId, {
-      name: code,
-      color: color,
-      pantone: code
-    });
-    
-    // Reset modal inputs
-    codeInput.value = '';
-    colorPicker.value = '#808080';
     const display = document.getElementById('v10-visual-color-display');
+
+    if (codeInput) codeInput.value = '';
+    if (colorPicker) colorPicker.value = '#808080';
     if (display) {
       display.textContent = 'Click to select color';
       display.style.background = '#808080';
       display.style.color = '#fff';
     }
-    
-    this.closeColorPicker();
+
+    // Uncheck all radio buttons
+    document.querySelectorAll('input[name="import-labdip"]').forEach(input => input.checked = false);
+    document.querySelectorAll('input[name="stock-color"]').forEach(input => input.checked = false);
+
+    // Reset to custom source
+    const customRadio = document.querySelector('input[name="colorway-source"][value="custom"]');
+    if (customRadio) {
+      customRadio.checked = true;
+      this.switchColorwaySource('custom');
+    }
   }
   
   
