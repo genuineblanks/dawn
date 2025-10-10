@@ -7156,16 +7156,31 @@ class V10_GarmentUIManager {
   enableFabricSelection(garmentCard) {
     const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
     const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
-    
+    const fabricDisplay = garmentCard.querySelector('#fabric-display');
+    const fabricSection = garmentCard.querySelector('#fabric-collapsed')?.closest('.compact-selection-section');
+
+    // Clear any locked state from previous selections
     if (fabricCollapsed) {
       fabricCollapsed.style.opacity = '1';
       fabricCollapsed.style.pointerEvents = 'auto';
+      fabricCollapsed.style.cursor = 'pointer';
+      delete fabricCollapsed.dataset.locked; // Remove locked attribute
     }
+
+    if (fabricDisplay) {
+      fabricDisplay.style.pointerEvents = 'auto';
+      fabricDisplay.style.cursor = 'pointer';
+      // Remove parent request badge if it exists
+      const badge = fabricDisplay.querySelector('.parent-request-badge');
+      if (badge) badge.remove();
+    }
+
     if (fabricPlaceholder) {
+      fabricPlaceholder.style.pointerEvents = 'auto';
       fabricPlaceholder.style.cursor = 'pointer';
       const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
       const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
-      
+
       if (placeholderText) {
         placeholderText.textContent = 'Select fabric type';
       }
@@ -7173,6 +7188,12 @@ class V10_GarmentUIManager {
         // Use SVG icon for fabric placeholder
         placeholderIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M12 14v8"/><path d="M8 14l-2 2-2-2"/><path d="M16 14l2 2 2-2"/></svg>';
       }
+    }
+
+    // Remove locked class from section
+    if (fabricSection) {
+      fabricSection.classList.remove('locked-from-parent');
+      fabricSection.style.opacity = '';
     }
   }
   
