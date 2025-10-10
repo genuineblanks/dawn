@@ -17330,6 +17330,7 @@ class V10_ReviewManager {
       request_id: requestId,
       submission_id: requestId,
       request_type: submissionData.request_type,
+      parent_request_id: submissionData.parent_request_id, // Parent ID for sample/bulk requests
       submitted_at: submissionData.submitted_at,
       client_data: submissionData.client_data,
       records: submissionData.records, // Garments, lab dips, etc.
@@ -17463,8 +17464,11 @@ class V10_ReviewManager {
       const currentPercent = startPercent + (totalIncrease * progress);
 
       if (currentPercent < endPercent) {
+        // Normal progress - use original message
         this.updateLoadingProgress(stepId, message, Math.floor(currentPercent));
       } else {
+        // Reached the end and stopped - change message
+        this.updateLoadingProgress(stepId, 'Finalizing your submission...', Math.floor(endPercent));
         clearInterval(interval);
       }
     }, 100); // Update every 100ms for smooth animation
