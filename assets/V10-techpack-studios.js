@@ -21518,12 +21518,48 @@ class V10_ModalManager {
     // First check modalManager instance
     const parentRequest = this.selectedParentRequest || V10_State.parentRequestData;
 
-    if (!parentRequest?.data?.records?.garments) {
-      console.log('ℹ️ No parent request data - showing all garment types');
-      return null;  // No filter - show all types
+    console.log('🔍 DEBUG: Full parent request object:', parentRequest);
+    console.log('🔍 DEBUG: parentRequest.data:', parentRequest?.data);
+
+    if (!parentRequest) {
+      console.log('ℹ️ No parent request - showing all garment types');
+      return null;
     }
 
-    const garmentTypes = parentRequest.data.records.garments
+    // Try different possible data structures
+    let garments = null;
+
+    // Option 1: data.records.garments
+    if (parentRequest.data?.records?.garments) {
+      garments = parentRequest.data.records.garments;
+      console.log('✅ Found garments at: data.records.garments');
+    }
+    // Option 2: data.garments (direct)
+    else if (parentRequest.data?.garments) {
+      garments = parentRequest.data.garments;
+      console.log('✅ Found garments at: data.garments');
+    }
+    // Option 3: Check if data itself is a string that needs parsing
+    else if (typeof parentRequest.data === 'string') {
+      try {
+        const parsed = JSON.parse(parentRequest.data);
+        garments = parsed.records?.garments || parsed.garments;
+        console.log('✅ Found garments after parsing string data');
+      } catch (e) {
+        console.error('❌ Failed to parse data string:', e);
+      }
+    }
+
+    if (!garments || !Array.isArray(garments)) {
+      console.log('ℹ️ No garments array found - showing all garment types');
+      console.log('🔍 DEBUG: Available keys in parentRequest:', Object.keys(parentRequest));
+      console.log('🔍 DEBUG: Available keys in parentRequest.data:', parentRequest.data ? Object.keys(parentRequest.data) : 'N/A');
+      return null;
+    }
+
+    console.log('🔍 DEBUG: Garments array:', garments);
+
+    const garmentTypes = garments
       .map(g => g.type)
       .filter(Boolean);  // Remove null/undefined
 
