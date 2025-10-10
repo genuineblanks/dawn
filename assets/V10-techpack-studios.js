@@ -7110,7 +7110,9 @@ class V10_GarmentUIManager {
 
     // Enable/disable fabric selection based on garment type OR if it's a tour demo garment
     if (garmentData.type || isTourActive || isDemoGarment) {
-      this.enableFabricSelection(garmentCard);
+      // If we have parent fabrics, don't clear lock state (will be re-applied)
+      const shouldPreserveLockState = allowedFabrics && allowedFabrics.length > 0;
+      this.enableFabricSelection(garmentCard, !shouldPreserveLockState);
       // Populate fabric options - use demo fabrics for tour demo garments
       if (garmentData.type && !isDemoGarment) {
         this.populateFabricOptions(garmentCard, garmentData.type, allowedFabrics);
@@ -7152,32 +7154,44 @@ class V10_GarmentUIManager {
   
   /**
    * Enable fabric selection
+   * @param {HTMLElement} garmentCard - The garment card element
+   * @param {boolean} clearLockState - Whether to clear lock state (default: true)
    */
-  enableFabricSelection(garmentCard) {
+  enableFabricSelection(garmentCard, clearLockState = true) {
     const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
     const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
     const fabricDisplay = garmentCard.querySelector('#fabric-display');
     const fabricSection = garmentCard.querySelector('#fabric-collapsed')?.closest('.compact-selection-section');
 
-    // Clear any locked state from previous selections
     if (fabricCollapsed) {
       fabricCollapsed.style.opacity = '1';
       fabricCollapsed.style.pointerEvents = 'auto';
       fabricCollapsed.style.cursor = 'pointer';
-      delete fabricCollapsed.dataset.locked; // Remove locked attribute
+
+      // Only clear lock state if explicitly requested
+      if (clearLockState) {
+        delete fabricCollapsed.dataset.locked;
+      }
     }
 
     if (fabricDisplay) {
-      fabricDisplay.style.pointerEvents = 'auto';
-      fabricDisplay.style.cursor = 'pointer';
-      // Remove parent request badge if it exists
-      const badge = fabricDisplay.querySelector('.parent-request-badge');
-      if (badge) badge.remove();
+      // Only clear lock state if explicitly requested
+      if (clearLockState) {
+        fabricDisplay.style.pointerEvents = 'auto';
+        fabricDisplay.style.cursor = 'pointer';
+        // Remove parent request badge if it exists
+        const badge = fabricDisplay.querySelector('.parent-request-badge');
+        if (badge) badge.remove();
+      }
     }
 
     if (fabricPlaceholder) {
-      fabricPlaceholder.style.pointerEvents = 'auto';
-      fabricPlaceholder.style.cursor = 'pointer';
+      // Only clear lock state if explicitly requested
+      if (clearLockState) {
+        fabricPlaceholder.style.pointerEvents = 'auto';
+        fabricPlaceholder.style.cursor = 'pointer';
+      }
+
       const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
       const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
 
@@ -7190,8 +7204,8 @@ class V10_GarmentUIManager {
       }
     }
 
-    // Remove locked class from section
-    if (fabricSection) {
+    // Only remove locked class if explicitly requested
+    if (clearLockState && fabricSection) {
       fabricSection.classList.remove('locked-from-parent');
       fabricSection.style.opacity = '';
     }
