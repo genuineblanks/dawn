@@ -17284,7 +17284,6 @@ class V10_ReviewManager {
     // 🔒 SECURITY: Generate HMAC signature for request authentication
     // Using CryptoJS (loaded via CDN in liquid template)
     const HMAC_SECRET = window.TECHPACK_HMAC_SECRET || 'default-secret-change-in-production';
-    const payloadString = JSON.stringify(vercelPayload);
     const signature = CryptoJS.HmacSHA256(payloadString, HMAC_SECRET).toString(CryptoJS.enc.Hex);
     console.log('🔐 Request signed with HMAC-SHA256');
 
