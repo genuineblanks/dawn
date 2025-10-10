@@ -6768,8 +6768,9 @@ class V10_GarmentUIManager {
 
     const typesList = allowedTypes.join(', ');
     notice.innerHTML = `
-      <svg class="filter-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M2 3h12M4 6h8M6 9h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <svg class="filter-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01"/>
       </svg>
       <span class="filter-text">
         Showing <strong>${visibleCount}</strong> garment type${visibleCount !== 1 ? 's' : ''} from your previous request: ${typesList}
@@ -21558,9 +21559,15 @@ class V10_ModalManager {
     }
 
     console.log('🔍 DEBUG: Garments array:', garments);
+    console.log('🔍 DEBUG: First garment object:', garments[0]);
+    console.log('🔍 DEBUG: First garment keys:', Object.keys(garments[0]));
 
     const garmentTypes = garments
-      .map(g => g.type)
+      .map((g, index) => {
+        console.log(`🔍 DEBUG: Garment ${index + 1} type field:`, g.type);
+        console.log(`🔍 DEBUG: Garment ${index + 1} full object:`, g);
+        return g.type;
+      })
       .filter(Boolean);  // Remove null/undefined
 
     const uniqueTypes = [...new Set(garmentTypes)];  // Remove duplicates
