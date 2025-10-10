@@ -6766,14 +6766,13 @@ class V10_GarmentUIManager {
       garmentTypeGrid.parentElement?.insertBefore(notice, garmentTypeGrid);
     }
 
-    const typesList = allowedTypes.join(', ');
     notice.innerHTML = `
       <svg class="filter-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"/>
         <path d="M12 16v-4M12 8h.01"/>
       </svg>
       <span class="filter-text">
-        Showing <strong>${visibleCount}</strong> garment type${visibleCount !== 1 ? 's' : ''} from your previous request: ${typesList}
+        Showing <strong>${visibleCount}</strong> garment type${visibleCount !== 1 ? 's' : ''} from your previous request
       </span>
     `;
   }
@@ -7163,7 +7162,7 @@ class V10_GarmentUIManager {
   disableFabricSelection(garmentCard) {
     const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
     const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
-    
+
     if (fabricCollapsed) {
       fabricCollapsed.style.opacity = '0.5';
       fabricCollapsed.style.pointerEvents = 'none';
@@ -7172,7 +7171,7 @@ class V10_GarmentUIManager {
       fabricPlaceholder.style.cursor = 'not-allowed';
       const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
       const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
-      
+
       if (placeholderText) {
         placeholderText.textContent = 'Select garment type first';
       }
@@ -7182,7 +7181,112 @@ class V10_GarmentUIManager {
       }
     }
   }
-  
+
+  /**
+   * Lock fabric selection with badge indicating it's from parent request
+   */
+  lockFabricSelection(garmentCard, fabricType) {
+    const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
+    const fabricDisplay = garmentCard.querySelector('#fabric-display');
+    const fabricSection = garmentCard.querySelector('#fabric-collapsed')?.closest('.compact-selection-section');
+
+    // Disable clicking on fabric selection
+    if (fabricCollapsed) {
+      fabricCollapsed.style.pointerEvents = 'none';
+      fabricCollapsed.style.cursor = 'not-allowed';
+    }
+
+    // Add locked badge to fabric display
+    if (fabricDisplay) {
+      let badge = fabricDisplay.querySelector('.parent-request-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'parent-request-badge';
+        badge.innerHTML = `
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>From previous request</span>
+        `;
+        fabricDisplay.appendChild(badge);
+      }
+    }
+
+    // Add locked class to section for additional styling
+    if (fabricSection) {
+      fabricSection.classList.add('locked-from-parent');
+    }
+
+    console.log(`🔒 Fabric selection locked: ${fabricType}`);
+  }
+
+  /**
+   * Filter fabric options to only show fabrics from parent request
+   * Used when parent has multiple fabrics for the same garment type
+   */
+  filterFabricOptions(garmentCard, allowedFabrics) {
+    const fabricGrid = garmentCard.querySelector('#fabric-type-grid');
+    if (!fabricGrid) {
+      console.warn('⚠️ Fabric grid not found for filtering');
+      return;
+    }
+
+    console.log('🔍 Filtering fabric options. Allowed:', allowedFabrics);
+
+    // Normalize allowed fabrics for comparison (case-insensitive)
+    const normalizedAllowed = allowedFabrics.map(f => f.toLowerCase().trim());
+
+    // Filter fabric radio cards
+    let hiddenCount = 0;
+    let visibleCount = 0;
+
+    fabricGrid.querySelectorAll('.compact-radio-card').forEach(card => {
+      const input = card.querySelector('input[type="radio"]');
+      if (!input) return;
+
+      const fabricType = input.value;
+      const isAllowed = normalizedAllowed.includes(fabricType.toLowerCase().trim());
+
+      if (!isAllowed) {
+        card.style.display = 'none';
+        hiddenCount++;
+      } else {
+        card.style.display = '';
+        visibleCount++;
+      }
+    });
+
+    // Add filter notice above the grid
+    this.addFabricFilterNotice(fabricGrid, visibleCount, allowedFabrics);
+
+    console.log(`✅ Filtered fabric types: ${visibleCount} visible, ${hiddenCount} hidden`);
+  }
+
+  /**
+   * Add a notice above fabric grid showing filter is active
+   */
+  addFabricFilterNotice(fabricGrid, visibleCount, allowedFabrics) {
+    // Check if notice already exists
+    let notice = fabricGrid.parentElement?.querySelector('.garment-filter-notice');
+
+    if (!notice) {
+      notice = document.createElement('div');
+      notice.className = 'garment-filter-notice';
+      fabricGrid.parentElement?.insertBefore(notice, fabricGrid);
+    }
+
+    notice.innerHTML = `
+      <svg class="filter-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      <span class="filter-text">
+        Showing <strong>${visibleCount}</strong> fabric type${visibleCount !== 1 ? 's' : ''} from your previous request
+      </span>
+    `;
+  }
+
   /**
    * Enable sample selection based on fabric type
    */
@@ -11341,6 +11445,46 @@ class V10_GarmentStudio {
         if (garmentId) {
           const garmentData = V10_State.garments.get(garmentId);
           this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+
+          // Check if this garment type has fabric(s) from parent request
+          const fabricMapping = window.v10ModalManager?.getParentGarmentFabricMapping?.();
+          if (fabricMapping && fabricMapping.has(value)) {
+            const parentFabrics = fabricMapping.get(value); // Array of fabrics
+
+            if (parentFabrics.length === 1) {
+              // Single fabric: auto-fill and lock
+              const parentFabricType = parentFabrics[0];
+              console.log(`🎯 Auto-filling single fabric from parent: ${value} → ${parentFabricType}`);
+
+              // Find and select the fabric radio button
+              const fabricInput = garmentCard.querySelector(`input[name*="fabricType"][value="${parentFabricType}"]`);
+              if (fabricInput) {
+                fabricInput.checked = true;
+
+                // Update garment data
+                garmentData.fabricType = parentFabricType;
+
+                // Update UI to show selected fabric
+                this.updateCompactSelection('fabric', parentFabricType, garmentCard);
+
+                // Mark fabric as locked from parent
+                setTimeout(() => {
+                  this.uiManager.lockFabricSelection(garmentCard, parentFabricType);
+                }, 400);
+
+                console.log(`✅ Fabric auto-filled and locked: ${parentFabricType}`);
+              } else {
+                console.warn(`⚠️ Fabric type "${parentFabricType}" not found in options for ${value}`);
+              }
+            } else if (parentFabrics.length > 1) {
+              // Multiple fabrics: filter options, don't lock
+              console.log(`🎯 Filtering ${parentFabrics.length} fabrics from parent: ${parentFabrics.join(', ')}`);
+
+              setTimeout(() => {
+                this.uiManager.filterFabricOptions(garmentCard, parentFabrics);
+              }, 400);
+            }
+          }
         }
       }, 300);
       
@@ -21519,11 +21663,7 @@ class V10_ModalManager {
     // First check modalManager instance
     const parentRequest = this.selectedParentRequest || V10_State.parentRequestData;
 
-    console.log('🔍 DEBUG: Full parent request object:', parentRequest);
-    console.log('🔍 DEBUG: parentRequest.data:', parentRequest?.data);
-
     if (!parentRequest) {
-      console.log('ℹ️ No parent request - showing all garment types');
       return null;
     }
 
@@ -21533,47 +21673,91 @@ class V10_ModalManager {
     // Option 1: data.records.garments
     if (parentRequest.data?.records?.garments) {
       garments = parentRequest.data.records.garments;
-      console.log('✅ Found garments at: data.records.garments');
     }
     // Option 2: data.garments (direct)
     else if (parentRequest.data?.garments) {
       garments = parentRequest.data.garments;
-      console.log('✅ Found garments at: data.garments');
     }
     // Option 3: Check if data itself is a string that needs parsing
     else if (typeof parentRequest.data === 'string') {
       try {
         const parsed = JSON.parse(parentRequest.data);
         garments = parsed.records?.garments || parsed.garments;
-        console.log('✅ Found garments after parsing string data');
       } catch (e) {
-        console.error('❌ Failed to parse data string:', e);
+        console.error('❌ Failed to parse parent request data:', e);
       }
     }
 
     if (!garments || !Array.isArray(garments)) {
-      console.log('ℹ️ No garments array found - showing all garment types');
-      console.log('🔍 DEBUG: Available keys in parentRequest:', Object.keys(parentRequest));
-      console.log('🔍 DEBUG: Available keys in parentRequest.data:', parentRequest.data ? Object.keys(parentRequest.data) : 'N/A');
       return null;
     }
 
-    console.log('🔍 DEBUG: Garments array:', garments);
-    console.log('🔍 DEBUG: First garment object:', garments[0]);
-    console.log('🔍 DEBUG: First garment keys:', Object.keys(garments[0]));
-
     const garmentTypes = garments
-      .map((g, index) => {
-        console.log(`🔍 DEBUG: Garment ${index + 1} type field:`, g.type);
-        console.log(`🔍 DEBUG: Garment ${index + 1} full object:`, g);
-        return g.type;
-      })
+      .map(g => g.type)
       .filter(Boolean);  // Remove null/undefined
 
     const uniqueTypes = [...new Set(garmentTypes)];  // Remove duplicates
 
     console.log('✅ Parent request has garment types:', uniqueTypes);
     return uniqueTypes.length > 0 ? uniqueTypes : null;
+  }
+
+  /**
+   * Get garment type to fabric type mapping from parent request
+   * Returns Map<garmentType, fabricType[]> where each garment type maps to an array of fabrics
+   * Supports multiple fabrics for the same garment type
+   */
+  getParentGarmentFabricMapping() {
+    const parentRequest = this.selectedParentRequest || V10_State.parentRequestData;
+
+    if (!parentRequest) {
+      return null;
+    }
+
+    // Get garments array using same logic as getParentGarmentTypes
+    let garments = null;
+
+    if (parentRequest.data?.records?.garments) {
+      garments = parentRequest.data.records.garments;
+    } else if (parentRequest.data?.garments) {
+      garments = parentRequest.data.garments;
+    } else if (typeof parentRequest.data === 'string') {
+      try {
+        const parsed = JSON.parse(parentRequest.data);
+        garments = parsed.records?.garments || parsed.garments;
+      } catch (e) {
+        console.error('❌ Failed to parse data string:', e);
+      }
+    }
+
+    if (!garments || !Array.isArray(garments)) {
+      return null;
+    }
+
+    // Build mapping: garment type → array of fabric types
+    const mapping = new Map();
+    garments.forEach((g, index) => {
+      if (g.type && g.fabricType) {
+        // Initialize array if not exists
+        if (!mapping.has(g.type)) {
+          mapping.set(g.type, []);
+        }
+
+        // Add fabric if not already in array (avoid duplicates)
+        const fabrics = mapping.get(g.type);
+        if (!fabrics.includes(g.fabricType)) {
+          fabrics.push(g.fabricType);
+          console.log(`📋 Added ${g.type} → ${g.fabricType}`);
+        }
+      }
+    });
+
+    // Log summary
+    mapping.forEach((fabrics, garmentType) => {
+      console.log(`✅ ${garmentType}: ${fabrics.length} fabric(s) - ${fabrics.join(', ')}`);
+    });
+
+    return mapping.size > 0 ? mapping : null;
   }
 
   // ========================================
