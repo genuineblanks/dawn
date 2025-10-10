@@ -16853,69 +16853,41 @@ class V10_ReviewManager {
     // Show loading modal
     this.showLoadingModal();
 
-    let uploadAnimation = null; // Track upload animation interval for cleanup
+    // Start smooth 0% → 95% animation (independent of actual work)
+    // This ensures users always see smooth progress from 0% to completion
+    const progressAnimation = this.animateProgressSlowly(
+      'step-send-webhook',
+      'Uploading your request...',
+      0,
+      95,
+      40000 // 40 seconds (upper bound of typical upload time)
+    );
 
     try {
-      // ==========================================
-      // STEP 1: Collect Data (0% → 20%)
-      // ==========================================
-      this.updateLoadingProgress('step-collect-data', 'Preparing your submission...', 0);
+      // Do ALL the work in background (doesn't control progress bar)
+      console.log('📝 Step 1: Preparing submission data...');
       const submissionData = await this.prepareEnhancedSubmissionData();
-      this.updateLoadingProgress('step-collect-data', 'Preparing your submission...', 20);
-      console.log('✅ Step 1 complete: Data collected');
 
-      // ==========================================
-      // STEP 2: Process Files (20% → 35%)
-      // ==========================================
-      this.updateLoadingProgress('step-process-files', 'Processing your files...', 20);
+      console.log('📝 Step 2: Processing files...');
       await this.processFilesForSubmission(submissionData);
-      this.updateLoadingProgress('step-process-files', 'Processing your files...', 35);
-      console.log('✅ Step 2 complete: Files processed');
 
-      // ==========================================
-      // STEP 3: Upload (35% → 95%)
-      // ==========================================
-      this.updateLoadingProgress('step-send-webhook', 'Uploading your request...', 35);
-
-      // 3A: Send metadata to Vercel (fast - 35% → 45%)
+      console.log('📝 Step 3: Sending metadata to server...');
       const response = await this.sendToWebhook(submissionData);
-      this.updateLoadingProgress('step-send-webhook', 'Uploading your request...', 45);
-      console.log('✅ Step 3A complete: Metadata sent, Request ID:', response.requestId);
 
-      // 3B: Upload files to Google Drive (SLOW - 45% → 95%)
+      console.log('📝 Step 4: Uploading files...');
       if (submissionData.filesWithData && submissionData.filesWithData.length > 0) {
-        console.log('📤 Uploading files to Google Drive...');
-
-        // Start smooth animation 45% → 95% over estimated 50 seconds
-        uploadAnimation = this.animateProgressSlowly(
-          'step-send-webhook',
-          'Uploading your request...',
-          45,
-          95,
-          50000 // 50 seconds estimated duration
-        );
-
         await this.uploadFilesToGoogleScript(submissionData, response.requestId);
-
-        // Stop animation when upload completes
-        if (uploadAnimation) {
-          clearInterval(uploadAnimation);
-          uploadAnimation = null;
-        }
-
-        this.updateLoadingProgress('step-send-webhook', 'Uploading your request...', 95);
-        console.log('✅ Step 3B complete: Files uploaded');
+        console.log('✅ Files uploaded successfully');
       } else {
-        console.log('ℹ️ No files to upload, skipping to 95%');
-        this.updateLoadingProgress('step-send-webhook', 'Uploading your request...', 95);
+        console.log('ℹ️ No files to upload');
       }
 
-      // ==========================================
-      // STEP 4: Complete (95% → 100%)
-      // ==========================================
+      // ALL WORK COMPLETE - Stop animation and jump to 100%
+      clearInterval(progressAnimation);
       this.updateLoadingProgress('step-confirm', 'Complete!', 100);
       await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause to show 100%
-      console.log('✅ Step 4 complete: Submission successful');
+
+      console.log('✅ Submission successful!');
 
       // Hide loading modal
       this.hideLoadingModal();
@@ -16926,10 +16898,8 @@ class V10_ReviewManager {
     } catch (error) {
       console.error('❌ Submission failed:', error);
 
-      // Stop upload animation if running
-      if (uploadAnimation) {
-        clearInterval(uploadAnimation);
-      }
+      // Stop progress animation
+      clearInterval(progressAnimation);
 
       // Hide loading modal
       this.hideLoadingModal();
