@@ -17113,6 +17113,12 @@ class V10_ReviewManager {
       clientType: baseSubmission.client_data.client_type
     }));
 
+    // 🛡️ SECURITY: Add honeypot fields (anti-bot protection)
+    // These fields are hidden from users but bots typically fill them
+    // Backend will reject if these fields are filled
+    baseSubmission.client_data.website_url = ''; // Honeypot field
+    baseSubmission.client_data.company_phone = ''; // Honeypot field
+
     return baseSubmission;
   }
 
@@ -17275,13 +17281,21 @@ class V10_ReviewManager {
       garmentsCount: vercelPayload.records.garments.length
     });
 
+    // 🔒 SECURITY: Generate HMAC signature for request authentication
+    // Using CryptoJS (loaded via CDN in liquid template)
+    const HMAC_SECRET = window.TECHPACK_HMAC_SECRET || 'default-secret-change-in-production';
+    const payloadString = JSON.stringify(vercelPayload);
+    const signature = CryptoJS.HmacSHA256(payloadString, HMAC_SECRET).toString(CryptoJS.enc.Hex);
+    console.log('🔐 Request signed with HMAC-SHA256');
+
     try {
       const response = await fetch(secureProxyUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Signature': signature  // Add HMAC signature to headers
         },
-        body: JSON.stringify(vercelPayload) // Send clean payload without filesWithData
+        body: payloadString // Use same string we signed
       });
 
       console.log('📡 Response Status:', response.status);
