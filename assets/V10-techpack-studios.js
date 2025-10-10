@@ -6651,7 +6651,13 @@ class V10_GarmentUIManager {
 
       // Populate fabric options if garment type exists
       if (garmentData.type) {
-        this.populateFabricOptions(garmentCard, garmentData.type);
+        // Check for parent request fabric constraints
+        let parentFabrics = null;
+        const fabricMapping = window.v10ModalManager?.getParentGarmentFabricMapping?.();
+        if (fabricMapping && fabricMapping.has(garmentData.type)) {
+          parentFabrics = fabricMapping.get(garmentData.type);
+        }
+        this.populateFabricOptions(garmentCard, garmentData.type, parentFabrics);
       }
 
       // Set current values
@@ -6780,7 +6786,7 @@ class V10_GarmentUIManager {
   /**
    * Populate fabric options using template-driven approach
    */
-  populateFabricOptions(garmentCard, garmentType) {
+  populateFabricOptions(garmentCard, garmentType, allowedFabrics = null) {
     try {
       const fabricGrid = garmentCard.querySelector('#fabric-type-grid');
       if (!fabricGrid) {
@@ -6789,25 +6795,39 @@ class V10_GarmentUIManager {
       }
 
       const garmentId = garmentCard.dataset.garmentId;
-      const fabrics = V10_CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
-      
+      let fabrics = V10_CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
+
+      // If allowed fabrics are specified, filter to only those fabrics
+      if (allowedFabrics && allowedFabrics.length > 0) {
+        const normalizedAllowed = allowedFabrics.map(f => f.toLowerCase().trim());
+        fabrics = fabrics.filter(fabric =>
+          normalizedAllowed.includes(fabric.toLowerCase().trim())
+        );
+        console.log(`🔍 Filtered to ${fabrics.length} allowed fabrics from parent request:`, fabrics);
+      }
+
       if (fabrics.length === 0) {
         fabricGrid.innerHTML = '<p class="no-fabrics">No fabric options available for this garment type.</p>';
         return;
       }
-      
+
       const isCompactInterface = fabricGrid.classList.contains('compact-radio-grid');
       const template = isCompactInterface ? 'compact-radio-card' : 'radio-card';
-      
-      fabricGrid.innerHTML = fabrics.map(fabric => 
+
+      fabricGrid.innerHTML = fabrics.map(fabric =>
         this.createFabricOptionHTML(fabric, garmentId, template)
       ).join('');
-      
+
       // Add event listeners for restrictions
       this.addFabricChangeListeners(fabricGrid, garmentCard);
-      
+
+      // Add filter notice if fabrics were restricted
+      if (allowedFabrics && allowedFabrics.length > 0) {
+        this.addFabricFilterNotice(fabricGrid, fabrics.length, allowedFabrics);
+      }
+
       console.log(`✅ [UI] Populated ${fabrics.length} fabric options`);
-      
+
     } catch (error) {
       console.error('❌ [UI] Error populating fabric options:', error);
     }
@@ -7081,7 +7101,7 @@ class V10_GarmentUIManager {
   /**
    * Update selection dependencies based on current state
    */
-  updateSelectionDependencies(garmentCard, garmentData) {
+  updateSelectionDependencies(garmentCard, garmentData, allowedFabrics = null) {
     const requestType = V10_State.requestType;
 
     // 🎯 TOUR EXEMPTION: During garment studio tour, bypass fabric type restriction
@@ -7093,7 +7113,7 @@ class V10_GarmentUIManager {
       this.enableFabricSelection(garmentCard);
       // Populate fabric options - use demo fabrics for tour demo garments
       if (garmentData.type && !isDemoGarment) {
-        this.populateFabricOptions(garmentCard, garmentData.type);
+        this.populateFabricOptions(garmentCard, garmentData.type, allowedFabrics);
       } else if (isTourActive || isDemoGarment) {
         // During tour or for demo garments, populate with demo fabric options for demonstration
         this.populateDemoFabricOptions(garmentCard);
@@ -7184,16 +7204,30 @@ class V10_GarmentUIManager {
 
   /**
    * Lock fabric selection with badge indicating it's from parent request
+   * Prevents ANY interaction - dropdown cannot be opened
    */
   lockFabricSelection(garmentCard, fabricType) {
     const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
     const fabricDisplay = garmentCard.querySelector('#fabric-display');
+    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
     const fabricSection = garmentCard.querySelector('#fabric-collapsed')?.closest('.compact-selection-section');
 
-    // Disable clicking on fabric selection
+    // Completely disable clicking on ALL fabric selection elements
     if (fabricCollapsed) {
       fabricCollapsed.style.pointerEvents = 'none';
       fabricCollapsed.style.cursor = 'not-allowed';
+      // Add data attribute to prevent toggleSelection from working
+      fabricCollapsed.dataset.locked = 'true';
+    }
+
+    if (fabricDisplay) {
+      fabricDisplay.style.pointerEvents = 'none';
+      fabricDisplay.style.cursor = 'not-allowed';
+    }
+
+    if (fabricPlaceholder) {
+      fabricPlaceholder.style.pointerEvents = 'none';
+      fabricPlaceholder.style.cursor = 'not-allowed';
     }
 
     // Add locked badge to fabric display
@@ -7213,12 +7247,13 @@ class V10_GarmentUIManager {
       }
     }
 
-    // Add locked class to section for additional styling
+    // Add locked class to section for additional styling + visual feedback
     if (fabricSection) {
       fabricSection.classList.add('locked-from-parent');
+      fabricSection.style.opacity = '0.85';
     }
 
-    console.log(`🔒 Fabric selection locked: ${fabricType}`);
+    console.log(`🔒 Fabric selection completely locked: ${fabricType}`);
   }
 
   /**
@@ -8292,9 +8327,16 @@ class V10_GarmentStudio {
       
       const previousValue = garmentData.type;
       const newValue = e.target.value;
-      
+
       garmentData.type = newValue;
-      this.uiManager.populateFabricOptions(garmentCard, newValue);
+
+      // Check for parent request fabric constraints
+      let parentFabrics = null;
+      const fabricMapping = window.v10ModalManager?.getParentGarmentFabricMapping?.();
+      if (fabricMapping && fabricMapping.has(newValue)) {
+        parentFabrics = fabricMapping.get(newValue);
+      }
+      this.uiManager.populateFabricOptions(garmentCard, newValue, parentFabrics);
       
       // COMPLETE STATE CLEARING - Clear all dependent selections when garment type changes
       garmentData.fabricType = null; // Use null to completely clear
@@ -9143,25 +9185,25 @@ class V10_GarmentStudio {
       // CRITICAL: Ensure proper UI state after edit mode starts
       // This needs to run after the UI is rendered to reset any invalid displays
       setTimeout(() => {
-        this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
-
-        // RE-APPLY parent request fabric constraints after dependencies update
+        // Get parent request fabric constraints BEFORE updating dependencies
+        let parentFabrics = null;
         if (garmentData.type) {
           const fabricMapping = window.v10ModalManager?.getParentGarmentFabricMapping?.();
           if (fabricMapping && fabricMapping.has(garmentData.type)) {
-            const parentFabrics = fabricMapping.get(garmentData.type);
-
-            if (parentFabrics.length === 1) {
-              // Single fabric: re-lock
-              console.log(`🔒 Re-locking fabric in edit mode: ${parentFabrics[0]}`);
-              this.uiManager.lockFabricSelection(garmentCard, parentFabrics[0]);
-            } else if (parentFabrics.length > 1) {
-              // Multiple fabrics: re-filter
-              console.log(`🔍 Re-filtering fabrics in edit mode:`, parentFabrics);
-              this.uiManager.filterFabricOptions(garmentCard, parentFabrics);
-            }
+            parentFabrics = fabricMapping.get(garmentData.type);
+            console.log(`🎯 Edit mode: Found ${parentFabrics.length} fabric(s) from parent request for ${garmentData.type}`);
           }
         }
+
+        // Update dependencies with allowed fabrics (filters during population)
+        this.uiManager.updateSelectionDependencies(garmentCard, garmentData, parentFabrics);
+
+        // If single fabric from parent, re-lock
+        if (parentFabrics && parentFabrics.length === 1) {
+          console.log(`🔒 Re-locking fabric in edit mode: ${parentFabrics[0]}`);
+          this.uiManager.lockFabricSelection(garmentCard, parentFabrics[0]);
+        }
+        // Note: Multiple fabrics are already filtered during populateFabricOptions()
 
         // Force complete reset of any invalid displayed selections
         if (!garmentData.fabricType) {
@@ -11314,6 +11356,12 @@ class V10_GarmentStudio {
       return;
     }
 
+    // Check if this selection is locked from parent request
+    if (selectionWidget.dataset.locked === 'true') {
+      console.log('🔒 Selection is locked from parent request - cannot toggle');
+      return;
+    }
+
     const garmentCard = selectionWidget.closest('.garment-card');
     if (!garmentCard) {
       console.error('❌ No garment card found for selection widget');
@@ -11462,47 +11510,46 @@ class V10_GarmentStudio {
         const garmentId = garmentCard.dataset.garmentId;
         if (garmentId) {
           const garmentData = V10_State.garments.get(garmentId);
-          this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
 
-          // Check if this garment type has fabric(s) from parent request
+          // Check if this garment type has fabric(s) from parent request BEFORE updating dependencies
           const fabricMapping = window.v10ModalManager?.getParentGarmentFabricMapping?.();
+          let parentFabrics = null;
+
           if (fabricMapping && fabricMapping.has(value)) {
-            const parentFabrics = fabricMapping.get(value); // Array of fabrics
+            parentFabrics = fabricMapping.get(value); // Array of fabrics
+            console.log(`🎯 Found ${parentFabrics.length} fabric(s) from parent request for ${value}: ${parentFabrics.join(', ')}`);
+          }
 
-            if (parentFabrics.length === 1) {
-              // Single fabric: auto-fill and lock
-              const parentFabricType = parentFabrics[0];
-              console.log(`🎯 Auto-filling single fabric from parent: ${value} → ${parentFabricType}`);
+          // Update dependencies with allowed fabrics (filters during population)
+          this.uiManager.updateSelectionDependencies(garmentCard, garmentData, parentFabrics);
 
-              // Find and select the fabric radio button
-              const fabricInput = garmentCard.querySelector(`input[name*="fabricType"][value="${parentFabricType}"]`);
-              if (fabricInput) {
-                fabricInput.checked = true;
+          // If single fabric from parent, auto-fill and lock
+          if (parentFabrics && parentFabrics.length === 1) {
+            const parentFabricType = parentFabrics[0];
+            console.log(`🎯 Auto-filling single fabric from parent: ${value} → ${parentFabricType}`);
 
-                // Update garment data
-                garmentData.fabricType = parentFabricType;
+            // Find and select the fabric radio button
+            const fabricInput = garmentCard.querySelector(`input[name*="fabricType"][value="${parentFabricType}"]`);
+            if (fabricInput) {
+              fabricInput.checked = true;
 
-                // Update UI to show selected fabric
-                this.updateCompactSelection('fabric', parentFabricType, garmentCard);
+              // Update garment data
+              garmentData.fabricType = parentFabricType;
 
-                // Mark fabric as locked from parent
-                setTimeout(() => {
-                  this.uiManager.lockFabricSelection(garmentCard, parentFabricType);
-                }, 400);
+              // Update UI to show selected fabric
+              this.updateCompactSelection('fabric', parentFabricType, garmentCard);
 
-                console.log(`✅ Fabric auto-filled and locked: ${parentFabricType}`);
-              } else {
-                console.warn(`⚠️ Fabric type "${parentFabricType}" not found in options for ${value}`);
-              }
-            } else if (parentFabrics.length > 1) {
-              // Multiple fabrics: filter options, don't lock
-              console.log(`🎯 Filtering ${parentFabrics.length} fabrics from parent: ${parentFabrics.join(', ')}`);
-
+              // Mark fabric as locked from parent (small delay to ensure UI is ready)
               setTimeout(() => {
-                this.uiManager.filterFabricOptions(garmentCard, parentFabrics);
-              }, 400);
+                this.uiManager.lockFabricSelection(garmentCard, parentFabricType);
+              }, 100);
+
+              console.log(`✅ Fabric auto-filled and locked: ${parentFabricType}`);
+            } else {
+              console.warn(`⚠️ Fabric type "${parentFabricType}" not found in options for ${value}`);
             }
           }
+          // Note: Multiple fabrics are already filtered during populateFabricOptions()
         }
       }, 300);
       
