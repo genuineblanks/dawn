@@ -17281,20 +17281,13 @@ class V10_ReviewManager {
       garmentsCount: vercelPayload.records.garments.length
     });
 
-    // 🔒 SECURITY: Generate HMAC signature for request authentication
-    // Using CryptoJS (loaded via CDN in liquid template)
-    const HMAC_SECRET = window.TECHPACK_HMAC_SECRET || 'default-secret-change-in-production';
-    const signature = CryptoJS.HmacSHA256(payloadString, HMAC_SECRET).toString(CryptoJS.enc.Hex);
-    console.log('🔐 Request signed with HMAC-SHA256');
-
     try {
       const response = await fetch(secureProxyUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-Signature': signature  // Add HMAC signature to headers
+          'Content-Type': 'application/json'
         },
-        body: payloadString // Use same string we signed
+        body: payloadString
       });
 
       console.log('📡 Response Status:', response.status);
