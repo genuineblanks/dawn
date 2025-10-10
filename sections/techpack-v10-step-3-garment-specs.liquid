@@ -1707,6 +1707,43 @@ Enhanced with Visual Studio Guide System
   display: flex !important;
   padding: 18px 24px !important;
 }
+
+/* Garment Type Filter Notice */
+.garment-filter-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--v10-text-secondary);
+}
+
+.garment-filter-notice .filter-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--v10-accent-primary);
+}
+
+.garment-filter-notice .filter-text {
+  flex: 1;
+}
+
+.garment-filter-notice strong {
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .garment-filter-notice {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
 </style>
 
 <!-- Load TechPack V10 Application -->

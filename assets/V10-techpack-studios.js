@@ -6642,15 +6642,18 @@ class V10_GarmentUIManager {
       // Set garment ID and number
       garmentCard.dataset.garmentId = garmentData.id;
       this.setGarmentNumber(clone, garmentData);
-      
+
       // Setup unique radio names
       this.setupRadioNames(clone, garmentData.id);
-      
+
+      // Filter garment types based on parent request (if applicable)
+      this.filterGarmentTypes(clone);
+
       // Populate fabric options if garment type exists
       if (garmentData.type) {
         this.populateFabricOptions(garmentCard, garmentData.type);
       }
-      
+
       // Set current values
       this.setGarmentValues(clone, garmentData);
       
@@ -6686,12 +6689,92 @@ class V10_GarmentUIManager {
       { selector: 'input[name="sampleType"]', name: `sampleType-${garmentId}` },
       { selector: 'input[name="sampleReference"]', name: `sampleReference-${garmentId}` }
     ];
-    
+
     radioGroups.forEach(({ selector, name }) => {
       clone.querySelectorAll(selector).forEach(input => {
         input.name = name;
       });
     });
+  }
+
+  /**
+   * Filter garment types based on parent request (quotation or sample)
+   * Only shows garment types that were in the parent request
+   */
+  filterGarmentTypes(clone) {
+    try {
+      // Get allowed garment types from parent request
+      const allowedTypes = window.v10ModalManager?.getParentGarmentTypes?.();
+
+      // If no filtering needed, return early
+      if (!allowedTypes || allowedTypes.length === 0) {
+        console.log('ℹ️ No garment type filtering - showing all types');
+        return;
+      }
+
+      console.log('🔍 Filtering garment types. Allowed:', allowedTypes);
+
+      const garmentTypeGrid = clone.querySelector('#garment-type-grid');
+      if (!garmentTypeGrid) {
+        console.warn('⚠️ Garment type grid not found for filtering');
+        return;
+      }
+
+      // Normalize allowed types for comparison (case-insensitive)
+      const normalizedAllowed = allowedTypes.map(t => t.toLowerCase().trim());
+
+      // Filter garment type radio cards
+      let hiddenCount = 0;
+      let visibleCount = 0;
+
+      garmentTypeGrid.querySelectorAll('.compact-radio-card').forEach(card => {
+        const input = card.querySelector('input[type="radio"]');
+        if (!input) return;
+
+        const garmentType = input.value;
+        const isAllowed = normalizedAllowed.includes(garmentType.toLowerCase().trim());
+
+        if (!isAllowed) {
+          card.style.display = 'none';
+          hiddenCount++;
+        } else {
+          card.style.display = '';
+          visibleCount++;
+        }
+      });
+
+      // Add filter notice above the grid
+      this.addGarmentTypeFilterNotice(garmentTypeGrid, visibleCount, allowedTypes);
+
+      console.log(`✅ Filtered garment types: ${visibleCount} visible, ${hiddenCount} hidden`);
+
+    } catch (error) {
+      console.error('❌ Error filtering garment types:', error);
+    }
+  }
+
+  /**
+   * Add a notice above garment type grid showing filter is active
+   */
+  addGarmentTypeFilterNotice(garmentTypeGrid, visibleCount, allowedTypes) {
+    // Check if notice already exists
+    let notice = garmentTypeGrid.parentElement?.querySelector('.garment-filter-notice');
+
+    if (!notice) {
+      notice = document.createElement('div');
+      notice.className = 'garment-filter-notice';
+      garmentTypeGrid.parentElement?.insertBefore(notice, garmentTypeGrid);
+    }
+
+    const typesList = allowedTypes.join(', ');
+    notice.innerHTML = `
+      <svg class="filter-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M2 3h12M4 6h8M6 9h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="filter-text">
+        Showing <strong>${visibleCount}</strong> garment type${visibleCount !== 1 ? 's' : ''} from your previous request: ${typesList}
+      </span>
+    `;
   }
   
   /**
@@ -21235,9 +21318,14 @@ class V10_ModalManager {
       modal.querySelectorAll('.v10-submission-card-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const requestId = btn.getAttribute('data-request-id');
+          // Store FULL quotation data (not just ID)
+          const quotation = data.data.find(q => q.request_id === requestId);
+          this.selectedParentRequest = quotation;
           this.selectedParentRequestId = requestId;
           V10_State.parentRequestId = requestId; // Backup in global state
+          V10_State.parentRequestData = quotation; // Store full data too
           console.log('✅ Selected quotation parent ID:', requestId);
+          console.log('✅ Stored full quotation data with', quotation?.data?.records?.garments?.length || 0, 'garments');
           console.log('✅ Stored in modalManager:', this.selectedParentRequestId);
           console.log('✅ Stored in V10_State:', V10_State.parentRequestId);
           modal.remove();
@@ -21364,9 +21452,14 @@ class V10_ModalManager {
       modal.querySelectorAll('.v10-submission-card-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const requestId = btn.getAttribute('data-request-id');
+          // Store FULL sample data (not just ID)
+          const sample = data.data.find(s => s.request_id === requestId);
+          this.selectedParentRequest = sample;
           this.selectedParentRequestId = requestId;
           V10_State.parentRequestId = requestId; // Backup in global state
+          V10_State.parentRequestData = sample; // Store full data too
           console.log('✅ Selected sample parent ID:', requestId);
+          console.log('✅ Stored full sample data with', sample?.data?.records?.garments?.length || 0, 'garments');
           console.log('✅ Stored in modalManager:', this.selectedParentRequestId);
           console.log('✅ Stored in V10_State:', V10_State.parentRequestId);
           modal.remove();
@@ -21413,7 +21506,31 @@ class V10_ModalManager {
   setupSelectionModals() {
     // Initialize selectedParentRequestId
     this.selectedParentRequestId = null;
+    this.selectedParentRequest = null;
     console.log('✅ Selection modals initialized');
+  }
+
+  /**
+   * Get garment types from selected parent request (quotation or sample)
+   * Returns array of garment type strings, or null if no filtering needed
+   */
+  getParentGarmentTypes() {
+    // First check modalManager instance
+    const parentRequest = this.selectedParentRequest || V10_State.parentRequestData;
+
+    if (!parentRequest?.data?.records?.garments) {
+      console.log('ℹ️ No parent request data - showing all garment types');
+      return null;  // No filter - show all types
+    }
+
+    const garmentTypes = parentRequest.data.records.garments
+      .map(g => g.type)
+      .filter(Boolean);  // Remove null/undefined
+
+    const uniqueTypes = [...new Set(garmentTypes)];  // Remove duplicates
+
+    console.log('✅ Parent request has garment types:', uniqueTypes);
+    return uniqueTypes.length > 0 ? uniqueTypes : null;
   }
 
   // ========================================
