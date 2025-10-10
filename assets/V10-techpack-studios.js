@@ -9144,7 +9144,25 @@ class V10_GarmentStudio {
       // This needs to run after the UI is rendered to reset any invalid displays
       setTimeout(() => {
         this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
-        
+
+        // RE-APPLY parent request fabric constraints after dependencies update
+        if (garmentData.type) {
+          const fabricMapping = window.v10ModalManager?.getParentGarmentFabricMapping?.();
+          if (fabricMapping && fabricMapping.has(garmentData.type)) {
+            const parentFabrics = fabricMapping.get(garmentData.type);
+
+            if (parentFabrics.length === 1) {
+              // Single fabric: re-lock
+              console.log(`🔒 Re-locking fabric in edit mode: ${parentFabrics[0]}`);
+              this.uiManager.lockFabricSelection(garmentCard, parentFabrics[0]);
+            } else if (parentFabrics.length > 1) {
+              // Multiple fabrics: re-filter
+              console.log(`🔍 Re-filtering fabrics in edit mode:`, parentFabrics);
+              this.uiManager.filterFabricOptions(garmentCard, parentFabrics);
+            }
+          }
+        }
+
         // Force complete reset of any invalid displayed selections
         if (!garmentData.fabricType) {
           this.uiManager.resetFabricSelection(garmentCard);
@@ -9152,7 +9170,7 @@ class V10_GarmentStudio {
         if (!garmentData.sampleType || !garmentData.fabricType) {
           this.uiManager.resetSampleSelection(garmentCard);
         }
-        
+
         console.log('🔄 Edit mode UI state properly reset after expansion');
       }, 50);
       
