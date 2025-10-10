@@ -16850,42 +16850,72 @@ class V10_ReviewManager {
       return;
     }
 
-    // Show loading modal with SMOOTH progress animation
+    // Show loading modal
     this.showLoadingModal();
 
-    // Start smooth progress animation (0% → 90% over ~5 seconds)
-    let currentProgress = 0;
-    const progressInterval = setInterval(() => {
-      if (currentProgress < 90) {
-        currentProgress += 1;
-        this.updateLoadingProgress(null, 'Processing your submission...', currentProgress);
-      }
-    }, 50); // Update every 50ms for smooth animation
+    let uploadAnimation = null; // Track upload animation interval for cleanup
 
     try {
-      // Step 1: Prepare submission data
+      // ==========================================
+      // STEP 1: Collect Data (0% → 20%)
+      // ==========================================
+      this.updateLoadingProgress('step-collect-data', 'Preparing your submission...', 0);
       const submissionData = await this.prepareEnhancedSubmissionData();
+      this.updateLoadingProgress('step-collect-data', 'Preparing your submission...', 20);
+      console.log('✅ Step 1 complete: Data collected');
 
-      // Step 2: Process files
+      // ==========================================
+      // STEP 2: Process Files (20% → 35%)
+      // ==========================================
+      this.updateLoadingProgress('step-process-files', 'Processing your files...', 20);
       await this.processFilesForSubmission(submissionData);
+      this.updateLoadingProgress('step-process-files', 'Processing your files...', 35);
+      console.log('✅ Step 2 complete: Files processed');
 
-      // Step 3: Send metadata to Vercel (get Request ID)
+      // ==========================================
+      // STEP 3: Upload (35% → 95%)
+      // ==========================================
+      this.updateLoadingProgress('step-send-webhook', 'Uploading your request...', 35);
+
+      // 3A: Send metadata to Vercel (fast - 35% → 45%)
       const response = await this.sendToWebhook(submissionData);
+      this.updateLoadingProgress('step-send-webhook', 'Uploading your request...', 45);
+      console.log('✅ Step 3A complete: Metadata sent, Request ID:', response.requestId);
 
-      // Step 4: Upload files to Google Drive (if files exist)
-      // This bypasses Vercel's 4.5MB payload limit by sending files separately
+      // 3B: Upload files to Google Drive (SLOW - 45% → 95%)
       if (submissionData.filesWithData && submissionData.filesWithData.length > 0) {
         console.log('📤 Uploading files to Google Drive...');
+
+        // Start smooth animation 45% → 95% over estimated 50 seconds
+        uploadAnimation = this.animateProgressSlowly(
+          'step-send-webhook',
+          'Uploading your request...',
+          45,
+          95,
+          50000 // 50 seconds estimated duration
+        );
+
         await this.uploadFilesToGoogleScript(submissionData, response.requestId);
-        console.log('✅ Files uploaded successfully');
+
+        // Stop animation when upload completes
+        if (uploadAnimation) {
+          clearInterval(uploadAnimation);
+          uploadAnimation = null;
+        }
+
+        this.updateLoadingProgress('step-send-webhook', 'Uploading your request...', 95);
+        console.log('✅ Step 3B complete: Files uploaded');
       } else {
-        console.log('ℹ️ No files to upload');
+        console.log('ℹ️ No files to upload, skipping to 95%');
+        this.updateLoadingProgress('step-send-webhook', 'Uploading your request...', 95);
       }
 
-      // Stop simulation, jump to 100%
-      clearInterval(progressInterval);
-      this.updateLoadingProgress('step-confirm', 'Submission complete!', 100);
+      // ==========================================
+      // STEP 4: Complete (95% → 100%)
+      // ==========================================
+      this.updateLoadingProgress('step-confirm', 'Complete!', 100);
       await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause to show 100%
+      console.log('✅ Step 4 complete: Submission successful');
 
       // Hide loading modal
       this.hideLoadingModal();
@@ -16894,10 +16924,12 @@ class V10_ReviewManager {
       this.showSuccessModal(response);
 
     } catch (error) {
-      console.error('Submission failed:', error);
+      console.error('❌ Submission failed:', error);
 
-      // Stop progress animation
-      clearInterval(progressInterval);
+      // Stop upload animation if running
+      if (uploadAnimation) {
+        clearInterval(uploadAnimation);
+      }
 
       // Hide loading modal
       this.hideLoadingModal();
@@ -17451,7 +17483,7 @@ class V10_ReviewManager {
     });
   }
 
-  animateProgressSlowly(startPercent, endPercent, maxDuration) {
+  animateProgressSlowly(stepId, message, startPercent, endPercent, maxDuration) {
     const startTime = Date.now();
     const totalIncrease = endPercent - startPercent;
 
@@ -17461,7 +17493,7 @@ class V10_ReviewManager {
       const currentPercent = startPercent + (totalIncrease * progress);
 
       if (currentPercent < endPercent) {
-        this.updateLoadingProgress(null, 'Submitting your request...', Math.floor(currentPercent));
+        this.updateLoadingProgress(stepId, message, Math.floor(currentPercent));
       } else {
         clearInterval(interval);
       }
