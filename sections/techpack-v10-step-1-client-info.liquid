@@ -20,6 +20,15 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 </script>
 {%- endif -%}
 
+<style>
+  /* Only layout overrides - backgrounds handled by external V10 CSS */
+  .techpack-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+</style>
+
 <!-- Landing Page Section -->
 <section id="techpack-v10-landing" class="v10-techpack-landing">
   <div class="techpack-container">
@@ -613,6 +622,12 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 <div class="v10-unlock-overlay" id="v10-unlock-overlay">
   <div class="v10-unlock-icon">🔓</div>
   <div class="v10-unlock-text">ACCESS GRANTED</div>
+</div>
+
+<!-- Matrix Animation Overlay -->
+<div class="v10-matrix-overlay" id="v10-matrix-overlay">
+  <canvas class="v10-matrix-canvas" id="v10-matrix-canvas"></canvas>
+  <div class="v10-matrix-text">PROCESSING</div>
 </div>
 
 <!-- Client Verification Modal -->
