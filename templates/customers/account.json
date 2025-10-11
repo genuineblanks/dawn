@@ -1,1 +1,60 @@
-{"sections":{"main":{"type":"main-account","settings":{"padding_top":36,"padding_bottom":36}}},"order":["main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "dashboard_header": {
+      "type": "dashboard-header",
+      "settings": {
+        "logo_position": "middle-left",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "dashboard_home": {
+      "type": "dashboard-home",
+      "settings": {
+        "api_url": "https://dawn-main-theme.vercel.app"
+      }
+    },
+    "dashboard_orders": {
+      "type": "dashboard-orders",
+      "disabled": true,
+      "settings": {}
+    },
+    "dashboard_files": {
+      "type": "dashboard-files",
+      "disabled": true,
+      "settings": {
+        "max_file_size": "10"
+      }
+    },
+    "dashboard_email": {
+      "type": "dashboard-email",
+      "disabled": true,
+      "settings": {
+        "support_email": "office@genuineblanks.com"
+      }
+    }
+  },
+  "order": [
+    "dashboard_header",
+    "dashboard_home",
+    "dashboard_orders",
+    "dashboard_files",
+    "dashboard_email"
+  ]
+}
