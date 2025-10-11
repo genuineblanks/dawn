@@ -1,0 +1,96 @@
+{%- comment -%}
+  Renders a dashboard module card.
+
+  Usage:
+  {% render 'dashboard-module-card',
+    icon: 'orders',
+    title: 'ORDERS',
+    description: 'Manage Orders',
+    link: '?view=orders'
+  %}
+{%- endcomment -%}
+
+<a href="{{ link }}" class="module-card">
+  <div class="module-icon">
+    {%- case icon -%}
+      {%- when 'orders' -%}
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+          <polyline points="3.29 7 12 12 20.71 7"></polyline>
+          <line x1="12" y1="22" x2="12" y2="12"></line>
+        </svg>
+      {%- when 'files' -%}
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </svg>
+      {%- when 'email' -%}
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+    {%- endcase -%}
+  </div>
+  <h3 class="module-title">{{ title }}</h3>
+  <p class="module-description">{{ description }}</p>
+  <span class="module-cta">View All →</span>
+</a>
+
+{% stylesheet %}
+  .module-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+
+  .module-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-6px);
+  }
+
+  .module-icon {
+    margin-bottom: 1.5rem;
+    color: #333333;
+    transition: transform 0.3s ease;
+  }
+
+  .module-card:hover .module-icon {
+    transform: scale(1.1);
+  }
+
+  .module-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #222222;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.08rem;
+  }
+
+  .module-description {
+    font-size: 0.9rem;
+    color: #666666;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .module-cta {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background: #222222;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    transition: all 0.3s ease;
+  }
+
+  .module-card:hover .module-cta {
+    background: #000000;
+    transform: translateX(4px);
+  }
+{% endstylesheet %}

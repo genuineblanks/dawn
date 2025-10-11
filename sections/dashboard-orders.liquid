@@ -1,0 +1,601 @@
+<div class="dashboard-orders" data-customer-email="{{ customer.email }}">
+
+  {%- comment -%} Hero Section {%- endcomment -%}
+  <div class="dashboard-hero">
+    <h1 class="dashboard-hero-title">YOUR ORDERS</h1>
+    <p class="dashboard-hero-subtitle">View and manage all your submissions</p>
+  </div>
+
+  {%- comment -%} Filters {%- endcomment -%}
+  <div class="orders-filters">
+    <div class="filter-group">
+      <label class="filter-label">TYPE</label>
+      <select id="filter-type" class="filter-select">
+        <option value="">All Types</option>
+        <option value="sample-request">Sample Request</option>
+        <option value="quotation">Quotation</option>
+        <option value="bulk-order">Bulk Order</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">STATUS</label>
+      <select id="filter-status" class="filter-select">
+        <option value="">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="in-progress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">SEARCH</label>
+      <input
+        type="text"
+        id="filter-search"
+        class="filter-input"
+        placeholder="Search by Order ID..."
+      >
+    </div>
+  </div>
+
+  {%- comment -%} Orders Grid {%- endcomment -%}
+  <div class="orders-grid" id="orders-grid">
+    <div class="dashboard-loading">
+      <div class="spinner"></div>
+      <p>Loading orders...</p>
+    </div>
+  </div>
+
+  {%- comment -%} Pagination (if needed) {%- endcomment -%}
+  <div class="orders-pagination" id="pagination" style="display: none;">
+    <button class="pagination-button" id="prev-page">← Previous</button>
+    <span class="pagination-info" id="page-info">Page 1</span>
+    <button class="pagination-button" id="next-page">Next →</button>
+  </div>
+
+  {%- comment -%} Back to Dashboard {%- endcomment -%}
+  <div class="dashboard-view-all">
+    <a href="{{ routes.account_url }}" class="dashboard-link">← BACK TO DASHBOARD</a>
+  </div>
+
+</div>
+
+{%- comment -%} Order Detail Modal {%- endcomment -%}
+<div class="order-modal" id="order-modal" style="display: none;">
+  <div class="order-modal-overlay" id="modal-overlay"></div>
+  <div class="order-modal-content">
+    <button class="order-modal-close" id="modal-close">×</button>
+    <div id="order-detail"></div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .dashboard-orders {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .dashboard-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .dashboard-hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #222222;
+    letter-spacing: 0.08rem;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+  }
+
+  .dashboard-hero-subtitle {
+    font-size: 1.1rem;
+    color: #666666;
+    margin: 0;
+  }
+
+  /* Filters */
+  .orders-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .filter-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #222222;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .filter-select,
+  .filter-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #333333;
+    background: #ffffff;
+    transition: all 0.3s ease;
+  }
+
+  .filter-select:focus,
+  .filter-input:focus {
+    outline: none;
+    border-color: #333333;
+  }
+
+  /* Orders Grid */
+  .orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #999999;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 1rem;
+    border: 4px solid #f0f0f0;
+    border-top: 4px solid #333333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Order Cards (same as dashboard-home) */
+  .order-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+  }
+
+  .order-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-6px);
+  }
+
+  .order-card-image-wrapper {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    background: #f5f5f5;
+  }
+
+  .order-card-image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+    border: 2px dashed #dddddd;
+  }
+
+  .order-card-icon {
+    color: #999999;
+    margin-bottom: 0.5rem;
+  }
+
+  .placeholder-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #999999;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+  }
+
+  .order-card-content {
+    padding: 1.5rem;
+  }
+
+  .order-card-id {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #222222;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.05rem;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  }
+
+  .order-card-type {
+    font-size: 0.85rem;
+    color: #666666;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+  }
+
+  .order-card-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 1rem 0;
+  }
+
+  .order-card-meta {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+  }
+
+  .order-card-meta li {
+    font-size: 0.85rem;
+    color: #666666;
+    margin-bottom: 0.5rem;
+  }
+
+  .order-card-status {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+  }
+
+  .status-pending {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  .status-in-progress,
+  .status-in_progress {
+    background: #DBEAFE;
+    color: #1E40AF;
+  }
+
+  .status-completed {
+    background: #D1FAE5;
+    color: #065F46;
+  }
+
+  /* Pagination */
+  .orders-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  .pagination-button {
+    padding: 0.75rem 1.5rem;
+    background: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .pagination-button:hover:not(:disabled) {
+    border-color: #333333;
+  }
+
+  .pagination-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .pagination-info {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666666;
+  }
+
+  /* Order Modal */
+  .order-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+  }
+
+  .order-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .order-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+  }
+
+  .order-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #999999;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .order-modal-close:hover {
+    color: #333333;
+  }
+
+  .dashboard-view-all {
+    text-align: center;
+  }
+
+  .dashboard-link {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: #ffffff;
+    color: #333333;
+    text-decoration: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
+    transition: all 0.3s ease;
+  }
+
+  .dashboard-link:hover {
+    border-color: #333333;
+  }
+
+  @media screen and (max-width: 749px) {
+    .dashboard-orders {
+      padding: 2rem 1rem;
+    }
+
+    .dashboard-hero-title {
+      font-size: 1.8rem;
+    }
+
+    .orders-filters {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1.5rem;
+    }
+
+    .orders-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .orders-pagination {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .order-modal-content {
+      width: 95%;
+      padding: 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class OrdersManager {
+    constructor() {
+      this.dashboardElement = document.querySelector('.dashboard-orders');
+      if (!this.dashboardElement) return;
+
+      this.customerEmail = this.dashboardElement.dataset.customerEmail;
+      this.ordersGrid = document.getElementById('orders-grid');
+      this.filterType = document.getElementById('filter-type');
+      this.filterStatus = document.getElementById('filter-status');
+      this.filterSearch = document.getElementById('filter-search');
+      this.orderModal = document.getElementById('order-modal');
+      this.modalClose = document.getElementById('modal-close');
+      this.modalOverlay = document.getElementById('modal-overlay');
+
+      this.allOrders = [];
+      this.filteredOrders = [];
+
+      this.init();
+    }
+
+    async init() {
+      await this.loadAllOrders();
+      this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+      this.filterType.addEventListener('change', () => this.applyFilters());
+      this.filterStatus.addEventListener('change', () => this.applyFilters());
+      this.filterSearch.addEventListener('input', () => this.applyFilters());
+      this.modalClose.addEventListener('click', () => this.closeModal());
+      this.modalOverlay.addEventListener('click', () => this.closeModal());
+    }
+
+    async loadAllOrders() {
+      try {
+        const response = await fetch(
+          `https://dawn-main-theme.vercel.app/api/submissions?email=${encodeURIComponent(this.customerEmail)}`
+        );
+        const data = await response.json();
+
+        if (data.success) {
+          this.allOrders = data.data;
+          this.filteredOrders = data.data;
+          this.renderOrders();
+        } else {
+          this.showError();
+        }
+      } catch (error) {
+        console.error('Failed to fetch orders:', error);
+        this.showError();
+      }
+    }
+
+    applyFilters() {
+      const typeFilter = this.filterType.value;
+      const statusFilter = this.filterStatus.value;
+      const searchFilter = this.filterSearch.value.toLowerCase();
+
+      this.filteredOrders = this.allOrders.filter(order => {
+        const matchesType = !typeFilter || order.submission_type === typeFilter;
+        const matchesStatus = !statusFilter || order.status.toLowerCase().replace(' ', '-') === statusFilter;
+        const matchesSearch = !searchFilter || order.request_id.toLowerCase().includes(searchFilter);
+
+        return matchesType && matchesStatus && matchesSearch;
+      });
+
+      this.renderOrders();
+    }
+
+    renderOrders() {
+      if (this.filteredOrders.length === 0) {
+        this.ordersGrid.innerHTML = `
+          <div class="dashboard-empty" style="grid-column: 1 / -1;">
+            <p>No orders found matching your filters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      this.ordersGrid.innerHTML = this.filteredOrders.map(order => this.renderOrderCard(order)).join('');
+
+      // Add click listeners
+      document.querySelectorAll('.order-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const orderId = card.dataset.orderId;
+          this.showOrderDetail(orderId);
+        });
+      });
+    }
+
+    renderOrderCard(order) {
+      const date = new Date(order.created_at);
+      const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const garmentCount = order.data?.records?.garments?.length || 0;
+      const fileCount = order.data?.files?.length || 0;
+
+      return `
+        <div class="order-card" data-order-id="${order.request_id}">
+          <div class="order-card-image-wrapper">
+            <div class="order-card-image-placeholder">
+              <svg class="order-card-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 20h4v-4h-4m0-2h4v-4h-4M4 20h4v-4H4m0-2h4v-4H4m0-2h4V8H4M4 6h4V2H4m6 18h4v-4h-4m0-2h4v-4h-4m0-2h4V8h-4m0-2h4V2h-4" fill="currentColor"/>
+              </svg>
+              <span class="placeholder-label">3D IMAGE</span>
+            </div>
+          </div>
+          <div class="order-card-content">
+            <h3 class="order-card-id">${order.request_id}</h3>
+            <p class="order-card-type">${order.submission_type.replace('-', ' ')}</p>
+            <div class="order-card-divider"></div>
+            <ul class="order-card-meta">
+              <li>📅 ${formattedDate}</li>
+              <li>👕 ${garmentCount} garments</li>
+              <li>📁 ${fileCount} files</li>
+            </ul>
+            <div class="order-card-divider"></div>
+            <span class="order-card-status status-${order.status.toLowerCase().replace(' ', '_')}">${order.status.toUpperCase()}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    showOrderDetail(orderId) {
+      const order = this.allOrders.find(o => o.request_id === orderId);
+      if (!order) return;
+
+      const detailHTML = `
+        <h2 style="margin-top: 1.5rem;">${order.request_id}</h2>
+        <p><strong>Type:</strong> ${order.submission_type.replace('-', ' ').toUpperCase()}</p>
+        <p><strong>Status:</strong> <span class="order-card-status status-${order.status.toLowerCase().replace(' ', '_')}">${order.status.toUpperCase()}</span></p>
+        <p><strong>Submitted:</strong> ${new Date(order.created_at).toLocaleString()}</p>
+        <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #f0f0f0;">
+        <h3>Order Details</h3>
+        <pre style="background: #f9f9f9; padding: 1rem; border-radius: 6px; overflow-x: auto;">${JSON.stringify(order.data, null, 2)}</pre>
+      `;
+
+      document.getElementById('order-detail').innerHTML = detailHTML;
+      this.orderModal.style.display = 'block';
+    }
+
+    closeModal() {
+      this.orderModal.style.display = 'none';
+    }
+
+    showError() {
+      this.ordersGrid.innerHTML = `
+        <div class="dashboard-error" style="grid-column: 1 / -1;">
+          <p>Failed to load orders. Please refresh the page.</p>
+        </div>
+      `;
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => new OrdersManager());
+  } else {
+    new OrdersManager();
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Dashboard Orders",
+  "class": "section-dashboard-orders",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Dashboard Orders"
+    }
+  ]
+}
+{% endschema %}

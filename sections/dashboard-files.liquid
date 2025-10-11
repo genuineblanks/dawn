@@ -1,0 +1,584 @@
+<div class="dashboard-files" data-customer-email="{{ customer.email }}">
+
+  {%- comment -%} Hero Section {%- endcomment -%}
+  <div class="dashboard-hero">
+    <h1 class="dashboard-hero-title">FILE MANAGER</h1>
+    <p class="dashboard-hero-subtitle">Upload new or reworked files to existing orders</p>
+  </div>
+
+  {%- comment -%} File Upload Interface {%- endcomment -%}
+  <div class="files-container">
+
+    {%- comment -%} Order Selection {%- endcomment -%}
+    <div class="files-section">
+      <h2 class="files-section-title">SELECT ORDER</h2>
+      <select id="order-select" class="files-select">
+        <option value="">Loading orders...</option>
+      </select>
+    </div>
+
+    {%- comment -%} Current Files Display {%- endcomment -%}
+    <div class="files-section">
+      <h2 class="files-section-title">CURRENT FILES</h2>
+      <div id="current-files" class="current-files">
+        <p class="files-placeholder">Select an order to view files</p>
+      </div>
+    </div>
+
+    {%- comment -%} Upload Zone {%- endcomment -%}
+    <div class="files-section">
+      <h2 class="files-section-title">UPLOAD NEW FILE</h2>
+      <div id="upload-zone" class="upload-zone">
+        <svg class="upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        <p class="upload-text">Click to upload or drag and drop</p>
+        <p class="upload-subtext">PDF, JPG, PNG up to 10MB</p>
+        <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+      </div>
+    </div>
+
+    {%- comment -%} File Preview & Version Info {%- endcomment -%}
+    <div class="files-section" id="file-preview-section" style="display: none;">
+      <h2 class="files-section-title">FILE PREVIEW</h2>
+      <div class="file-preview">
+        <p class="preview-label">Original filename:</p>
+        <p class="preview-original" id="preview-original"></p>
+        <p class="preview-label">New filename (with versioning):</p>
+        <p class="preview-new" id="preview-new"></p>
+        <button id="upload-button" class="files-button">UPLOAD FILE</button>
+        <button id="cancel-button" class="files-button-secondary">CANCEL</button>
+      </div>
+    </div>
+
+    {%- comment -%} Upload Status {%- endcomment -%}
+    <div class="files-section" id="upload-status" style="display: none;">
+      <div class="upload-status-message"></div>
+    </div>
+
+  </div>
+
+  {%- comment -%} Back to Dashboard {%- endcomment -%}
+  <div class="dashboard-view-all">
+    <a href="{{ routes.account_url }}" class="dashboard-link">← BACK TO DASHBOARD</a>
+  </div>
+
+</div>
+
+{% stylesheet %}
+  .dashboard-files {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .dashboard-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .dashboard-hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #222222;
+    letter-spacing: 0.08rem;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+  }
+
+  .dashboard-hero-subtitle {
+    font-size: 1.1rem;
+    color: #666666;
+    margin: 0;
+  }
+
+  .files-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+  }
+
+  .files-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .files-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .files-section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #222222;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+    margin: 0 0 1rem 0;
+  }
+
+  .files-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #333333;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .files-select:focus {
+    outline: none;
+    border-color: #333333;
+  }
+
+  .current-files {
+    min-height: 100px;
+  }
+
+  .files-placeholder {
+    color: #999999;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+
+  .file-item-name {
+    font-size: 0.9rem;
+    color: #333333;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  }
+
+  .file-item-date {
+    font-size: 0.8rem;
+    color: #999999;
+  }
+
+  .upload-zone {
+    border: 3px dashed #d0d0d0;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+  }
+
+  .upload-zone:hover {
+    border-color: #333333;
+    background: #f5f5f5;
+  }
+
+  .upload-zone.dragover {
+    border-color: #333333;
+    background: #e8e8e8;
+  }
+
+  .upload-icon {
+    color: #999999;
+    margin-bottom: 1rem;
+  }
+
+  .upload-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333333;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .upload-subtext {
+    font-size: 0.85rem;
+    color: #999999;
+    margin: 0;
+  }
+
+  .file-preview {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .preview-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666666;
+    margin: 0 0 0.25rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+  }
+
+  .preview-original,
+  .preview-new {
+    font-size: 0.9rem;
+    color: #333333;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    margin: 0 0 1rem 0;
+    padding: 0.5rem;
+    background: #ffffff;
+    border-radius: 4px;
+    word-break: break-all;
+  }
+
+  .preview-new {
+    color: #059669;
+    font-weight: 600;
+  }
+
+  .files-button {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: #222222;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 1rem;
+  }
+
+  .files-button:hover {
+    background: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .files-button-secondary {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: #ffffff;
+    color: #333333;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .files-button-secondary:hover {
+    border-color: #333333;
+  }
+
+  .upload-status-message {
+    padding: 1rem;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .upload-status-message.success {
+    background: #D1FAE5;
+    color: #065F46;
+  }
+
+  .upload-status-message.error {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+
+  .dashboard-view-all {
+    text-align: center;
+  }
+
+  .dashboard-link {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: #ffffff;
+    color: #333333;
+    text-decoration: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
+    transition: all 0.3s ease;
+  }
+
+  .dashboard-link:hover {
+    border-color: #333333;
+  }
+
+  @media screen and (max-width: 749px) {
+    .dashboard-files {
+      padding: 2rem 1rem;
+    }
+
+    .dashboard-hero-title {
+      font-size: 1.8rem;
+    }
+
+    .files-container {
+      padding: 1.5rem;
+    }
+
+    .upload-zone {
+      padding: 2rem 1rem;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class FileManager {
+    constructor() {
+      this.dashboardElement = document.querySelector('.dashboard-files');
+      if (!this.dashboardElement) return;
+
+      this.customerEmail = this.dashboardElement.dataset.customerEmail;
+      this.orderSelect = document.getElementById('order-select');
+      this.uploadZone = document.getElementById('upload-zone');
+      this.fileInput = document.getElementById('file-input');
+      this.currentFiles = document.getElementById('current-files');
+      this.previewSection = document.getElementById('file-preview-section');
+      this.uploadButton = document.getElementById('upload-button');
+      this.cancelButton = document.getElementById('cancel-button');
+      this.uploadStatus = document.getElementById('upload-status');
+
+      this.selectedFile = null;
+      this.selectedOrder = null;
+
+      this.init();
+    }
+
+    async init() {
+      await this.loadOrders();
+      this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+      this.orderSelect.addEventListener('change', () => this.loadOrderFiles());
+      this.uploadZone.addEventListener('click', () => this.fileInput.click());
+      this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+      this.uploadButton.addEventListener('click', () => this.uploadFile());
+      this.cancelButton.addEventListener('click', () => this.cancelUpload());
+
+      // Drag & drop
+      this.uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        this.uploadZone.classList.add('dragover');
+      });
+
+      this.uploadZone.addEventListener('dragleave', () => {
+        this.uploadZone.classList.remove('dragover');
+      });
+
+      this.uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        this.uploadZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+          this.handleFiles(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    async loadOrders() {
+      try {
+        const response = await fetch(
+          `https://dawn-main-theme.vercel.app/api/submissions?email=${encodeURIComponent(this.customerEmail)}`
+        );
+        const data = await response.json();
+
+        if (data.success && data.data.length > 0) {
+          this.orderSelect.innerHTML = '<option value="">Select an order...</option>' +
+            data.data.map(order =>
+              `<option value="${order.request_id}">${order.request_id} - ${order.submission_type.replace('-', ' ').toUpperCase()}</option>`
+            ).join('');
+        } else {
+          this.orderSelect.innerHTML = '<option value="">No orders found</option>';
+        }
+      } catch (error) {
+        console.error('Failed to load orders:', error);
+        this.orderSelect.innerHTML = '<option value="">Error loading orders</option>';
+      }
+    }
+
+    async loadOrderFiles() {
+      const orderId = this.orderSelect.value;
+      if (!orderId) {
+        this.currentFiles.innerHTML = '<p class="files-placeholder">Select an order to view files</p>';
+        return;
+      }
+
+      this.selectedOrder = orderId;
+
+      try {
+        const response = await fetch(
+          `https://dawn-main-theme.vercel.app/api/submissions?request_id=${orderId}`
+        );
+        const data = await response.json();
+
+        if (data.success && data.data.length > 0) {
+          const files = data.data[0].data?.files || [];
+          this.renderFiles(files);
+        }
+      } catch (error) {
+        console.error('Failed to load files:', error);
+        this.currentFiles.innerHTML = '<p class="files-placeholder">Error loading files</p>';
+      }
+    }
+
+    renderFiles(files) {
+      if (files.length === 0) {
+        this.currentFiles.innerHTML = '<p class="files-placeholder">No files uploaded yet</p>';
+        return;
+      }
+
+      this.currentFiles.innerHTML = files.map(file => `
+        <div class="file-item">
+          <span class="file-item-name">📄 ${file.name || file}</span>
+          ${file.uploaded_at ? `<span class="file-item-date">${new Date(file.uploaded_at).toLocaleDateString()}</span>` : ''}
+        </div>
+      `).join('');
+    }
+
+    handleFileSelect(event) {
+      if (event.target.files.length > 0) {
+        this.handleFiles(event.target.files[0]);
+      }
+    }
+
+    handleFiles(file) {
+      if (!this.selectedOrder) {
+        alert('Please select an order first');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        return;
+      }
+
+      this.selectedFile = file;
+      const newFilename = this.generateNewFilename(file.name);
+
+      document.getElementById('preview-original').textContent = file.name;
+      document.getElementById('preview-new').textContent = newFilename;
+      this.previewSection.style.display = 'block';
+      this.uploadStatus.style.display = 'none';
+    }
+
+    generateNewFilename(originalName) {
+      // For now, simple versioning - in production, count existing REWORKED files
+      return `${this.selectedOrder}_REWORKED_${originalName}`;
+    }
+
+    cancelUpload() {
+      this.selectedFile = null;
+      this.fileInput.value = '';
+      this.previewSection.style.display = 'none';
+    }
+
+    async uploadFile() {
+      if (!this.selectedFile || !this.selectedOrder) return;
+
+      this.uploadButton.disabled = true;
+      this.uploadButton.textContent = 'UPLOADING...';
+
+      try {
+        const base64 = await this.fileToBase64(this.selectedFile);
+        const newFilename = this.generateNewFilename(this.selectedFile.name);
+
+        const response = await fetch('https://dawn-main-theme.vercel.app/api/upload-file', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: this.selectedOrder,
+            filename: newFilename,
+            data: base64,
+            mimeType: this.selectedFile.type,
+            customerEmail: this.customerEmail
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          this.showStatus('File uploaded successfully!', 'success');
+          this.previewSection.style.display = 'none';
+          this.selectedFile = null;
+          this.fileInput.value = '';
+          await this.loadOrderFiles();
+        } else {
+          throw new Error(result.error || 'Upload failed');
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        this.showStatus('Upload failed: ' + error.message, 'error');
+      } finally {
+        this.uploadButton.disabled = false;
+        this.uploadButton.textContent = 'UPLOAD FILE';
+      }
+    }
+
+    fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    showStatus(message, type) {
+      const statusMessage = this.uploadStatus.querySelector('.upload-status-message');
+      statusMessage.textContent = message;
+      statusMessage.className = `upload-status-message ${type}`;
+      this.uploadStatus.style.display = 'block';
+
+      setTimeout(() => {
+        this.uploadStatus.style.display = 'none';
+      }, 5000);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => new FileManager());
+  } else {
+    new FileManager();
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Dashboard Files",
+  "class": "section-dashboard-files",
+  "settings": [
+    {
+      "type": "header",
+      "content": "File Upload Settings"
+    },
+    {
+      "type": "text",
+      "id": "max_file_size",
+      "label": "Max File Size (MB)",
+      "default": "10"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dashboard Files"
+    }
+  ]
+}
+{% endschema %}
