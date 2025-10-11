@@ -9,6 +9,8 @@ const V10_AccountDashboard = {
   currentFilter: 'all',
   currentStatusFilter: 'pending', // Default to 'pending', options: 'pending', 'completed'
   customerEmail: null,
+  customerName: null,
+  currentView: 'dashboard', // NEW: Track current view
 
   // DOM Elements
   dashboard: null,
@@ -32,6 +34,7 @@ const V10_AccountDashboard = {
     console.log('✅ Initializing V10 Wholesale Account Dashboard');
 
     this.customerEmail = this.dashboard.dataset.customerEmail;
+    this.customerName = this.dashboard.dataset.customerName;
     this.loadingState = document.getElementById('v10-loading-state');
     this.emptyState = document.getElementById('v10-empty-state');
     this.submissionsGrid = document.getElementById('v10-submissions-grid');
@@ -39,6 +42,9 @@ const V10_AccountDashboard = {
     this.modalClose = document.getElementById('modal-close');
 
     this.setupEventListeners();
+    this.setupViewSwitching(); // NEW
+    this.setupFileUpload(); // NEW
+    this.setupEmailModule(); // NEW
 
     // ✅ Fetch submissions directly (no authentication required)
     // Security: API validates email ownership server-side
@@ -88,6 +94,435 @@ const V10_AccountDashboard = {
         this.closeModal();
       }
     });
+  },
+
+  /**
+   * Setup view switching between Dashboard/Orders/Files/Email
+   */
+  setupViewSwitching() {
+    // View tab buttons
+    const viewTabs = document.querySelectorAll('.v10-view-tab');
+    viewTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const viewName = tab.dataset.view;
+        this.switchView(viewName);
+      });
+    });
+
+    // Module card navigation buttons
+    const moduleCards = document.querySelectorAll('[data-navigate]');
+    moduleCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const viewName = card.dataset.navigate;
+        this.switchView(viewName);
+      });
+    });
+
+    // View all button
+    const viewAllBtn = document.querySelector('.v10-view-all-btn');
+    if (viewAllBtn) {
+      viewAllBtn.addEventListener('click', () => {
+        this.switchView('orders');
+      });
+    }
+  },
+
+  /**
+   * Switch between views
+   */
+  switchView(viewName) {
+    console.log('🔄 Switching to view:', viewName);
+
+    // Update current view
+    this.currentView = viewName;
+
+    // Hide all views
+    document.querySelectorAll('.v10-view-content').forEach(view => {
+      view.style.display = 'none';
+    });
+
+    // Show selected view
+    const targetView = document.getElementById(`view-${viewName}`);
+    if (targetView) {
+      targetView.style.display = 'block';
+    }
+
+    // Update active tab
+    document.querySelectorAll('.v10-view-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.view === viewName);
+    });
+
+    // Load data for specific views
+    if (viewName === 'dashboard') {
+      this.loadRecentOrders();
+    } else if (viewName === 'orders') {
+      this.renderSubmissions(); // Use existing method
+    } else if (viewName === 'files') {
+      this.loadFileOrdersDropdown();
+    } else if (viewName === 'email') {
+      this.loadEmailOrdersDropdown();
+    }
+  },
+
+  /**
+   * Load recent 4 orders for dashboard home view
+   */
+  loadRecentOrders() {
+    const recentGrid = document.getElementById('recent-orders-grid');
+    if (!recentGrid) return;
+
+    // Get 4 most recent submissions
+    const recent = [...this.submissions]
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 4);
+
+    if (recent.length === 0) {
+      recentGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #999;">
+          <p>No orders yet. Create your first submission to get started!</p>
+        </div>
+      `;
+      return;
+    }
+
+    recentGrid.innerHTML = recent.map(submission => this.renderSubmissionCard(submission)).join('');
+
+    // Add click handlers
+    recentGrid.querySelectorAll('.v10-submission-card').forEach((card, index) => {
+      card.addEventListener('click', () => {
+        this.showSubmissionDetails(recent[index]);
+      });
+    });
+  },
+
+  /**
+   * Setup file upload module
+   */
+  setupFileUpload() {
+    const uploadZone = document.getElementById('upload-zone');
+    const fileInput = document.getElementById('file-input');
+    const uploadBtn = document.getElementById('upload-file-btn');
+    const fileOrderSelect = document.getElementById('file-order-select');
+
+    if (!uploadZone || !fileInput) return;
+
+    // Drag and drop handlers
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+
+      const files = Array.from(e.dataTransfer.files);
+      this.handleFileSelection(files);
+    });
+
+    // Click to upload
+    uploadZone.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      this.handleFileSelection(files);
+    });
+
+    // Upload button
+    if (uploadBtn) {
+      uploadBtn.addEventListener('click', () => {
+        this.uploadFiles();
+      });
+    }
+
+    // Order selection change - load current files
+    if (fileOrderSelect) {
+      fileOrderSelect.addEventListener('change', (e) => {
+        const requestId = e.target.value;
+        this.loadCurrentFiles(requestId);
+      });
+    }
+  },
+
+  /**
+   * Handle file selection and preview
+   */
+  handleFileSelection(files) {
+    if (files.length === 0) return;
+
+    const previewSection = document.getElementById('file-preview-section');
+    const filesList = document.getElementById('files-to-upload-list');
+
+    if (!previewSection || !filesList) return;
+
+    // Store files for upload
+    this.filesToUpload = files;
+
+    // Show preview
+    previewSection.style.display = 'block';
+    filesList.innerHTML = files.map((file, index) => `
+      <div class="v10-file-preview-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+          <polyline points="13 2 13 9 20 9"/>
+        </svg>
+        <div>
+          <div class="file-name">${file.name}</div>
+          <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  /**
+   * Load current files for selected order
+   */
+  loadCurrentFiles(requestId) {
+    const submission = this.submissions.find(s => s.request_id === requestId);
+    const currentFilesList = document.getElementById('current-files-list');
+
+    if (!currentFilesList) return;
+
+    if (!submission || !submission.data?.files || submission.data.files.length === 0) {
+      currentFilesList.innerHTML = '<p style="color: #999; font-size: 0.875rem;">No files uploaded yet</p>';
+      return;
+    }
+
+    currentFilesList.innerHTML = `
+      <h4 style="font-size: 0.875rem; color: #999; margin-bottom: 0.75rem;">Current Files:</h4>
+      ${submission.data.files.map(file => `
+        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: #2d2d2d; border-radius: 4px; margin-bottom: 0.5rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+            <polyline points="13 2 13 9 20 9"/>
+          </svg>
+          <span style="font-size: 0.875rem; color: #fff;">${file.name}</span>
+        </div>
+      `).join('')}
+    `;
+  },
+
+  /**
+   * Upload files to API
+   */
+  async uploadFiles() {
+    if (!this.filesToUpload || this.filesToUpload.length === 0) {
+      alert('Please select files to upload');
+      return;
+    }
+
+    const requestId = document.getElementById('file-order-select')?.value;
+    if (!requestId) {
+      alert('Please select an order');
+      return;
+    }
+
+    const uploadBtn = document.getElementById('upload-file-btn');
+    if (uploadBtn) {
+      uploadBtn.textContent = 'UPLOADING...';
+      uploadBtn.disabled = true;
+    }
+
+    try {
+      // Convert files to base64
+      const filePromises = Array.from(this.filesToUpload).map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve({
+            name: file.name,
+            type: file.type,
+            data: reader.result
+          });
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const filesData = await Promise.all(filePromises);
+
+      // Upload to API
+      const response = await fetch('https://dawn-main-theme.vercel.app/api/upload-file', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requestId,
+          customerEmail: this.customerEmail,
+          files: filesData
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Files uploaded successfully!');
+        this.filesToUpload = null;
+        document.getElementById('file-preview-section').style.display = 'none';
+        document.getElementById('file-input').value = '';
+
+        // Refresh submissions to show new files
+        await this.fetchSubmissions();
+        this.loadCurrentFiles(requestId);
+      } else {
+        throw new Error(result.error || 'Upload failed');
+      }
+
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Failed to upload files: ' + error.message);
+    } finally {
+      if (uploadBtn) {
+        uploadBtn.textContent = 'UPLOAD FILES';
+        uploadBtn.disabled = false;
+      }
+    }
+  },
+
+  /**
+   * Load orders dropdown for files view
+   */
+  loadFileOrdersDropdown() {
+    const select = document.getElementById('file-order-select');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Select an order...</option>' +
+      this.submissions
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .map(s => `<option value="${s.request_id}">${s.request_id} - ${this.getTypeLabel(s.submission_type)}</option>`)
+        .join('');
+  },
+
+  /**
+   * Setup email module
+   */
+  setupEmailModule() {
+    const sendBtn = document.getElementById('send-email-btn');
+    const emailOrderSelect = document.getElementById('email-order-select');
+    const templateSelect = document.getElementById('email-template-select');
+    const messageTextarea = document.getElementById('email-message');
+
+    if (!sendBtn) return;
+
+    // Load email templates
+    if (templateSelect) {
+      const templates = {
+        'blank': '',
+        'status': `Hi,\n\nI'd like to inquire about the status of my order [ORDER_ID].\n\nCould you please provide an update?\n\nThank you,\n${this.customerName || 'Customer'}`,
+        'revision': `Hi,\n\nI need to request a revision for order [ORDER_ID].\n\nDetails:\n[Please describe the changes needed]\n\nThank you,\n${this.customerName || 'Customer'}`,
+        'question': `Hi,\n\nI have a question about order [ORDER_ID].\n\n[Your question here]\n\nThank you,\n${this.customerName || 'Customer'}`
+      };
+
+      templateSelect.addEventListener('change', (e) => {
+        const template = templates[e.target.value] || '';
+        const orderId = emailOrderSelect?.value || '[ORDER_ID]';
+        messageTextarea.value = template.replace('[ORDER_ID]', orderId);
+      });
+    }
+
+    // Update template when order changes
+    if (emailOrderSelect && templateSelect) {
+      emailOrderSelect.addEventListener('change', () => {
+        // Trigger template update with new order ID
+        const event = new Event('change');
+        templateSelect.dispatchEvent(event);
+      });
+    }
+
+    // Send email
+    sendBtn.addEventListener('click', () => {
+      this.sendEmail();
+    });
+  },
+
+  /**
+   * Send email via API
+   */
+  async sendEmail() {
+    const orderSelect = document.getElementById('email-order-select');
+    const messageTextarea = document.getElementById('email-message');
+    const sendBtn = document.getElementById('send-email-btn');
+
+    const requestId = orderSelect?.value;
+    const message = messageTextarea?.value?.trim();
+
+    if (!requestId) {
+      alert('Please select an order');
+      return;
+    }
+
+    if (!message) {
+      alert('Please enter a message');
+      return;
+    }
+
+    if (sendBtn) {
+      sendBtn.textContent = 'SENDING...';
+      sendBtn.disabled = true;
+    }
+
+    try {
+      const response = await fetch('https://dawn-main-theme.vercel.app/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requestId,
+          customerEmail: this.customerEmail,
+          customerName: this.customerName,
+          message
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Message sent successfully!');
+        messageTextarea.value = '';
+        document.getElementById('email-template-select').value = 'blank';
+      } else {
+        throw new Error(result.error || 'Failed to send email');
+      }
+
+    } catch (error) {
+      console.error('Send email error:', error);
+      alert('Failed to send message: ' + error.message);
+    } finally {
+      if (sendBtn) {
+        sendBtn.textContent = 'SEND MESSAGE';
+        sendBtn.disabled = false;
+      }
+    }
+  },
+
+  /**
+   * Load orders dropdown for email view
+   */
+  loadEmailOrdersDropdown() {
+    const select = document.getElementById('email-order-select');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Select an order...</option>' +
+      this.submissions
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .map(s => `<option value="${s.request_id}">${s.request_id} - ${this.getTypeLabel(s.submission_type)}</option>`)
+        .join('');
+  },
+
+  /**
+   * Get type label for display
+   */
+  getTypeLabel(type) {
+    const labels = {
+      'quotation': 'Quotation',
+      'sample-request': 'Sample Request',
+      'bulk-order-request': 'Bulk Order'
+    };
+    return labels[type] || type;
   },
 
   /**
