@@ -888,29 +888,15 @@
                          data-product="{{ block_index }}"
                          data-slide-index="{{ slide_index }}"
                          data-media-type="video">
-                      <video class="factory-video-{{ section.id }}"
-                             autoplay
-                             muted
-                             loop
-                             playsinline
-                             webkit-playsinline
-                             x5-playsinline
-                             preload="auto"
-                             draggable="false"
-                             oncontextmenu="return false;"
-                             onselectstart="return false;"
-                             ondragstart="return false;"
-                             onloadeddata="this.play()"
-                             oncanplay="this.play()">
-                        <source src="{{ current_video.sources[0].url }}" type="{{ current_video.sources[0].mime_type }}">
-                        {% if current_video.sources[1] %}
-                          <source src="{{ current_video.sources[1].url }}" type="{{ current_video.sources[1].mime_type }}">
-                        {% endif %}
-                        {% if current_video.sources[2] %}
-                          <source src="{{ current_video.sources[2].url }}" type="{{ current_video.sources[2].mime_type }}">
-                        {% endif %}
-                        <p>Your browser doesn't support video playback.</p>
-                      </video>
+                      {{ current_video | video_tag:
+                         class: 'factory-video-' | append: section.id,
+                         autoplay: false,
+                         muted: true,
+                         loop: true,
+                         playsinline: true,
+                         preload: 'none',
+                         controls: false
+                      }}
                     </div>
                     {% assign slide_index = slide_index | plus: 1 %}
                   {% endif %}
@@ -1105,48 +1091,54 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function playCurrentVideo(slideIndex) {
+  function playCurrentVideo(slideIndex, retryCount = 0) {
+    const MAX_RETRIES = 3;
     const currentSlide = allSlides[slideIndex];
+
     if (currentSlide && currentSlide.dataset.mediaType === 'video') {
       const video = currentSlide.querySelector('.factory-video-' + sectionId);
       if (video) {
-        // Reset video to beginning and force play immediately
-        video.currentTime = 0;
+        // Lazy load: Enable preloading when video becomes active
+        if (video.preload === 'none') {
+          video.preload = 'metadata';
+        }
 
-        // Multiple aggressive play attempts
-        const tryPlay = () => {
-          video.play().catch(err => {
-            console.log('Video autoplay attempt failed:', err);
-            // Try again after a short delay
-            setTimeout(tryPlay, 100);
-          });
-        };
-
-        // Immediate play attempt
-        tryPlay();
-
-        // Ensure video is visible and playing
-        if (video.paused) {
-          // Force play on next frame
-          requestAnimationFrame(() => {
-            tryPlay();
-          });
+        // Wait for video to be ready before playing
+        if (video.readyState >= 2) { // HAVE_CURRENT_DATA or better
+          video.currentTime = 0;
+          video.play()
+            .then(() => {
+              console.log('Video playing');
+            })
+            .catch(err => {
+              console.log('Video play failed:', err.message);
+              if (retryCount < MAX_RETRIES) {
+                const delay = Math.min(100 * Math.pow(2, retryCount), 1000);
+                setTimeout(() => playCurrentVideo(slideIndex, retryCount + 1), delay);
+              }
+            });
+        } else {
+          // Wait for video to load metadata
+          video.addEventListener('loadedmetadata', function onLoaded() {
+            video.removeEventListener('loadedmetadata', onLoaded);
+            video.currentTime = 0;
+            video.play()
+              .then(() => console.log('Video playing after load'))
+              .catch(err => {
+                console.log('Video play failed after load:', err.message);
+                if (retryCount < MAX_RETRIES) {
+                  setTimeout(() => playCurrentVideo(slideIndex, retryCount + 1), 200);
+                }
+              });
+          }, { once: true });
         }
       }
     }
   }
 
-  // Force play all videos when page becomes visible
+  // Simplified: Just trigger playCurrentVideo for active slide
   function forcePlayAllVideos() {
-    const videos = section.querySelectorAll('.factory-video-' + sectionId);
-    videos.forEach(video => {
-      if (video.closest('.factory-slide-' + sectionId).classList.contains('active')) {
-        video.currentTime = 0;
-        video.play().catch(err => {
-          console.log('Force play failed:', err);
-        });
-      }
-    });
+    playCurrentVideo(currentSlideIndex);
   }
 
   // Show specific slide
@@ -1549,73 +1541,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Pause videos when page visibility changes
+  // Simplified: Handle page visibility changes
   document.addEventListener('visibilitychange', function() {
     if (document.hidden) {
       pauseAllVideos();
     } else {
-      // Force play videos when page becomes visible
-      setTimeout(() => {
-        forcePlayAllVideos();
-        playCurrentVideo(currentSlideIndex);
-      }, 100);
+      playCurrentVideo(currentSlideIndex);
     }
   });
 
-  // Add user interaction fallback for strict browsers
-  let hasUserInteracted = false;
+  // Simplified: Enable autoplay on first user interaction
   const enableAutoplayAfterInteraction = () => {
-    hasUserInteracted = true;
-    forcePlayAllVideos();
+    playCurrentVideo(currentSlideIndex);
     document.removeEventListener('click', enableAutoplayAfterInteraction);
     document.removeEventListener('touchstart', enableAutoplayAfterInteraction);
   };
 
-  document.addEventListener('click', enableAutoplayAfterInteraction);
-  document.addEventListener('touchstart', enableAutoplayAfterInteraction, { passive: true });
+  document.addEventListener('click', enableAutoplayAfterInteraction, { once: true });
+  document.addEventListener('touchstart', enableAutoplayAfterInteraction, { passive: true, once: true });
 
-  // Add seamless looping support for videos
+  // Simplified video event listeners - loop attribute handles looping automatically
   function addVideoEventListeners() {
     const videos = section.querySelectorAll('.factory-video-' + sectionId);
     videos.forEach(video => {
-      // Ensure seamless looping
+      // Backup: Ensure looping works if loop attribute fails
       video.addEventListener('ended', function() {
         this.currentTime = 0;
-        this.play().catch(err => {
-          console.log('Loop restart failed:', err);
-        });
-      });
-
-      // Force play when video loads
-      video.addEventListener('loadeddata', function() {
-        if (this.closest('.factory-slide-' + sectionId).classList.contains('active')) {
-          this.play().catch(err => {
-            console.log('Auto-play on load failed:', err);
-          });
-        }
-      });
-
-      // Retry play if video stalls
-      video.addEventListener('stalled', function() {
-        setTimeout(() => {
-          if (this.paused && this.closest('.factory-slide-' + sectionId).classList.contains('active')) {
-            this.play().catch(err => {
-              console.log('Stall recovery failed:', err);
-            });
-          }
-        }, 500);
-      });
-
-      // Handle buffer issues
-      video.addEventListener('waiting', function() {
-        // Video is buffering, try to continue after a short delay
-        setTimeout(() => {
-          if (this.readyState >= 2) { // HAVE_CURRENT_DATA
-            this.play().catch(err => {
-              console.log('Buffer recovery failed:', err);
-            });
-          }
-        }, 200);
+        this.play().catch(err => console.log('Loop restart failed:', err.message));
       });
     });
   }
@@ -1630,20 +1582,18 @@ document.addEventListener('DOMContentLoaded', function() {
     addVideoEventListeners();
   }, 100);
 
-  // Intersection Observer for aggressive autoplay when section comes into view
+  // Simplified: Play video when section comes into view
   if ('IntersectionObserver' in window) {
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Section is visible, force autoplay
-          setTimeout(() => {
-            forcePlayAllVideos();
-            playCurrentVideo(currentSlideIndex);
-          }, 100);
+          playCurrentVideo(currentSlideIndex);
+        } else {
+          pauseAllVideos();
         }
       });
     }, {
-      threshold: 0.1 // Trigger when 10% of section is visible
+      threshold: 0.1
     });
 
     sectionObserver.observe(section);
