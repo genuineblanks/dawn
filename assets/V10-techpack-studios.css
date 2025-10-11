@@ -12930,3 +12930,172 @@ select:focus {
     font-size: 13px;
   }
 }
+
+/* ===================================================================
+   COMBINE MODE STYLES - Sample Selection Modal
+   =================================================================== */
+
+/* Combine Toggle Button */
+.v10-combine-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 20px;
+  border-radius: 8px;
+  color: var(--v10-text-secondary, rgba(255,255,255,0.7));
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.v10-combine-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.v10-combine-toggle.active {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: #10b981;
+  color: #10b981;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Lock Icon Animation */
+.v10-lock-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.v10-combine-toggle.active .v10-lock-icon {
+  transform: rotate(360deg) scale(1.15);
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
+}
+
+.v10-combine-text {
+  flex: 1;
+}
+
+/* Sample Card in Combine Mode */
+.v10-submission-card-btn.combine-mode {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.2s ease;
+}
+
+.v10-submission-card-btn.combine-mode:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Custom Checkbox */
+.v10-sample-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.v10-sample-checkbox {
+  display: none;
+}
+
+.v10-checkbox-custom {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.v10-sample-checkbox:checked + .v10-checkbox-custom {
+  background: #10b981;
+  border-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.v10-sample-checkbox:checked + .v10-checkbox-custom::after {
+  content: '✓';
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  animation: checkmark-pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes checkmark-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Combine Action Bar */
+.v10-combine-action-bar {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(26, 26, 26, 0.98) 0%, rgba(26, 26, 26, 0.95) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+  margin: 0 -20px -20px -20px;
+}
+
+.v10-combine-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--v10-text-primary, white);
+}
+
+.v10-combine-count span {
+  color: #10b981;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Dark theme support */
+[data-theme="dark"] .v10-combine-toggle {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .v10-combine-toggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .v10-combine-toggle.active {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+}
+
+[data-theme="dark"] .v10-submission-card-btn.combine-mode {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+[data-theme="dark"] .v10-combine-action-bar {
+  background: linear-gradient(to top, rgba(20, 20, 20, 0.98) 0%, rgba(20, 20, 20, 0.95) 100%);
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
