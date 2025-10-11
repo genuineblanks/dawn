@@ -21478,14 +21478,17 @@ class V10_ModalManager {
         e.preventDefault();
         e.stopPropagation();
 
-        // Check if user is logged in as wholesale customer
-        if (window.V10_LOGGED_IN_CUSTOMER && window.V10_LOGGED_IN_CUSTOMER.isWholesale) {
-          console.log('✅ Logged-in wholesale customer - skipping client verification modal');
-          this.selectClientType('registered'); // Go directly to submission type modal
-        } else {
-          console.log('ℹ️ Not logged in or not wholesale - showing client verification modal');
-          this.openModal('client-verification'); // Show "New or Registered" modal
-        }
+        // Show unlock animation FIRST (introduces the app experience)
+        this.showUnlockAnimation(() => {
+          // Check if user is logged in as wholesale customer
+          if (window.V10_LOGGED_IN_CUSTOMER && window.V10_LOGGED_IN_CUSTOMER.isWholesale) {
+            console.log('✅ Logged-in wholesale customer - skipping client verification modal');
+            this.selectClientType('registered'); // Go directly to submission type modal
+          } else {
+            console.log('ℹ️ Not logged in or not wholesale - showing client verification modal');
+            this.openModal('client-verification'); // Show "New or Registered" modal
+          }
+        });
       });
     }
 
@@ -21583,8 +21586,8 @@ class V10_ModalManager {
     this.currentClientType = clientType;
     this.closeModal('client-verification');
 
-    // Show unlock animation
-    this.showUnlockAnimation(() => {
+    // Show matrix animation when selecting client type
+    this.showMatrixAnimation(() => {
       // NEW: Lock/unlock company and email fields based on client type
       if (clientType === 'registered') {
         this.lockRegisteredClientFields();
@@ -21851,7 +21854,7 @@ class V10_ModalManager {
     // Create loading modal
     const loadingHTML = `
       <div class="v10-modal-overlay" id="v10-quotation-selection-modal" style="display: flex;">
-        <div class="v10-modal-dialog" style="max-width: 700px;">
+        <div class="v10-modal v10-modal-dialog" style="max-width: 900px;">
           <div class="v10-modal-header">
             <h3 class="v10-modal-title">Select Quotation</h3>
             <button type="button" class="v10-modal-close" aria-label="Close">×</button>
@@ -21892,25 +21895,26 @@ class V10_ModalManager {
       const quotationsHTML = data.data.map(quotation => {
         const garmentCount = quotation.data?.records?.garments?.length || 0;
         const date = new Date(quotation.created_at).toLocaleDateString();
+        const displayId = this.formatRequestId(quotation.request_id); // Format: "Order #14"
 
         return `
-          <button type="button" class="v10-submission-card-btn" data-request-id="${quotation.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
+          <div class="v10-submission-card-btn" data-request-id="${quotation.request_id}" role="button" tabindex="0">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">${quotation.request_id}</div>
-                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date}</div>
+                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: var(--v10-text-primary, #ffffff);">${displayId}</div>
+                <div style="font-size: 0.875rem; color: var(--v10-text-tertiary, #c1c1c1);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date}</div>
               </div>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="9 18 15 12 9 6"/>
               </svg>
             </div>
-          </button>
+          </div>
         `;
       }).join('');
 
       modal.querySelector('.v10-modal-body').innerHTML = `
         <p style="margin-bottom: 1rem; color: var(--gb-neutral-600);">Select a quotation to create a sample request from:</p>
-        <div style="max-height: 400px; overflow-y: auto;">
+        <div class="v10-samples-list">
           ${quotationsHTML}
         </div>
       `;
@@ -21933,15 +21937,7 @@ class V10_ModalManager {
           this.selectSubmissionType('sample-request');
         });
 
-        // Hover effect
-        btn.addEventListener('mouseenter', () => {
-          btn.style.borderColor = 'var(--gb-neutral-700)';
-          btn.style.background = 'var(--gb-neutral-200)';
-        });
-        btn.addEventListener('mouseleave', () => {
-          btn.style.borderColor = 'var(--gb-neutral-300)';
-          btn.style.background = 'var(--gb-neutral-100)';
-        });
+        // Note: Hover effects are now handled by CSS (see .v10-submission-card-btn:hover)
       });
 
     } catch (error) {
@@ -22026,12 +22022,13 @@ class V10_ModalManager {
         const garmentCount = sample.data?.records?.garments?.length || 0;
         const date = new Date(sample.created_at).toLocaleDateString();
         const status = sample.status || 'pending';
+        const displayId = this.formatRequestId(sample.request_id); // Format: "Order #14"
 
         return `
           <div class="v10-submission-card-btn" data-request-id="${sample.request_id}" role="button" tabindex="0">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: var(--v10-text-primary, #ffffff);">${sample.request_id}</div>
+                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: var(--v10-text-primary, #ffffff);">${displayId}</div>
                 <div style="font-size: 0.875rem; color: var(--v10-text-tertiary, #c1c1c1);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date} • ${status}</div>
               </div>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -23358,6 +23355,24 @@ class V10_ModalManager {
    * Show unlock animation overlay
    * @param {Function} callback - Function to execute after animation completes
    */
+  /**
+   * Format request ID for display
+   * Transforms "GNNA-88-014" → "Order #14"
+   * @param {string} requestId - Full request ID
+   * @returns {string} Formatted display text
+   */
+  formatRequestId(requestId) {
+    if (!requestId || typeof requestId !== 'string') return requestId;
+
+    // Split by hyphen and get last segment
+    const parts = requestId.split('-');
+    const lastSegment = parts[parts.length - 1];
+
+    // Remove leading zeros and format
+    const number = parseInt(lastSegment, 10);
+    return `Order #${number}`;
+  }
+
   showUnlockAnimation(callback) {
     const overlay = document.getElementById('v10-unlock-overlay');
     if (!overlay) {
@@ -23378,6 +23393,89 @@ class V10_ModalManager {
         setTimeout(callback, 300); // Wait for fade out transition
       }
     }, 1000);
+  }
+
+  showMatrixAnimation(callback) {
+    const overlay = document.getElementById('v10-matrix-overlay');
+    const canvas = document.getElementById('v10-matrix-canvas');
+
+    if (!overlay || !canvas) {
+      console.warn('⚠️ Matrix overlay or canvas not found');
+      if (callback) callback();
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size to window size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Matrix characters - including numbers, letters, and katakana
+    const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
+    const fontSize = 16;
+    const columns = Math.floor(canvas.width / fontSize);
+
+    // Array to track position of each column
+    const drops = new Array(columns).fill(0);
+
+    // Show overlay
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'auto';
+
+    let frameCount = 0;
+    const maxFrames = 90; // ~1.5 seconds at 60fps
+
+    // Animation function
+    const animate = () => {
+      // Semi-transparent black to create trailing effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Green text color
+      ctx.fillStyle = '#00ff41';
+      ctx.font = `${fontSize}px monospace`;
+
+      // Draw characters
+      for (let i = 0; i < drops.length; i++) {
+        // Random character
+        const char = characters[Math.floor(Math.random() * characters.length)];
+
+        // Draw character
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        ctx.fillText(char, x, y);
+
+        // Reset drop to top randomly or when it reaches bottom
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        // Move drop down
+        drops[i]++;
+      }
+
+      frameCount++;
+
+      // Continue animation if not finished
+      if (frameCount < maxFrames) {
+        requestAnimationFrame(animate);
+      } else {
+        // Animation complete - fade out
+        overlay.style.opacity = '0';
+
+        // Execute callback after fade out
+        setTimeout(() => {
+          overlay.style.pointerEvents = 'none';
+          // Clear canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          if (callback) callback();
+        }, 300);
+      }
+    };
+
+    // Start animation
+    animate();
   }
 
   trapFocus(modal) {
