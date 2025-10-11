@@ -895,6 +895,7 @@
                          data-slide-index="{{ slide_index }}"
                          data-media-type="video">
                       {{ current_video | video_tag:
+                         image_size: '1100x',
                          autoplay: false,
                          muted: true,
                          loop: true,
@@ -1094,46 +1095,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function playCurrentVideo(slideIndex, retryCount = 0) {
-    const MAX_RETRIES = 3;
+  function playCurrentVideo(slideIndex) {
     const currentSlide = allSlides[slideIndex];
 
     if (currentSlide && currentSlide.dataset.mediaType === 'video') {
       const video = currentSlide.querySelector('video');
       if (video) {
-        // Lazy load: Enable preloading when video becomes active
-        if (video.preload === 'none') {
-          video.preload = 'metadata';
-        }
+        // Reset video to beginning
+        video.currentTime = 0;
 
-        // Wait for video to be ready before playing
-        if (video.readyState >= 2) { // HAVE_CURRENT_DATA or better
-          video.currentTime = 0;
+        // Check if video has enough data to play smoothly
+        if (video.readyState >= 3) { // HAVE_FUTURE_DATA or HAVE_ENOUGH_DATA
           video.play()
             .then(() => {
-              console.log('Video playing');
+              console.log('Video playing smoothly');
             })
             .catch(err => {
               console.log('Video play failed:', err.message);
-              if (retryCount < MAX_RETRIES) {
-                const delay = Math.min(100 * Math.pow(2, retryCount), 1000);
-                setTimeout(() => playCurrentVideo(slideIndex, retryCount + 1), delay);
-              }
             });
         } else {
-          // Wait for video to load metadata
-          video.addEventListener('loadedmetadata', function onLoaded() {
-            video.removeEventListener('loadedmetadata', onLoaded);
+          // Wait for enough buffering before playing
+          video.addEventListener('canplaythrough', function onReady() {
             video.currentTime = 0;
             video.play()
-              .then(() => console.log('Video playing after load'))
-              .catch(err => {
-                console.log('Video play failed after load:', err.message);
-                if (retryCount < MAX_RETRIES) {
-                  setTimeout(() => playCurrentVideo(slideIndex, retryCount + 1), 200);
-                }
-              });
+              .then(() => console.log('Video playing after buffering'))
+              .catch(err => console.log('Video play failed:', err.message));
           }, { once: true });
+
+          // Start loading the video
+          video.load();
         }
       }
     }
@@ -1569,9 +1559,6 @@ document.addEventListener('DOMContentLoaded', function() {
     videos.forEach(video => {
       // Add factory-video class for CSS styling
       video.classList.add('factory-video-' + sectionId);
-
-      // Set preload to none for lazy loading
-      video.preload = 'none';
 
       // Backup: Ensure looping works if loop attribute fails
       video.addEventListener('ended', function() {
