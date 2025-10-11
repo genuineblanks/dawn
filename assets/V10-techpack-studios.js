@@ -22028,11 +22028,11 @@ class V10_ModalManager {
         const status = sample.status || 'pending';
 
         return `
-          <button type="button" class="v10-submission-card-btn" data-request-id="${sample.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
+          <button type="button" class="v10-submission-card-btn" data-request-id="${sample.request_id}">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">${sample.request_id}</div>
-                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date} • ${status}</div>
+                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: var(--v10-text-primary, #ffffff);">${sample.request_id}</div>
+                <div style="font-size: 0.875rem; color: var(--v10-text-tertiary, #c1c1c1);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date} • ${status}</div>
               </div>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="9 18 15 12 9 6"/>
@@ -22096,20 +22096,18 @@ class V10_ModalManager {
 
           // Transform sample cards to checkbox mode
           sampleButtons.forEach(btn => {
-            btn.style.cursor = 'default';
             btn.classList.add('combine-mode');
 
             // Add checkbox HTML
             const requestId = btn.getAttribute('data-request-id');
             if (!btn.querySelector('.v10-sample-checkbox-wrapper')) {
               const checkboxHTML = `
-                <label class="v10-sample-checkbox-wrapper" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); z-index: 10;">
+                <label class="v10-sample-checkbox-wrapper">
                   <input type="checkbox" class="v10-sample-checkbox" data-request-id="${requestId}">
                   <span class="v10-checkbox-custom"></span>
                 </label>
               `;
-              btn.style.position = 'relative';
-              btn.style.paddingLeft = '60px';
+              btn.style.paddingLeft = '60px'; // Make room for checkbox
               btn.insertAdjacentHTML('afterbegin', checkboxHTML);
             }
           });
@@ -22120,11 +22118,10 @@ class V10_ModalManager {
           combineActionBar.style.display = 'none';
           selectedSamples.clear();
 
-          // Remove checkboxes
+          // Remove checkboxes and reset padding
           sampleButtons.forEach(btn => {
             btn.classList.remove('combine-mode');
-            btn.style.cursor = 'pointer';
-            btn.style.paddingLeft = '1.25rem';
+            btn.style.paddingLeft = '1.25rem'; // Reset padding
             const checkbox = btn.querySelector('.v10-sample-checkbox-wrapper');
             if (checkbox) checkbox.remove();
           });
@@ -22143,7 +22140,7 @@ class V10_ModalManager {
             const checkbox = btn.querySelector('.v10-sample-checkbox');
             if (checkbox && e.target !== checkbox) {
               checkbox.checked = !checkbox.checked;
-              checkbox.dispatchEvent(new Event('change'));
+              checkbox.dispatchEvent(new Event('change', { bubbles: true }));
             }
           } else {
             // Normal single selection mode
@@ -22159,19 +22156,7 @@ class V10_ModalManager {
           }
         });
 
-        // Hover effect (only in normal mode)
-        btn.addEventListener('mouseenter', () => {
-          if (!combineMode) {
-            btn.style.borderColor = 'var(--gb-neutral-700)';
-            btn.style.background = 'var(--gb-neutral-200)';
-          }
-        });
-        btn.addEventListener('mouseleave', () => {
-          if (!combineMode) {
-            btn.style.borderColor = 'var(--gb-neutral-300)';
-            btn.style.background = 'var(--gb-neutral-100)';
-          }
-        });
+        // Note: Hover effects are now handled by CSS (see .v10-submission-card-btn:hover)
       });
 
       // Checkbox change handler (delegated to modal for checkboxes added dynamically)
