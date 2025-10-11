@@ -550,33 +550,36 @@ button:focus,
   min-height: 100vh;
   background: var(--v10-bg-secondary);
   padding: var(--v10-space-8) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .techpack-container {
-  max-width: 1200px;
+  max-width: 90vw; /* Responsive to screen size - 90% of viewport width */
   margin: 0 auto;
-  padding: 0; /* Remove padding to prevent white space - let v10-app-container handle it */
+  padding: 0 2rem; /* Horizontal padding for mobile safety */
   position: relative;
   overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 .techpack-content {
   background: var(--v10-bg-tertiary);
-  border-radius: var(--v10-radius-xl);
-  padding: var(--v10-space-12);
-  box-shadow: var(--v10-shadow-lg);
-  border: 1px solid var(--v10-border-primary);
+  border-radius: 0; /* Remove rounded corners for fullscreen appearance */
+  padding: var(--v10-space-8) var(--v10-space-6);
+  box-shadow: none; /* Remove shadow for clean edge-to-edge look */
+  border: none; /* Remove border */
   backdrop-filter: var(--v10-backdrop-blur);
 }
 
 @media (max-width: 768px) {
   .techpack-container {
-    padding: 0; /* Remove mobile padding too */
+    max-width: 100%; /* Full width on mobile */
+    padding: 0 1rem; /* Reduced padding for mobile */
   }
-  
+
   .techpack-content {
-    padding: var(--v10-space-6);
-    border-radius: var(--v10-radius-lg);
+    padding: var(--v10-space-6) var(--v10-space-4);
   }
 }
 
