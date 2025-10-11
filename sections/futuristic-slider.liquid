@@ -1101,8 +1101,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (currentSlide && currentSlide.dataset.mediaType === 'video') {
       const video = currentSlide.querySelector('video');
       if (video) {
-        // Reset video to beginning
-        video.currentTime = 0;
+        // Don't reset if already playing - this preserves buffered data
+        if (!video.paused) return;
+
+        // Only reset to beginning if video has ended or is at the end
+        if (video.ended || video.currentTime >= video.duration - 0.1) {
+          video.currentTime = 0;
+        }
 
         // Check if video has enough data to play smoothly
         if (video.readyState >= 3) { // HAVE_FUTURE_DATA or HAVE_ENOUGH_DATA
@@ -1114,16 +1119,17 @@ document.addEventListener('DOMContentLoaded', function() {
               console.log('Video play failed:', err.message);
             });
         } else {
+          // Only load if video hasn't been loaded yet
+          if (video.networkState === 0 || video.networkState === 3) {
+            video.load();
+          }
+
           // Wait for enough buffering before playing
           video.addEventListener('canplaythrough', function onReady() {
-            video.currentTime = 0;
             video.play()
               .then(() => console.log('Video playing after buffering'))
               .catch(err => console.log('Video play failed:', err.message));
           }, { once: true });
-
-          // Start loading the video
-          video.load();
         }
       }
     }
