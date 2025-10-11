@@ -556,19 +556,19 @@ button:focus,
 }
 
 .techpack-container {
-  max-width: 90vw; /* Responsive to screen size - 90% of viewport width */
-  margin: 0 auto;
+  max-width: 1200px; /* Fixed width - keeps content at readable size */
+  margin: 0 auto; /* Centers the container */
   padding: 0 2rem; /* Horizontal padding for mobile safety */
   position: relative;
   overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 .techpack-content {
-  background: var(--v10-bg-tertiary);
-  border-radius: 0; /* Remove rounded corners for fullscreen appearance */
+  background: var(--v10-bg-tertiary); /* #2a2a2a - slightly lighter than section background */
+  border-radius: 0; /* No rounded corners for clean fullscreen look */
   padding: var(--v10-space-8) var(--v10-space-6);
-  box-shadow: none; /* Remove shadow for clean edge-to-edge look */
-  border: none; /* Remove border */
+  box-shadow: none; /* No shadow for clean appearance */
+  border: none; /* No border */
   backdrop-filter: var(--v10-backdrop-blur);
 }
 
