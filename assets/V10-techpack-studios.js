@@ -15959,12 +15959,12 @@ class V10_ReviewManager {
     }
     
     console.log(`🎯 Step 4: Navigating back to step ${stepNumber}${targetStudio ? ` -> ${targetStudio} studio` : ''}`);
-    
+
     // Hide step 4
     step4.style.display = 'none';
-    
-    // Show target step
-    targetStep.style.display = 'block';
+
+    // Show target step - remove inline style to use CSS Grid centering
+    targetStep.style.display = '';
     
     // Switch to specific studio if requested
     if (targetStudio && stepNumber === 3 && window.v10TechPackSystem && window.v10TechPackSystem.navigator) {
@@ -21324,9 +21324,9 @@ class V10_FileManager {
       
       if (step3Section) {
         console.log('✅ Step 3 section found, making sure it\'s accessible');
-        // Make sure it's visible to DOM queries
+        // Make sure it's visible to DOM queries - remove inline style to use CSS Grid
         if (step3Section.style.display === 'none') {
-          step3Section.style.display = 'block';
+          step3Section.style.display = '';
         }
         resolve();
         return;
@@ -22848,8 +22848,8 @@ class V10_ModalManager {
       }
 
       if (formSection) {
-        // Must use inline style to override the inline display:none from the HTML
-        formSection.style.display = 'block';
+        // Remove inline style to let CSS Grid centering take over
+        formSection.style.display = '';
         formSection.scrollIntoView({ behavior: 'smooth' });
 
         // Update current step
