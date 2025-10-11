@@ -550,14 +550,9 @@ button:focus,
   min-height: 100vh;
   background: var(--v10-bg-secondary);
   padding: var(--v10-space-8) 0;
-
-  /* Vertical centering for steps 1-4 - Using Grid for reliable centering */
-  display: grid;
-  place-items: center;  /* Centers both vertically and horizontally */
 }
 
 .techpack-container {
-  width: 100%;  /* Explicit width for proper Grid child behavior */
   max-width: 1200px;
   margin: 0 auto;
   padding: 0; /* Remove padding to prevent white space - let v10-app-container handle it */
