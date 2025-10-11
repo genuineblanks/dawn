@@ -899,7 +899,9 @@
                              draggable="false"
                              oncontextmenu="return false;"
                              onselectstart="return false;"
-                             ondragstart="return false;">
+                             ondragstart="return false;"
+                             onloadeddata="this.play()"
+                             oncanplay="this.play()">
                         <source src="{{ current_video.sources[0].url }}" type="{{ current_video.sources[0].mime_type }}">
                         {% if current_video.sources[1] %}
                           <source src="{{ current_video.sources[1].url }}" type="{{ current_video.sources[1].mime_type }}">
@@ -1103,33 +1105,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function playCurrentVideo(slideIndex, retryCount = 0) {
-    const MAX_RETRIES = 3;
+  function playCurrentVideo(slideIndex) {
     const currentSlide = allSlides[slideIndex];
-
     if (currentSlide && currentSlide.dataset.mediaType === 'video') {
       const video = currentSlide.querySelector('.factory-video-' + sectionId);
       if (video) {
-        // Reset video to beginning
+        // Reset video to beginning and force play immediately
         video.currentTime = 0;
 
-        // Proper promise chain handling
-        video.play()
-          .then(() => {
-            // Video playback started successfully
-            console.log('Video playing');
-          })
-          .catch(err => {
-            console.log('Video play failed:', err.message);
-
-            // Retry with exponential backoff, up to MAX_RETRIES
-            if (retryCount < MAX_RETRIES) {
-              const delay = Math.min(100 * Math.pow(2, retryCount), 1000);
-              setTimeout(() => {
-                playCurrentVideo(slideIndex, retryCount + 1);
-              }, delay);
-            }
+        // Multiple aggressive play attempts
+        const tryPlay = () => {
+          video.play().catch(err => {
+            console.log('Video autoplay attempt failed:', err);
+            // Try again after a short delay
+            setTimeout(tryPlay, 100);
           });
+        };
+
+        // Immediate play attempt
+        tryPlay();
+
+        // Ensure video is visible and playing
+        if (video.paused) {
+          // Force play on next frame
+          requestAnimationFrame(() => {
+            tryPlay();
+          });
+        }
       }
     }
   }
@@ -1140,13 +1142,9 @@ document.addEventListener('DOMContentLoaded', function() {
     videos.forEach(video => {
       if (video.closest('.factory-slide-' + sectionId).classList.contains('active')) {
         video.currentTime = 0;
-        video.play()
-          .then(() => {
-            console.log('Force play succeeded');
-          })
-          .catch(err => {
-            console.log('Force play failed:', err.message);
-          });
+        video.play().catch(err => {
+          console.log('Force play failed:', err);
+        });
       }
     });
   }
@@ -1583,30 +1581,42 @@ document.addEventListener('DOMContentLoaded', function() {
       // Ensure seamless looping
       video.addEventListener('ended', function() {
         this.currentTime = 0;
-        this.play()
-          .then(() => {
-            console.log('Loop restart succeeded');
-          })
-          .catch(err => {
-            console.log('Loop restart failed:', err.message);
-          });
+        this.play().catch(err => {
+          console.log('Loop restart failed:', err);
+        });
       });
 
-      // Play when video is loaded and active
+      // Force play when video loads
       video.addEventListener('loadeddata', function() {
         if (this.closest('.factory-slide-' + sectionId).classList.contains('active')) {
-          this.play()
-            .then(() => {
-              console.log('Auto-play on load succeeded');
-            })
-            .catch(err => {
-              console.log('Auto-play on load failed:', err.message);
-            });
+          this.play().catch(err => {
+            console.log('Auto-play on load failed:', err);
+          });
         }
       });
 
-      // Note: Removed stalled and waiting event handlers to prevent competing play attempts
-      // The playCurrentVideo() function with retry logic handles playback issues
+      // Retry play if video stalls
+      video.addEventListener('stalled', function() {
+        setTimeout(() => {
+          if (this.paused && this.closest('.factory-slide-' + sectionId).classList.contains('active')) {
+            this.play().catch(err => {
+              console.log('Stall recovery failed:', err);
+            });
+          }
+        }, 500);
+      });
+
+      // Handle buffer issues
+      video.addEventListener('waiting', function() {
+        // Video is buffering, try to continue after a short delay
+        setTimeout(() => {
+          if (this.readyState >= 2) { // HAVE_CURRENT_DATA
+            this.play().catch(err => {
+              console.log('Buffer recovery failed:', err);
+            });
+          }
+        }, 200);
+      });
     });
   }
 
