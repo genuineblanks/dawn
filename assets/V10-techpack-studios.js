@@ -22028,7 +22028,7 @@ class V10_ModalManager {
         const status = sample.status || 'pending';
 
         return `
-          <button type="button" class="v10-submission-card-btn" data-request-id="${sample.request_id}">
+          <div class="v10-submission-card-btn" data-request-id="${sample.request_id}" role="button" tabindex="0">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
                 <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: var(--v10-text-primary, #ffffff);">${sample.request_id}</div>
@@ -22038,7 +22038,7 @@ class V10_ModalManager {
                 <polyline points="9 18 15 12 9 6"/>
               </svg>
             </div>
-          </button>
+          </div>
         `;
       }).join('');
 
@@ -22132,15 +22132,29 @@ class V10_ModalManager {
       sampleButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
           if (combineMode) {
-            // Prevent default button click in combine mode
-            e.preventDefault();
-            e.stopPropagation();
+            // In combine mode, check if click is on checkbox area
+            const checkboxWrapper = btn.querySelector('.v10-sample-checkbox-wrapper');
+            const checkboxCustom = btn.querySelector('.v10-checkbox-custom');
 
-            // Toggle checkbox
+            // If clicking on checkbox wrapper or custom checkbox, let the label handle it naturally
+            if (checkboxWrapper && (
+                e.target === checkboxWrapper ||
+                e.target === checkboxCustom ||
+                checkboxWrapper.contains(e.target)
+            )) {
+              // Let the label handle the click naturally - do nothing
+              return;
+            }
+
+            // If clicking elsewhere on the card, manually toggle the checkbox
             const checkbox = btn.querySelector('.v10-sample-checkbox');
-            if (checkbox && e.target !== checkbox) {
+            if (checkbox) {
               checkbox.checked = !checkbox.checked;
-              checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+              console.log(`🔄 Manual toggle: ${checkbox.getAttribute('data-request-id')}, now checked: ${checkbox.checked}`);
+              // Trigger change event
+              const changeEvent = new Event('change', { bubbles: true });
+              checkbox.dispatchEvent(changeEvent);
+              console.log('📤 Dispatched change event');
             }
           } else {
             // Normal single selection mode
@@ -22161,14 +22175,19 @@ class V10_ModalManager {
 
       // Checkbox change handler (delegated to modal for checkboxes added dynamically)
       modal.addEventListener('change', (e) => {
+        console.log('🔍 Change event detected:', e.target);
         if (e.target.classList.contains('v10-sample-checkbox')) {
           const requestId = e.target.getAttribute('data-request-id');
+          console.log(`✅ Checkbox changed: ${requestId}, checked: ${e.target.checked}`);
+
           if (e.target.checked) {
             selectedSamples.add(requestId);
           } else {
             selectedSamples.delete(requestId);
           }
+
           selectedCountEl.textContent = selectedSamples.size;
+          console.log(`📊 Total selected: ${selectedSamples.size}`);
         }
       });
 

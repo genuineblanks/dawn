@@ -13045,18 +13045,20 @@ select:focus {
   z-index: 10 !important;
 }
 
-/* COMPLETELY HIDE Native Checkbox */
+/* Visually Hide Native Checkbox (but keep it functional) */
 .v10-sample-checkbox,
 input.v10-sample-checkbox,
 input[type="checkbox"].v10-sample-checkbox {
-  display: none !important;
-  opacity: 0 !important;
   position: absolute !important;
-  pointer-events: none !important;
-  width: 0 !important;
-  height: 0 !important;
+  opacity: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
   margin: 0 !important;
   padding: 0 !important;
+  border: 0 !important;
+  clip: rect(0, 0, 0, 0) !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
   appearance: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
