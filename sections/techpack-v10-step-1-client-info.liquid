@@ -618,6 +618,12 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
   </div>
 </section>
 
+<!-- Unlock Animation Overlay -->
+<div class="v10-unlock-overlay" id="v10-unlock-overlay">
+  <div class="v10-unlock-icon">🔓</div>
+  <div class="v10-unlock-text">ACCESS GRANTED</div>
+</div>
+
 <!-- Client Verification Modal -->
 <div class="v10-modal-overlay" id="v10-client-verification-modal" style="display: none;">
   <div class="v10-modal v10-modal--verification">
@@ -1115,32 +1121,6 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 @keyframes v10-unlock-text {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
-}
-
-/* COMBINE Lock Button */
-.v10-combine-lock-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  font-family: 'Courier New', monospace;
-  color: var(--v10-text-primary);
-}
-
-.v10-combine-lock-btn:hover {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
-  border-color: rgba(99, 102, 241, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-}
-
-.v10-combine-lock-btn .lock-icon {
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* Registration Warning Box */
