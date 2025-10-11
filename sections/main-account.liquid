@@ -27,9 +27,8 @@
 <!-- TechPack styling wrapper -->
 <div class="customer_account">
   <div class="customer account section-{{ section.id }}-padding">
-
-    {%- unless is_wholesale -%}
-    <!-- Account header (hidden for wholesale customers) -->
+    
+    <!-- TechPack header -->
     <h1>
       <span>{{ 'customer.account.title' | t }}</span>
       <a href="{{ routes.account_logout_url }}">
@@ -39,7 +38,6 @@
         {{ 'customer.log_out' | t }}
       </a>
     </h1>
-    {%- endunless -%}
 
     {%- if is_wholesale -%}
       <!-- WHOLESALE CUSTOMER DASHBOARD -->
