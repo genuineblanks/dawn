@@ -550,36 +550,39 @@ button:focus,
   min-height: 100vh;
   background: var(--v10-bg-secondary);
   padding: var(--v10-space-8) 0;
+
+  /* Vertical centering for steps 1-4 */
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .techpack-container {
-  max-width: 1200px; /* Fixed width - keeps content at readable size */
-  margin: 0 auto; /* Centers the container */
-  padding: 0 2rem; /* Horizontal padding for mobile safety */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0; /* Remove padding to prevent white space - let v10-app-container handle it */
   position: relative;
   overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 .techpack-content {
-  background: var(--v10-bg-tertiary); /* #2a2a2a - slightly lighter than section background */
-  border-radius: 0; /* No rounded corners for clean fullscreen look */
-  padding: var(--v10-space-8) var(--v10-space-6);
-  box-shadow: none; /* No shadow for clean appearance */
-  border: none; /* No border */
+  background: var(--v10-bg-tertiary);
+  border-radius: var(--v10-radius-xl);
+  padding: var(--v10-space-12);
+  box-shadow: var(--v10-shadow-lg);
+  border: 1px solid var(--v10-border-primary);
   backdrop-filter: var(--v10-backdrop-blur);
 }
 
 @media (max-width: 768px) {
   .techpack-container {
-    max-width: 100%; /* Full width on mobile */
-    padding: 0 1rem; /* Reduced padding for mobile */
+    padding: 0; /* Remove mobile padding too */
   }
-
+  
   .techpack-content {
-    padding: var(--v10-space-6) var(--v10-space-4);
+    padding: var(--v10-space-6);
+    border-radius: var(--v10-radius-lg);
   }
 }
 
@@ -1385,18 +1388,25 @@ button:focus,
 
 .v10-studio-card {
   background: var(--v10-bg-card);
-  border: none;
-  border-radius: 0;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-6);
   margin-bottom: var(--v10-space-6);
-  box-shadow: none;
-  backdrop-filter: none;
-  transition: none;
+  box-shadow: var(--v10-glass-shadow);
+  backdrop-filter: var(--v10-backdrop-blur);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
 .v10-studio-card::before {
-  display: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--v10-border-light);
+  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
 }
 
 /* Removed hover effect for solid appearance */
