@@ -311,6 +311,12 @@ const V10_QUANTITY_CONFIG = {
 const V10_State = {
   requestType: null, // 'quotation', 'sample-request', 'bulk-order-request'
   parentRequestId: null, // Parent request ID for sample/bulk requests (backup storage)
+  parentRequestData: null, // Full parent request data (backup storage)
+
+  // Combine Mode - for combining multiple samples into one bulk order
+  isCombinedOrder: false, // True when multiple samples are combined
+  combinedParentRequests: null, // Array of parent request objects when combining
+
   currentStudio: 'garment',
   currentMode: 'labdips', // 'labdips' or 'designs' within design studio
   garments: new Map(),
@@ -21577,16 +21583,19 @@ class V10_ModalManager {
     this.currentClientType = clientType;
     this.closeModal('client-verification');
 
-    // NEW: Lock/unlock company and email fields based on client type
-    if (clientType === 'registered') {
-      this.lockRegisteredClientFields();
-    } else {
-      this.unlockRegisteredClientFields();
-    }
+    // Show unlock animation
+    this.showUnlockAnimation(() => {
+      // NEW: Lock/unlock company and email fields based on client type
+      if (clientType === 'registered') {
+        this.lockRegisteredClientFields();
+      } else {
+        this.unlockRegisteredClientFields();
+      }
 
-    // Update submission modal for client type
-    this.updateSubmissionModalForClientType(clientType);
-    this.openModal('submission-type');
+      // Update submission modal for client type
+      this.updateSubmissionModalForClientType(clientType);
+      this.openModal('submission-type');
+    });
   }
 
   /**
@@ -21976,18 +21985,9 @@ class V10_ModalManager {
     const loadingHTML = `
       <div class="v10-modal-overlay" id="v10-sample-selection-modal" style="display: flex;">
         <div class="v10-modal-dialog" style="max-width: 700px;">
-          <div class="v10-modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <div class="v10-modal-header">
             <h3 class="v10-modal-title">Select Sample</h3>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-              <button type="button" id="v10-combine-toggle-btn" class="v10-combine-lock-btn" title="Toggle COMBINE mode">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="lock-icon">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-                <span style="font-size: 11px; font-weight: 600;">COMBINE</span>
-              </button>
-              <button type="button" class="v10-modal-close" aria-label="Close">×</button>
-            </div>
+            <button type="button" class="v10-modal-close" aria-label="Close">×</button>
           </div>
           <div class="v10-modal-body">
             <p style="text-align: center; padding: 2rem;">Loading your sample requests...</p>
@@ -22018,212 +22018,195 @@ class V10_ModalManager {
           modal.remove();
           this.openModal('submission-type');
         });
-
-        // Hide combine button if no samples
-        const combineBtn = modal.querySelector('#v10-combine-toggle-btn');
-        if (combineBtn) combineBtn.style.display = 'none';
-
         return;
       }
 
-      // Store samples data for combine mode
-      this.samplesData = data.data;
-
       // Display samples
-      const samplesHTML = data.data.map((sample, index) => {
+      const samplesHTML = data.data.map(sample => {
         const garmentCount = sample.data?.records?.garments?.length || 0;
         const date = new Date(sample.created_at).toLocaleDateString();
         const status = sample.status || 'pending';
-        const dialNumber = index + 1;
 
         return `
-          <div class="v10-sample-card-wrapper" data-request-id="${sample.request_id}" data-dial="${dialNumber}" style="position: relative; margin-bottom: 0.75rem;">
-            <div class="v10-dial-number" style="
-              position: absolute;
-              top: -8px;
-              left: -8px;
-              width: 32px;
-              height: 32px;
-              background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-weight: 700;
-              font-size: 14px;
-              color: white;
-              box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
-              transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-              z-index: 2;
-            ">${dialNumber}</div>
-
-            <div class="v10-checkbox-wrapper" style="
-              position: absolute;
-              top: 50%;
-              right: 1rem;
-              transform: translateY(-50%);
-              display: none;
-              z-index: 2;
-            ">
-              <input type="checkbox" class="v10-combine-checkbox" style="
-                width: 24px;
-                height: 24px;
-                cursor: pointer;
-                accent-color: #3b82f6;
-              ">
-            </div>
-
-            <button type="button" class="v10-submission-card-btn" data-request-id="${sample.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s; position: relative;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                  <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">${sample.request_id}</div>
-                  <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date} • ${status}</div>
-                </div>
-                <svg class="v10-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="9 18 15 12 9 6"/>
-                </svg>
+          <button type="button" class="v10-submission-card-btn" data-request-id="${sample.request_id}" style="width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid var(--gb-neutral-300); border-radius: 8px; background: var(--gb-neutral-100); cursor: pointer; transition: all 0.2s;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem;">${sample.request_id}</div>
+                <div style="font-size: 0.875rem; color: var(--gb-neutral-600);">${garmentCount} garment${garmentCount !== 1 ? 's' : ''} • ${date} • ${status}</div>
               </div>
-            </button>
-          </div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </button>
         `;
       }).join('');
 
       modal.querySelector('.v10-modal-body').innerHTML = `
-        <div id="v10-selection-counter" style="display: none; margin-bottom: 1rem; padding: 0.75rem; background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); border-radius: 8px; text-align: center; color: white; font-weight: 600;">
-          <span id="v10-selected-count">0</span> of ${data.data.length} IDs selected
+        <p style="margin-bottom: 1rem; color: var(--gb-neutral-600);">Select a sample to create a bulk order from:</p>
+
+        <!-- Combine Mode Toggle -->
+        <div class="v10-combine-header" style="margin-bottom: 1.5rem;">
+          <button type="button" class="v10-combine-toggle" id="v10-combine-toggle">
+            <svg class="v10-lock-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+            </svg>
+            <span class="v10-combine-text">COMBINE MULTIPLE SAMPLES</span>
+          </button>
         </div>
-        <p id="v10-normal-instructions" style="margin-bottom: 1rem; color: var(--gb-neutral-600);">Select a sample to create a bulk order from:</p>
-        <p id="v10-combine-instructions" style="display: none; margin-bottom: 1rem; color: var(--gb-neutral-600);">Select multiple sample requests to combine into one bulk order:</p>
-        <div style="max-height: 400px; overflow-y: auto;" id="v10-samples-list">
+
+        <div class="v10-samples-list" style="max-height: 400px; overflow-y: auto;">
           ${samplesHTML}
         </div>
-        <button type="button" id="v10-combine-unlock-btn" class="v10-combine-unlock-btn" style="
-          display: none;
-          width: 100%;
-          padding: 1rem;
-          margin-top: 1rem;
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-weight: 700;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: all 0.3s;
-          opacity: 0.5;
-          pointer-events: none;
-        " disabled>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 0.5rem;">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-          COMBINE & UNLOCK
-        </button>
+
+        <!-- Combine Action Bar (hidden by default) -->
+        <div class="v10-combine-action-bar" id="v10-combine-action-bar" style="display: none;">
+          <div class="v10-combine-count">
+            <span id="v10-selected-count">0</span> samples selected
+          </div>
+          <button type="button" class="v10-btn v10-btn--primary" id="v10-combine-continue">
+            COMBINE & CONTINUE
+            <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </button>
+        </div>
       `;
 
-      // Add COMBINE toggle functionality
-      const combineToggleBtn = modal.querySelector('#v10-combine-toggle-btn');
-      if (combineToggleBtn) {
-        combineToggleBtn.addEventListener('click', () => {
-          this.combineMode = !this.combineMode;
-          this.toggleCombineMode(modal);
-        });
-      }
+      // Combine mode state
+      let combineMode = false;
+      const selectedSamples = new Set();
 
-      // Add click handlers for sample cards
-      modal.querySelectorAll('.v10-submission-card-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (this.combineMode) {
-            // In combine mode: toggle selection via checkbox
-            const wrapper = btn.closest('.v10-sample-card-wrapper');
-            const checkbox = wrapper.querySelector('.v10-combine-checkbox');
-            if (checkbox) {
+      // Combine mode toggle handler
+      const combineToggle = modal.querySelector('#v10-combine-toggle');
+      const combineLockIcon = modal.querySelector('.v10-lock-icon');
+      const combineText = modal.querySelector('.v10-combine-text');
+      const combineActionBar = modal.querySelector('#v10-combine-action-bar');
+      const selectedCountEl = modal.querySelector('#v10-selected-count');
+      const sampleButtons = modal.querySelectorAll('.v10-submission-card-btn');
+
+      combineToggle.addEventListener('click', () => {
+        combineMode = !combineMode;
+
+        if (combineMode) {
+          // UNLOCK animation
+          combineToggle.classList.add('active');
+          combineText.textContent = 'COMBINE MODE ACTIVE';
+          combineActionBar.style.display = 'flex';
+
+          // Transform sample cards to checkbox mode
+          sampleButtons.forEach(btn => {
+            btn.style.cursor = 'default';
+            btn.classList.add('combine-mode');
+
+            // Add checkbox HTML
+            const requestId = btn.getAttribute('data-request-id');
+            if (!btn.querySelector('.v10-sample-checkbox-wrapper')) {
+              const checkboxHTML = `
+                <label class="v10-sample-checkbox-wrapper" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); z-index: 10;">
+                  <input type="checkbox" class="v10-sample-checkbox" data-request-id="${requestId}">
+                  <span class="v10-checkbox-custom"></span>
+                </label>
+              `;
+              btn.style.position = 'relative';
+              btn.style.paddingLeft = '60px';
+              btn.insertAdjacentHTML('afterbegin', checkboxHTML);
+            }
+          });
+        } else {
+          // LOCK again
+          combineToggle.classList.remove('active');
+          combineText.textContent = 'COMBINE MULTIPLE SAMPLES';
+          combineActionBar.style.display = 'none';
+          selectedSamples.clear();
+
+          // Remove checkboxes
+          sampleButtons.forEach(btn => {
+            btn.classList.remove('combine-mode');
+            btn.style.cursor = 'pointer';
+            btn.style.paddingLeft = '1.25rem';
+            const checkbox = btn.querySelector('.v10-sample-checkbox-wrapper');
+            if (checkbox) checkbox.remove();
+          });
+        }
+      });
+
+      // Sample click handlers (normal and combine mode)
+      sampleButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          if (combineMode) {
+            // Prevent default button click in combine mode
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Toggle checkbox
+            const checkbox = btn.querySelector('.v10-sample-checkbox');
+            if (checkbox && e.target !== checkbox) {
               checkbox.checked = !checkbox.checked;
               checkbox.dispatchEvent(new Event('change'));
             }
           } else {
-            // Normal mode: proceed with single selection
+            // Normal single selection mode
             const requestId = btn.getAttribute('data-request-id');
-            // Store FULL sample data (not just ID)
             const sample = data.data.find(s => s.request_id === requestId);
             this.selectedParentRequest = sample;
             this.selectedParentRequestId = requestId;
-            V10_State.parentRequestId = requestId; // Backup in global state
-            V10_State.parentRequestData = sample; // Store full data too
+            V10_State.parentRequestId = requestId;
+            V10_State.parentRequestData = sample;
             console.log('✅ Selected sample parent ID:', requestId);
-            console.log('✅ Stored full sample data with', sample?.data?.records?.garments?.length || 0, 'garments');
-            console.log('✅ Stored in modalManager:', this.selectedParentRequestId);
-            console.log('✅ Stored in V10_State:', V10_State.parentRequestId);
-
-            // Store for unlock animation
-            this.validatedRequestId = requestId;
-            this.pendingSubmissionType = 'bulk-order-request';
-
-            // Close modal and show unlock animation
             modal.remove();
-            this.showUnlockAnimation();
+            this.selectSubmissionType('bulk-order-request');
           }
         });
 
         // Hover effect (only in normal mode)
         btn.addEventListener('mouseenter', () => {
-          if (!this.combineMode) {
+          if (!combineMode) {
             btn.style.borderColor = 'var(--gb-neutral-700)';
             btn.style.background = 'var(--gb-neutral-200)';
           }
         });
         btn.addEventListener('mouseleave', () => {
-          if (!this.combineMode) {
+          if (!combineMode) {
             btn.style.borderColor = 'var(--gb-neutral-300)';
             btn.style.background = 'var(--gb-neutral-100)';
           }
         });
       });
 
-      // Add checkbox change handlers
-      modal.querySelectorAll('.v10-combine-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
-          const wrapper = e.target.closest('.v10-sample-card-wrapper');
-          const requestId = wrapper.getAttribute('data-request-id');
-          const dial = wrapper.querySelector('.v10-dial-number');
-          const card = wrapper.querySelector('.v10-submission-card-btn');
-
+      // Checkbox change handler (delegated to modal for checkboxes added dynamically)
+      modal.addEventListener('change', (e) => {
+        if (e.target.classList.contains('v10-sample-checkbox')) {
+          const requestId = e.target.getAttribute('data-request-id');
           if (e.target.checked) {
-            // Add to selection with dial spin animation
-            this.selectedSampleIds.add(requestId);
-            dial.style.transform = 'rotate(360deg) scale(1.2)';
-            card.style.borderColor = '#3b82f6';
-            card.style.background = 'rgba(59, 130, 246, 0.1)';
-            card.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.4)';
-            setTimeout(() => {
-              dial.style.transform = 'rotate(360deg) scale(1)';
-            }, 300);
+            selectedSamples.add(requestId);
           } else {
-            // Remove from selection with reverse spin
-            this.selectedSampleIds.delete(requestId);
-            dial.style.transform = 'rotate(-360deg) scale(0.8)';
-            card.style.borderColor = 'var(--gb-neutral-300)';
-            card.style.background = 'var(--gb-neutral-100)';
-            card.style.boxShadow = 'none';
-            setTimeout(() => {
-              dial.style.transform = 'rotate(0deg) scale(1)';
-            }, 300);
+            selectedSamples.delete(requestId);
           }
-
-          this.updateCombineButton(modal);
-        });
+          selectedCountEl.textContent = selectedSamples.size;
+        }
       });
 
-      // Add COMBINE & UNLOCK button handler
-      const combineUnlockBtn = modal.querySelector('#v10-combine-unlock-btn');
-      if (combineUnlockBtn) {
-        combineUnlockBtn.addEventListener('click', () => {
-          if (this.selectedSampleIds.size >= 2) {
-            modal.remove();
-            this.showCombineUnlockAnimation();
-          }
-        });
-      }
+      // Combine & Continue handler
+      modal.querySelector('#v10-combine-continue').addEventListener('click', () => {
+        if (selectedSamples.size === 0) {
+          alert('⚠️ Please select at least one sample to combine.');
+          return;
+        }
+
+        // Get all selected sample data
+        const combinedSamples = Array.from(selectedSamples).map(id =>
+          data.data.find(s => s.request_id === id)
+        );
+
+        // Store combined samples
+        V10_State.combinedParentRequests = combinedSamples;
+        V10_State.isCombinedOrder = true;
+        console.log(`✅ Combining ${selectedSamples.size} samples:`, Array.from(selectedSamples));
+
+        modal.remove();
+        this.selectSubmissionType('bulk-order-request');
+      });
 
     } catch (error) {
       console.error('❌ Error fetching samples:', error);
@@ -22249,294 +22232,12 @@ class V10_ModalManager {
   }
 
   /**
-   * Toggle COMBINE mode UI
-   */
-  toggleCombineMode(modal) {
-    const lockBtn = modal.querySelector('#v10-combine-toggle-btn');
-    const lockIcon = lockBtn?.querySelector('.lock-icon');
-    const normalInstructions = modal.querySelector('#v10-normal-instructions');
-    const combineInstructions = modal.querySelector('#v10-combine-instructions');
-    const selectionCounter = modal.querySelector('#v10-selection-counter');
-    const combineUnlockBtn = modal.querySelector('#v10-combine-unlock-btn');
-    const checkboxWrappers = modal.querySelectorAll('.v10-checkbox-wrapper');
-    const cardArrows = modal.querySelectorAll('.v10-card-arrow');
-
-    if (this.combineMode) {
-      // Activate COMBINE mode
-      lockBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-      lockBtn.style.transform = 'rotate(360deg)';
-      lockIcon.innerHTML = `
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-dasharray="24" stroke-dashoffset="0"/>
-      `;
-
-      // Show combine UI
-      normalInstructions.style.display = 'none';
-      combineInstructions.style.display = 'block';
-      selectionCounter.style.display = 'block';
-      combineUnlockBtn.style.display = 'block';
-
-      // Show checkboxes, hide arrows
-      checkboxWrappers.forEach(w => w.style.display = 'block');
-      cardArrows.forEach(a => a.style.display = 'none');
-
-      console.log('🔓 COMBINE mode activated');
-    } else {
-      // Deactivate COMBINE mode
-      lockBtn.style.background = '';
-      lockBtn.style.transform = 'rotate(-360deg)';
-      lockIcon.innerHTML = `
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      `;
-
-      // Show normal UI
-      normalInstructions.style.display = 'block';
-      combineInstructions.style.display = 'none';
-      selectionCounter.style.display = 'none';
-      combineUnlockBtn.style.display = 'none';
-
-      // Hide checkboxes, show arrows
-      checkboxWrappers.forEach(w => w.style.display = 'none');
-      cardArrows.forEach(a => a.style.display = 'block');
-
-      // Clear selections
-      this.selectedSampleIds.clear();
-      modal.querySelectorAll('.v10-combine-checkbox').forEach(cb => cb.checked = false);
-      modal.querySelectorAll('.v10-submission-card-btn').forEach(card => {
-        card.style.borderColor = 'var(--gb-neutral-300)';
-        card.style.background = 'var(--gb-neutral-100)';
-        card.style.boxShadow = 'none';
-      });
-      modal.querySelectorAll('.v10-dial-number').forEach(dial => {
-        dial.style.transform = 'rotate(0deg) scale(1)';
-      });
-
-      console.log('🔒 COMBINE mode deactivated');
-    }
-
-    setTimeout(() => {
-      lockBtn.style.transform = '';
-    }, 360);
-  }
-
-  /**
-   * Update COMBINE button state
-   */
-  updateCombineButton(modal) {
-    const combineBtn = modal.querySelector('#v10-combine-unlock-btn');
-    const counter = modal.querySelector('#v10-selected-count');
-
-    if (counter) {
-      counter.textContent = this.selectedSampleIds.size;
-    }
-
-    if (combineBtn) {
-      if (this.selectedSampleIds.size >= 2) {
-        combineBtn.disabled = false;
-        combineBtn.style.opacity = '1';
-        combineBtn.style.pointerEvents = 'auto';
-        combineBtn.style.transform = 'scale(1.02)';
-        combineBtn.style.boxShadow = '0 4px 20px rgba(16, 185, 129, 0.4)';
-      } else {
-        combineBtn.disabled = true;
-        combineBtn.style.opacity = '0.5';
-        combineBtn.style.pointerEvents = 'none';
-        combineBtn.style.transform = 'scale(1)';
-        combineBtn.style.boxShadow = 'none';
-      }
-    }
-  }
-
-  /**
-   * Show COMBINE unlock animation with vault/chain effects
-   */
-  showCombineUnlockAnimation() {
-    console.log(`🔗 Combining ${this.selectedSampleIds.size} sample requests...`);
-
-    // Create overlay with vault lock animation
-    const overlay = document.createElement('div');
-    overlay.className = 'v10-combine-unlock-overlay';
-    overlay.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.95);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      opacity: 0;
-      transition: opacity 0.3s;
-    `;
-
-    overlay.innerHTML = `
-      <div class="combine-animation-container" style="text-align: center;">
-        <div class="lock-chains" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0; transition: all 0.8s;">
-          🔗 🔗 🔗
-        </div>
-        <div class="vault-lock" style="font-size: 5rem; transition: all 0.8s; display: inline-block;">
-          🔒
-        </div>
-        <div class="unlock-text" style="
-          margin-top: 1.5rem;
-          font-size: 1.5rem;
-          font-weight: 700;
-          color: white;
-          letter-spacing: 2px;
-          opacity: 0;
-          transition: opacity 0.5s;
-        ">
-          COMBINING ${this.selectedSampleIds.size} REQUESTS...
-        </div>
-        <div class="particle-container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; pointer-events: none;"></div>
-      </div>
-    `;
-
-    document.body.appendChild(overlay);
-
-    // Animation sequence
-    setTimeout(() => overlay.style.opacity = '1', 10);
-
-    // Stage 1: Show chains and text (0-500ms)
-    setTimeout(() => {
-      const chains = overlay.querySelector('.lock-chains');
-      const text = overlay.querySelector('.unlock-text');
-      chains.style.opacity = '1';
-      chains.style.transform = 'translateY(-20px)';
-      text.style.opacity = '1';
-    }, 100);
-
-    // Stage 2: Chain link effect (500-1200ms)
-    setTimeout(() => {
-      const chains = overlay.querySelector('.lock-chains');
-      chains.style.transform = 'translateY(-20px) scale(1.2)';
-      chains.style.color = '#3b82f6';
-    }, 500);
-
-    // Stage 3: Lock spins and unlocks (1200-2000ms)
-    setTimeout(() => {
-      const lock = overlay.querySelector('.vault-lock');
-      const text = overlay.querySelector('.unlock-text');
-      lock.style.transform = 'rotate(720deg) scale(1.3)';
-      lock.textContent = '🔓';
-      text.textContent = 'VAULT UNLOCKED';
-      text.style.color = '#10b981';
-
-      // Add particle burst effect
-      this.createParticleBurst(overlay.querySelector('.particle-container'));
-    }, 1200);
-
-    // Stage 4: Merge samples and proceed (2000-2400ms)
-    setTimeout(() => {
-      const selectedIds = Array.from(this.selectedSampleIds);
-      this.mergeSamples(selectedIds);
-
-      const text = overlay.querySelector('.unlock-text');
-      text.textContent = 'COMBINED ORDER CREATED';
-      text.style.fontSize = '1.8rem';
-    }, 2000);
-
-    // Stage 5: Fade out and proceed (2400-2800ms)
-    setTimeout(() => {
-      overlay.style.opacity = '0';
-      setTimeout(() => {
-        overlay.remove();
-        // Proceed with combined request
-        this.validatedRequestId = this.combinedRequestId;
-        this.pendingSubmissionType = 'bulk-order-request';
-        this.selectSubmissionType('bulk-order-request');
-      }, 300);
-    }, 2400);
-  }
-
-  /**
-   * Create particle burst effect
-   */
-  createParticleBurst(container) {
-    const colors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b'];
-    for (let i = 0; i < 20; i++) {
-      const particle = document.createElement('div');
-      const angle = (Math.PI * 2 * i) / 20;
-      const velocity = 50 + Math.random() * 100;
-      const size = 4 + Math.random() * 8;
-
-      particle.style.cssText = `
-        position: absolute;
-        width: ${size}px;
-        height: ${size}px;
-        background: ${colors[Math.floor(Math.random() * colors.length)]};
-        border-radius: 50%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 1;
-        transition: all 0.8s cubic-bezier(0, 0.5, 0.5, 1);
-      `;
-
-      container.appendChild(particle);
-
-      setTimeout(() => {
-        particle.style.transform = `translate(${Math.cos(angle) * velocity}px, ${Math.sin(angle) * velocity}px)`;
-        particle.style.opacity = '0';
-      }, 10);
-
-      setTimeout(() => particle.remove(), 800);
-    }
-  }
-
-  /**
-   * Merge multiple sample requests into combined parent
-   */
-  mergeSamples(sampleIds) {
-    console.log('🔀 Merging samples:', sampleIds);
-
-    const allGarments = [];
-    sampleIds.forEach(id => {
-      const sample = this.samplesData.find(s => s.request_id === id);
-      if (sample?.data?.records?.garments) {
-        allGarments.push(...sample.data.records.garments);
-      } else if (sample?.data?.garments) {
-        allGarments.push(...sample.data.garments);
-      }
-    });
-
-    // Create combined parent request
-    this.combinedRequestId = `COMBINED-${Date.now()}`;
-    this.selectedParentRequest = {
-      request_id: this.combinedRequestId,
-      combined_from: sampleIds,
-      data: {
-        records: {
-          garments: allGarments
-        }
-      },
-      created_at: new Date().toISOString(),
-      status: 'combined'
-    };
-
-    this.selectedParentRequestId = this.combinedRequestId;
-    V10_State.parentRequestId = this.combinedRequestId;
-    V10_State.parentRequestData = this.selectedParentRequest;
-
-    console.log(`✅ Created combined request ${this.combinedRequestId} with ${allGarments.length} garments from ${sampleIds.length} samples`);
-  }
-
-  /**
    * Setup selection modals - placeholder for any initialization needed
    */
   setupSelectionModals() {
     // Initialize selectedParentRequestId
     this.selectedParentRequestId = null;
     this.selectedParentRequest = null;
-
-    // Initialize COMBINE mode state
-    this.combineMode = false;
-    this.selectedSampleIds = new Set();
-    this.samplesData = []; // Store fetched samples for combine
-
     console.log('✅ Selection modals initialized');
   }
 
@@ -22545,7 +22246,42 @@ class V10_ModalManager {
    * Returns array of garment type strings, or null if no filtering needed
    */
   getParentGarmentTypes() {
-    // First check modalManager instance
+    // Check if this is a combined order
+    if (V10_State.isCombinedOrder && V10_State.combinedParentRequests) {
+      console.log('🔗 Getting garment types from COMBINED parent requests');
+      const allTypes = new Set();
+
+      V10_State.combinedParentRequests.forEach((parentRequest, idx) => {
+        // Get garments from this parent request
+        let garments = null;
+        if (parentRequest.data?.records?.garments) {
+          garments = parentRequest.data.records.garments;
+        } else if (parentRequest.data?.garments) {
+          garments = parentRequest.data.garments;
+        } else if (typeof parentRequest.data === 'string') {
+          try {
+            const parsed = JSON.parse(parentRequest.data);
+            garments = parsed.records?.garments || parsed.garments;
+          } catch (e) {
+            console.error('❌ Failed to parse data string:', e);
+          }
+        }
+
+        if (garments && Array.isArray(garments)) {
+          garments.forEach(g => {
+            if (g.type) {
+              allTypes.add(g.type);
+            }
+          });
+        }
+      });
+
+      const uniqueTypes = [...allTypes];
+      console.log('✅ Combined parent requests have garment types:', uniqueTypes);
+      return uniqueTypes.length > 0 ? uniqueTypes : null;
+    }
+
+    // Single parent request
     const parentRequest = this.selectedParentRequest || V10_State.parentRequestData;
 
     if (!parentRequest) {
@@ -22593,6 +22329,13 @@ class V10_ModalManager {
    * Supports multiple fabrics for the same garment type
    */
   getParentGarmentFabricMapping() {
+    // Check if this is a combined order
+    if (V10_State.isCombinedOrder && V10_State.combinedParentRequests) {
+      console.log('🔗 Processing COMBINED parent requests for fabric mapping');
+      return this.getCombinedGarmentFabricMapping();
+    }
+
+    // Single parent request
     const parentRequest = this.selectedParentRequest || V10_State.parentRequestData;
 
     if (!parentRequest) {
@@ -22638,6 +22381,63 @@ class V10_ModalManager {
     });
 
     // Log summary
+    mapping.forEach((fabrics, garmentType) => {
+      console.log(`✅ ${garmentType}: ${fabrics.length} fabric(s) - ${fabrics.join(', ')}`);
+    });
+
+    return mapping.size > 0 ? mapping : null;
+  }
+
+  /**
+   * Get combined garment fabric mapping from multiple parent requests
+   * Merges garments from all combined samples
+   */
+  getCombinedGarmentFabricMapping() {
+    const mapping = new Map();
+
+    V10_State.combinedParentRequests.forEach((parentRequest, idx) => {
+      console.log(`📦 Processing sample ${idx + 1}/${V10_State.combinedParentRequests.length}: ${parentRequest.request_id}`);
+
+      // Get garments from this parent request
+      let garments = null;
+      if (parentRequest.data?.records?.garments) {
+        garments = parentRequest.data.records.garments;
+      } else if (parentRequest.data?.garments) {
+        garments = parentRequest.data.garments;
+      } else if (typeof parentRequest.data === 'string') {
+        try {
+          const parsed = JSON.parse(parentRequest.data);
+          garments = parsed.records?.garments || parsed.garments;
+        } catch (e) {
+          console.error('❌ Failed to parse data string:', e);
+        }
+      }
+
+      if (!garments || !Array.isArray(garments)) {
+        console.warn(`⚠️ No garments found in ${parentRequest.request_id}`);
+        return;
+      }
+
+      // Merge garments into mapping
+      garments.forEach(g => {
+        if (g.type && g.fabricType) {
+          // Initialize array if not exists
+          if (!mapping.has(g.type)) {
+            mapping.set(g.type, []);
+          }
+
+          // Add fabric if not already in array (avoid duplicates)
+          const fabrics = mapping.get(g.type);
+          if (!fabrics.includes(g.fabricType)) {
+            fabrics.push(g.fabricType);
+            console.log(`📋 [${parentRequest.request_id}] Added ${g.type} → ${g.fabricType}`);
+          }
+        }
+      });
+    });
+
+    // Log combined summary
+    console.log(`\n🔗 COMBINED FABRIC MAPPING:`);
     mapping.forEach((fabrics, garmentType) => {
       console.log(`✅ ${garmentType}: ${fabrics.length} fabric(s) - ${fabrics.join(', ')}`);
     });
@@ -23549,6 +23349,32 @@ class V10_ModalManager {
     document.querySelectorAll('.v10-modal-overlay').forEach(modal => {
       this.closeModal(modal);
     });
+  }
+
+  /**
+   * Show unlock animation overlay
+   * @param {Function} callback - Function to execute after animation completes
+   */
+  showUnlockAnimation(callback) {
+    const overlay = document.getElementById('v10-unlock-overlay');
+    if (!overlay) {
+      console.warn('⚠️ Unlock overlay not found');
+      if (callback) callback();
+      return;
+    }
+
+    // Show overlay with active class
+    overlay.classList.add('active');
+
+    // Hide overlay after animation (1 second total)
+    setTimeout(() => {
+      overlay.classList.remove('active');
+
+      // Execute callback after overlay fades out
+      if (callback) {
+        setTimeout(callback, 300); // Wait for fade out transition
+      }
+    }, 1000);
   }
 
   trapFocus(modal) {
