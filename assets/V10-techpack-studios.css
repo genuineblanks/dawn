@@ -1385,25 +1385,18 @@ button:focus,
 
 .v10-studio-card {
   background: var(--v10-bg-card);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-lg);
+  border: none;
+  border-radius: 0;
   padding: var(--v10-space-6);
   margin-bottom: var(--v10-space-6);
-  box-shadow: var(--v10-glass-shadow);
-  backdrop-filter: var(--v10-backdrop-blur);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none;
+  backdrop-filter: none;
+  transition: none;
   position: relative;
 }
 
 .v10-studio-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--v10-border-light);
-  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
+  display: none;
 }
 
 /* Removed hover effect for solid appearance */
