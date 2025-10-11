@@ -13223,17 +13223,17 @@ input[type="checkbox"].v10-sample-checkbox {
   z-index: 1 !important;
 }
 
-/* Matrix Text - "PROCESSING" */
+/* Matrix Text - "AUTHENTICATING" - Subtle Design System Match */
 .v10-matrix-text {
   position: relative !important;
   z-index: 2 !important;
-  font-size: 32px !important;
-  font-weight: 700 !important;
-  color: #00ff41 !important;
-  letter-spacing: 8px !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #c1c1c1 !important;
+  letter-spacing: 6px !important;
   text-transform: uppercase !important;
   font-family: 'Courier New', monospace !important;
-  text-shadow: 0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(0, 255, 65, 0.5) !important;
+  text-shadow: 0 0 8px rgba(193, 193, 193, 0.3), 0 0 16px rgba(193, 193, 193, 0.15) !important;
   animation: v10-matrix-text-pulse 1.5s ease-in-out infinite !important;
   opacity: 0;
   animation-delay: 0.5s;
@@ -13242,11 +13242,11 @@ input[type="checkbox"].v10-sample-checkbox {
 
 @keyframes v10-matrix-text-pulse {
   0%, 100% {
-    opacity: 1;
-    text-shadow: 0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(0, 255, 65, 0.5);
+    opacity: 0.9;
+    text-shadow: 0 0 8px rgba(193, 193, 193, 0.3), 0 0 16px rgba(193, 193, 193, 0.15);
   }
   50% {
     opacity: 0.7;
-    text-shadow: 0 0 20px rgba(0, 255, 65, 1), 0 0 40px rgba(0, 255, 65, 0.7);
+    text-shadow: 0 0 12px rgba(193, 193, 193, 0.4), 0 0 24px rgba(193, 193, 193, 0.2);
   }
 }

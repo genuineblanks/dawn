@@ -21478,8 +21478,8 @@ class V10_ModalManager {
         e.preventDefault();
         e.stopPropagation();
 
-        // Show unlock animation FIRST (introduces the app experience)
-        this.showUnlockAnimation(() => {
+        // Show matrix animation FIRST (authenticating/verifying effect)
+        this.showMatrixAnimation(() => {
           // Check if user is logged in as wholesale customer
           if (window.V10_LOGGED_IN_CUSTOMER && window.V10_LOGGED_IN_CUSTOMER.isWholesale) {
             console.log('✅ Logged-in wholesale customer - skipping client verification modal');
@@ -21586,19 +21586,16 @@ class V10_ModalManager {
     this.currentClientType = clientType;
     this.closeModal('client-verification');
 
-    // Show matrix animation when selecting client type
-    this.showMatrixAnimation(() => {
-      // NEW: Lock/unlock company and email fields based on client type
-      if (clientType === 'registered') {
-        this.lockRegisteredClientFields();
-      } else {
-        this.unlockRegisteredClientFields();
-      }
+    // NEW: Lock/unlock company and email fields based on client type
+    if (clientType === 'registered') {
+      this.lockRegisteredClientFields();
+    } else {
+      this.unlockRegisteredClientFields();
+    }
 
-      // Update submission modal for client type
-      this.updateSubmissionModalForClientType(clientType);
-      this.openModal('submission-type');
-    });
+    // Update submission modal for client type
+    this.updateSubmissionModalForClientType(clientType);
+    this.openModal('submission-type');
   }
 
   /**
@@ -22844,29 +22841,32 @@ class V10_ModalManager {
   }
 
   showClientForm() {
-    const landingSection = document.getElementById('techpack-v10-landing');
-    const formSection = document.getElementById('techpack-v10-step-1');
-    
-    if (landingSection) {
-      landingSection.style.display = 'none';
-    }
-    
-    if (formSection) {
-      // Must use inline style to override the inline display:none from the HTML
-      formSection.style.display = 'block';
-      formSection.scrollIntoView({ behavior: 'smooth' });
-      
-      // Update current step
-      sessionStorage.setItem('v10_current_step', '1');
-      
-      // Initialize client manager if not already done
-      if (!window.v10ClientManager) {
-        window.v10ClientManager = new V10_ClientManager();
-      } else {
-        // Re-setup form validation now that form is visible
-        window.v10ClientManager.setupFormValidation();
+    // Show "ACCESS GRANTED" unlock animation before revealing Step 1
+    this.showUnlockAnimation(() => {
+      const landingSection = document.getElementById('techpack-v10-landing');
+      const formSection = document.getElementById('techpack-v10-step-1');
+
+      if (landingSection) {
+        landingSection.style.display = 'none';
       }
-    }
+
+      if (formSection) {
+        // Must use inline style to override the inline display:none from the HTML
+        formSection.style.display = 'block';
+        formSection.scrollIntoView({ behavior: 'smooth' });
+
+        // Update current step
+        sessionStorage.setItem('v10_current_step', '1');
+
+        // Initialize client manager if not already done
+        if (!window.v10ClientManager) {
+          window.v10ClientManager = new V10_ClientManager();
+        } else {
+          // Re-setup form validation now that form is visible
+          window.v10ClientManager.setupFormValidation();
+        }
+      }
+    });
   }
 
   updateFormForSubmissionType(submissionType) {
@@ -23424,16 +23424,16 @@ class V10_ModalManager {
     overlay.style.pointerEvents = 'auto';
 
     let frameCount = 0;
-    const maxFrames = 90; // ~1.5 seconds at 60fps
+    const maxFrames = 75; // ~1.25 seconds at 60fps - more subtle timing
 
     // Animation function
     const animate = () => {
-      // Semi-transparent black to create trailing effect
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      // Semi-transparent black to create trailing effect (more opaque for subtlety)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Green text color
-      ctx.fillStyle = '#00ff41';
+      // Subtle grey text color with opacity (matches design system)
+      ctx.fillStyle = 'rgba(193, 193, 193, 0.6)';
       ctx.font = `${fontSize}px monospace`;
 
       // Draw characters
