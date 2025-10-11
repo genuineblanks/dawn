@@ -21478,14 +21478,17 @@ class V10_ModalManager {
         e.preventDefault();
         e.stopPropagation();
 
-        // Check if user is logged in as wholesale customer
-        if (window.V10_LOGGED_IN_CUSTOMER && window.V10_LOGGED_IN_CUSTOMER.isWholesale) {
-          console.log('✅ Logged-in wholesale customer - skipping client verification modal');
-          this.selectClientType('registered'); // Go directly to submission type modal
-        } else {
-          console.log('ℹ️ Not logged in or not wholesale - showing client verification modal');
-          this.openModal('client-verification'); // Show "New or Registered" modal
-        }
+        // Show matrix animation FIRST (authenticating/verifying effect)
+        this.showMatrixAnimation(() => {
+          // Check if user is logged in as wholesale customer
+          if (window.V10_LOGGED_IN_CUSTOMER && window.V10_LOGGED_IN_CUSTOMER.isWholesale) {
+            console.log('✅ Logged-in wholesale customer - skipping client verification modal');
+            this.selectClientType('registered'); // Go directly to submission type modal
+          } else {
+            console.log('ℹ️ Not logged in or not wholesale - showing client verification modal');
+            this.openModal('client-verification'); // Show "New or Registered" modal
+          }
+        });
       });
     }
 
@@ -21758,42 +21761,42 @@ class V10_ModalManager {
   async openSampleRequestOptions() {
     this.closeModal('submission-type');
 
-    // Create and show inline modal with 2 options
+    // Create and show inline modal with 2 buttons
     const modalHTML = `
       <div class="v10-modal-overlay" id="v10-sample-options-modal" style="display: flex;">
-        <div class="v10-modal" style="max-width: 900px;">
+        <div class="v10-modal-dialog">
           <div class="v10-modal-header">
-            <div class="v10-modal-header-spacer"></div>
             <h3 class="v10-modal-title">Sample Request Options</h3>
             <button type="button" class="v10-modal-close" aria-label="Close">×</button>
           </div>
           <div class="v10-modal-body">
-            <p style="margin-bottom: 1.5rem; color: var(--v10-text-tertiary);">Choose how you want to create your sample request:</p>
+            <p style="margin-bottom: 1.5rem; color: var(--gb-neutral-600);">Choose how you want to create your sample request:</p>
 
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-              <div class="v10-submission-card-btn" id="v10-sample-new-btn" role="button" tabindex="0">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: var(--v10-text-primary);">New Sample Request</div>
-                    <div style="font-size: 0.875rem; color: var(--v10-text-tertiary);">Start fresh (auto-generated ID)</div>
-                  </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <button type="button" class="v10-btn v10-btn--primary" id="v10-sample-new-btn" style="padding: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"/>
+                    <path d="M12 5v14M5 12h14"/>
                   </svg>
+                  <div style="text-align: left;">
+                    <div style="font-weight: 600; font-size: 1rem;">New Sample Request</div>
+                    <div style="font-size: 0.875rem; opacity: 0.9;">Start fresh (auto-generated ID)</div>
+                  </div>
                 </div>
-              </div>
+              </button>
 
-              <div class="v10-submission-card-btn" id="v10-sample-from-quotation-btn" role="button" tabindex="0">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: var(--v10-text-primary);">From Previous Quotation</div>
-                    <div style="font-size: 0.875rem; color: var(--v10-text-tertiary);">Select an existing quotation</div>
-                  </div>
+              <button type="button" class="v10-btn v10-btn--secondary" id="v10-sample-from-quotation-btn" style="padding: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"/>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
                   </svg>
+                  <div style="text-align: left;">
+                    <div style="font-weight: 600; font-size: 1rem;">From Previous Quotation</div>
+                    <div style="font-size: 0.875rem; opacity: 0.8;">Select an existing quotation</div>
+                  </div>
                 </div>
-              </div>
+              </button>
             </div>
           </div>
         </div>
@@ -23390,6 +23393,89 @@ class V10_ModalManager {
         setTimeout(callback, 300); // Wait for fade out transition
       }
     }, 1000);
+  }
+
+  showMatrixAnimation(callback) {
+    const overlay = document.getElementById('v10-matrix-overlay');
+    const canvas = document.getElementById('v10-matrix-canvas');
+
+    if (!overlay || !canvas) {
+      console.warn('⚠️ Matrix overlay or canvas not found');
+      if (callback) callback();
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size to window size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Matrix characters - including numbers, letters, and katakana
+    const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
+    const fontSize = 16;
+    const columns = Math.floor(canvas.width / fontSize);
+
+    // Array to track position of each column
+    const drops = new Array(columns).fill(0);
+
+    // Show overlay
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'auto';
+
+    let frameCount = 0;
+    const maxFrames = 75; // ~1.25 seconds at 60fps - more subtle timing
+
+    // Animation function
+    const animate = () => {
+      // Semi-transparent black to create trailing effect (more opaque for subtlety)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Subtle grey text color with opacity (matches design system)
+      ctx.fillStyle = 'rgba(193, 193, 193, 0.6)';
+      ctx.font = `${fontSize}px monospace`;
+
+      // Draw characters
+      for (let i = 0; i < drops.length; i++) {
+        // Random character
+        const char = characters[Math.floor(Math.random() * characters.length)];
+
+        // Draw character
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        ctx.fillText(char, x, y);
+
+        // Reset drop to top randomly or when it reaches bottom
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        // Move drop down
+        drops[i]++;
+      }
+
+      frameCount++;
+
+      // Continue animation if not finished
+      if (frameCount < maxFrames) {
+        requestAnimationFrame(animate);
+      } else {
+        // Animation complete - fade out
+        overlay.style.opacity = '0';
+
+        // Execute callback after fade out
+        setTimeout(() => {
+          overlay.style.pointerEvents = 'none';
+          // Clear canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          if (callback) callback();
+        }, 300);
+      }
+    };
+
+    // Start animation
+    animate();
   }
 
   trapFocus(modal) {
