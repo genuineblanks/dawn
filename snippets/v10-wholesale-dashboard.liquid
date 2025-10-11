@@ -355,6 +355,4 @@
   </div>
 </div>
 
-{% comment %} Load CSS and JavaScript {% endcomment %}
-{{ 'v10-account-dashboard.css' | asset_url | stylesheet_tag }}
-{{ 'v10-account-dashboard.js' | asset_url | script_tag }}
+{% comment %} CSS and JS are loaded in sections/main-account.liquid (lines 9-10) to avoid duplicate loading {% endcomment %}
