@@ -285,6 +285,7 @@
     pointer-events: none;
   }
 
+  .factory-video-wrapper video,
   .factory-video-{{ section.id }} {
     width: 100%;
     height: 100%;
@@ -304,6 +305,7 @@
     background: rgba(0, 0, 0, 0.1);
   }
 
+  .factory-video-wrapper video::-webkit-media-controls-panel,
   .factory-video-{{ section.id }}::-webkit-media-controls-panel {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -311,13 +313,17 @@
     border-radius: 4px;
   }
 
+  .factory-video-wrapper video::-webkit-media-controls-play-button,
+  .factory-video-wrapper video::-webkit-media-controls-volume-slider,
+  .factory-video-wrapper video::-webkit-media-controls-timeline,
   .factory-video-{{ section.id }}::-webkit-media-controls-play-button,
   .factory-video-{{ section.id }}::-webkit-media-controls-volume-slider,
   .factory-video-{{ section.id }}::-webkit-media-controls-timeline {
     filter: brightness(0) invert(1);
   }
-  
+
   .factory-slide-{{ section.id }}:hover .factory-image-{{ section.id }},
+  .factory-slide-{{ section.id }}:hover .factory-video-wrapper video,
   .factory-slide-{{ section.id }}:hover .factory-video-{{ section.id }} {
     transform: scale(1.02);
   }
@@ -883,18 +889,15 @@
                   {% assign video_key = 'video_' | append: i %}
                   {% assign current_video = block.settings[video_key] %}
                   {% if current_video != blank %}
-                    <div class="factory-slide-{{ section.id }}"
+                    <div class="factory-slide-{{ section.id }} factory-video-wrapper"
                          data-filter="{{ block_filter }}"
                          data-product="{{ block_index }}"
                          data-slide-index="{{ slide_index }}"
                          data-media-type="video">
                       {{ current_video | video_tag:
-                         class: 'factory-video-' | append: section.id,
                          autoplay: false,
                          muted: true,
                          loop: true,
-                         playsinline: true,
-                         preload: 'none',
                          controls: false
                       }}
                     </div>
@@ -1083,7 +1086,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Video management functions
   function pauseAllVideos() {
-    const videos = section.querySelectorAll('.factory-video-' + sectionId);
+    const videos = section.querySelectorAll('.factory-video-wrapper video');
     videos.forEach(video => {
       if (!video.paused) {
         video.pause();
@@ -1096,7 +1099,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentSlide = allSlides[slideIndex];
 
     if (currentSlide && currentSlide.dataset.mediaType === 'video') {
-      const video = currentSlide.querySelector('.factory-video-' + sectionId);
+      const video = currentSlide.querySelector('video');
       if (video) {
         // Lazy load: Enable preloading when video becomes active
         if (video.preload === 'none') {
@@ -1562,8 +1565,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Simplified video event listeners - loop attribute handles looping automatically
   function addVideoEventListeners() {
-    const videos = section.querySelectorAll('.factory-video-' + sectionId);
+    const videos = section.querySelectorAll('.factory-video-wrapper video');
     videos.forEach(video => {
+      // Add factory-video class for CSS styling
+      video.classList.add('factory-video-' + sectionId);
+
+      // Set preload to none for lazy loading
+      video.preload = 'none';
+
       // Backup: Ensure looping works if loop attribute fails
       video.addEventListener('ended', function() {
         this.currentTime = 0;
