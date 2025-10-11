@@ -21984,7 +21984,7 @@ class V10_ModalManager {
     // Create loading modal
     const loadingHTML = `
       <div class="v10-modal-overlay" id="v10-sample-selection-modal" style="display: flex;">
-        <div class="v10-modal-dialog" style="max-width: 700px;">
+        <div class="v10-modal v10-modal-dialog" style="max-width: 900px;">
           <div class="v10-modal-header">
             <h3 class="v10-modal-title">Select Sample</h3>
             <button type="button" class="v10-modal-close" aria-label="Close">×</button>
@@ -22098,7 +22098,7 @@ class V10_ModalManager {
           sampleButtons.forEach(btn => {
             btn.classList.add('combine-mode');
 
-            // Add checkbox HTML
+            // Add checkbox HTML at the beginning of the flex container
             const requestId = btn.getAttribute('data-request-id');
             if (!btn.querySelector('.v10-sample-checkbox-wrapper')) {
               const checkboxHTML = `
@@ -22107,7 +22107,7 @@ class V10_ModalManager {
                   <span class="v10-checkbox-custom"></span>
                 </label>
               `;
-              btn.style.paddingLeft = '60px'; // Make room for checkbox
+              // Insert checkbox as first child (will be on left due to flex layout)
               btn.insertAdjacentHTML('afterbegin', checkboxHTML);
             }
           });
@@ -22118,10 +22118,9 @@ class V10_ModalManager {
           combineActionBar.style.display = 'none';
           selectedSamples.clear();
 
-          // Remove checkboxes and reset padding
+          // Remove checkboxes
           sampleButtons.forEach(btn => {
             btn.classList.remove('combine-mode');
-            btn.style.paddingLeft = '1.25rem'; // Reset padding
             const checkbox = btn.querySelector('.v10-sample-checkbox-wrapper');
             if (checkbox) checkbox.remove();
           });

@@ -12937,6 +12937,9 @@ select:focus {
 
 /* Base Sample Card Button - Dark Theme */
 .v10-submission-card-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
   width: 100% !important;
   text-align: left !important;
   padding: 1.25rem !important;
@@ -12948,7 +12951,7 @@ select:focus {
   cursor: pointer !important;
   transition: all 0.2s ease !important;
   box-shadow: var(--v10-shadow-sm, 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3)) !important;
-  position: relative;
+  position: relative !important;
 }
 
 .v10-submission-card-btn:hover {
@@ -12956,6 +12959,11 @@ select:focus {
   border-color: var(--v10-border-focus, #6b7280) !important;
   transform: translateY(-1px) !important;
   box-shadow: var(--v10-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3)) !important;
+}
+
+/* Content wrapper inside sample card */
+.v10-submission-card-btn > div:not(.v10-sample-checkbox-wrapper) {
+  flex: 1 !important;
 }
 
 /* Combine Mode Header */
@@ -13022,27 +13030,25 @@ select:focus {
 .v10-submission-card-btn.combine-mode {
   background: rgba(45, 45, 45, 0.8) !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
-  cursor: default !important;
+  cursor: pointer !important;
   transition: all 0.2s ease !important;
+  gap: 16px !important;
 }
 
 .v10-submission-card-btn.combine-mode:hover {
   background: rgba(52, 52, 52, 0.9) !important;
   border-color: rgba(255, 255, 255, 0.15) !important;
-  transform: none !important;
+  transform: translateY(-1px) !important;
 }
 
-/* Checkbox Wrapper */
+/* Checkbox Wrapper - Flows naturally in flex layout */
 .v10-sample-checkbox-wrapper {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
-  position: absolute !important;
-  left: 16px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 10 !important;
+  flex-shrink: 0 !important;
+  margin-right: 0 !important;
 }
 
 /* Visually Hide Native Checkbox (but keep it functional) */
@@ -13116,6 +13122,13 @@ input[type="checkbox"].v10-sample-checkbox {
   }
 }
 
+/* Samples List Container */
+.v10-samples-list {
+  max-height: 400px !important;
+  overflow-y: auto !important;
+  padding-right: 8px !important;
+}
+
 /* Combine Action Bar */
 .v10-combine-action-bar {
   position: sticky !important;
@@ -13123,12 +13136,17 @@ input[type="checkbox"].v10-sample-checkbox {
   background: linear-gradient(to top, rgba(26, 26, 26, 0.98) 0%, rgba(26, 26, 26, 0.95) 100%) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
   padding: 16px 20px !important;
-  display: flex !important;
+  display: none !important; /* Hidden by default */
   justify-content: space-between !important;
   align-items: center !important;
   backdrop-filter: blur(10px) !important;
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4) !important;
   margin: 0 -20px -20px -20px !important;
+}
+
+/* Show action bar when active */
+.v10-combine-action-bar[style*="display: flex"] {
+  display: flex !important;
 }
 
 .v10-combine-count {
