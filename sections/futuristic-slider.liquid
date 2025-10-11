@@ -285,7 +285,6 @@
     pointer-events: none;
   }
 
-  .factory-video-wrapper video,
   .factory-video-{{ section.id }} {
     width: 100%;
     height: 100%;
@@ -305,7 +304,6 @@
     background: rgba(0, 0, 0, 0.1);
   }
 
-  .factory-video-wrapper video::-webkit-media-controls-panel,
   .factory-video-{{ section.id }}::-webkit-media-controls-panel {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -313,17 +311,13 @@
     border-radius: 4px;
   }
 
-  .factory-video-wrapper video::-webkit-media-controls-play-button,
-  .factory-video-wrapper video::-webkit-media-controls-volume-slider,
-  .factory-video-wrapper video::-webkit-media-controls-timeline,
   .factory-video-{{ section.id }}::-webkit-media-controls-play-button,
   .factory-video-{{ section.id }}::-webkit-media-controls-volume-slider,
   .factory-video-{{ section.id }}::-webkit-media-controls-timeline {
     filter: brightness(0) invert(1);
   }
-
+  
   .factory-slide-{{ section.id }}:hover .factory-image-{{ section.id }},
-  .factory-slide-{{ section.id }}:hover .factory-video-wrapper video,
   .factory-slide-{{ section.id }}:hover .factory-video-{{ section.id }} {
     transform: scale(1.02);
   }
@@ -889,18 +883,34 @@
                   {% assign video_key = 'video_' | append: i %}
                   {% assign current_video = block.settings[video_key] %}
                   {% if current_video != blank %}
-                    <div class="factory-slide-{{ section.id }} factory-video-wrapper"
+                    <div class="factory-slide-{{ section.id }}"
                          data-filter="{{ block_filter }}"
                          data-product="{{ block_index }}"
                          data-slide-index="{{ slide_index }}"
                          data-media-type="video">
-                      {{ current_video | video_tag:
-                         image_size: '1100x',
-                         autoplay: false,
-                         muted: true,
-                         loop: true,
-                         controls: false
-                      }}
+                      <video class="factory-video-{{ section.id }}"
+                             autoplay
+                             muted
+                             loop
+                             playsinline
+                             webkit-playsinline
+                             x5-playsinline
+                             preload="auto"
+                             draggable="false"
+                             oncontextmenu="return false;"
+                             onselectstart="return false;"
+                             ondragstart="return false;"
+                             onloadeddata="this.play()"
+                             oncanplay="this.play()">
+                        <source src="{{ current_video.sources[0].url }}" type="{{ current_video.sources[0].mime_type }}">
+                        {% if current_video.sources[1] %}
+                          <source src="{{ current_video.sources[1].url }}" type="{{ current_video.sources[1].mime_type }}">
+                        {% endif %}
+                        {% if current_video.sources[2] %}
+                          <source src="{{ current_video.sources[2].url }}" type="{{ current_video.sources[2].mime_type }}">
+                        {% endif %}
+                        <p>Your browser doesn't support video playback.</p>
+                      </video>
                     </div>
                     {% assign slide_index = slide_index | plus: 1 %}
                   {% endif %}
@@ -1087,7 +1097,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Video management functions
   function pauseAllVideos() {
-    const videos = section.querySelectorAll('.factory-video-wrapper video');
+    const videos = section.querySelectorAll('.factory-video-' + sectionId);
     videos.forEach(video => {
       if (!video.paused) {
         video.pause();
@@ -1097,47 +1107,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function playCurrentVideo(slideIndex) {
     const currentSlide = allSlides[slideIndex];
-
     if (currentSlide && currentSlide.dataset.mediaType === 'video') {
-      const video = currentSlide.querySelector('video');
+      const video = currentSlide.querySelector('.factory-video-' + sectionId);
       if (video) {
-        // Don't reset if already playing - this preserves buffered data
-        if (!video.paused) return;
+        // Reset video to beginning and force play immediately
+        video.currentTime = 0;
 
-        // Only reset to beginning if video has ended or is at the end
-        if (video.ended || video.currentTime >= video.duration - 0.1) {
-          video.currentTime = 0;
-        }
+        // Multiple aggressive play attempts
+        const tryPlay = () => {
+          video.play().catch(err => {
+            console.log('Video autoplay attempt failed:', err);
+            // Try again after a short delay
+            setTimeout(tryPlay, 100);
+          });
+        };
 
-        // Check if video has enough data to play smoothly
-        if (video.readyState >= 3) { // HAVE_FUTURE_DATA or HAVE_ENOUGH_DATA
-          video.play()
-            .then(() => {
-              console.log('Video playing smoothly');
-            })
-            .catch(err => {
-              console.log('Video play failed:', err.message);
-            });
-        } else {
-          // Only load if video hasn't been loaded yet
-          if (video.networkState === 0 || video.networkState === 3) {
-            video.load();
-          }
+        // Immediate play attempt
+        tryPlay();
 
-          // Wait for enough buffering before playing
-          video.addEventListener('canplaythrough', function onReady() {
-            video.play()
-              .then(() => console.log('Video playing after buffering'))
-              .catch(err => console.log('Video play failed:', err.message));
-          }, { once: true });
+        // Ensure video is visible and playing
+        if (video.paused) {
+          // Force play on next frame
+          requestAnimationFrame(() => {
+            tryPlay();
+          });
         }
       }
     }
   }
 
-  // Simplified: Just trigger playCurrentVideo for active slide
+  // Force play all videos when page becomes visible
   function forcePlayAllVideos() {
-    playCurrentVideo(currentSlideIndex);
+    const videos = section.querySelectorAll('.factory-video-' + sectionId);
+    videos.forEach(video => {
+      if (video.closest('.factory-slide-' + sectionId).classList.contains('active')) {
+        video.currentTime = 0;
+        video.play().catch(err => {
+          console.log('Force play failed:', err);
+        });
+      }
+    });
   }
 
   // Show specific slide
@@ -1540,36 +1549,73 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Simplified: Handle page visibility changes
+  // Pause videos when page visibility changes
   document.addEventListener('visibilitychange', function() {
     if (document.hidden) {
       pauseAllVideos();
     } else {
-      playCurrentVideo(currentSlideIndex);
+      // Force play videos when page becomes visible
+      setTimeout(() => {
+        forcePlayAllVideos();
+        playCurrentVideo(currentSlideIndex);
+      }, 100);
     }
   });
 
-  // Simplified: Enable autoplay on first user interaction
+  // Add user interaction fallback for strict browsers
+  let hasUserInteracted = false;
   const enableAutoplayAfterInteraction = () => {
-    playCurrentVideo(currentSlideIndex);
+    hasUserInteracted = true;
+    forcePlayAllVideos();
     document.removeEventListener('click', enableAutoplayAfterInteraction);
     document.removeEventListener('touchstart', enableAutoplayAfterInteraction);
   };
 
-  document.addEventListener('click', enableAutoplayAfterInteraction, { once: true });
-  document.addEventListener('touchstart', enableAutoplayAfterInteraction, { passive: true, once: true });
+  document.addEventListener('click', enableAutoplayAfterInteraction);
+  document.addEventListener('touchstart', enableAutoplayAfterInteraction, { passive: true });
 
-  // Simplified video event listeners - loop attribute handles looping automatically
+  // Add seamless looping support for videos
   function addVideoEventListeners() {
-    const videos = section.querySelectorAll('.factory-video-wrapper video');
+    const videos = section.querySelectorAll('.factory-video-' + sectionId);
     videos.forEach(video => {
-      // Add factory-video class for CSS styling
-      video.classList.add('factory-video-' + sectionId);
-
-      // Backup: Ensure looping works if loop attribute fails
+      // Ensure seamless looping
       video.addEventListener('ended', function() {
         this.currentTime = 0;
-        this.play().catch(err => console.log('Loop restart failed:', err.message));
+        this.play().catch(err => {
+          console.log('Loop restart failed:', err);
+        });
+      });
+
+      // Force play when video loads
+      video.addEventListener('loadeddata', function() {
+        if (this.closest('.factory-slide-' + sectionId).classList.contains('active')) {
+          this.play().catch(err => {
+            console.log('Auto-play on load failed:', err);
+          });
+        }
+      });
+
+      // Retry play if video stalls
+      video.addEventListener('stalled', function() {
+        setTimeout(() => {
+          if (this.paused && this.closest('.factory-slide-' + sectionId).classList.contains('active')) {
+            this.play().catch(err => {
+              console.log('Stall recovery failed:', err);
+            });
+          }
+        }, 500);
+      });
+
+      // Handle buffer issues
+      video.addEventListener('waiting', function() {
+        // Video is buffering, try to continue after a short delay
+        setTimeout(() => {
+          if (this.readyState >= 2) { // HAVE_CURRENT_DATA
+            this.play().catch(err => {
+              console.log('Buffer recovery failed:', err);
+            });
+          }
+        }, 200);
       });
     });
   }
@@ -1584,18 +1630,20 @@ document.addEventListener('DOMContentLoaded', function() {
     addVideoEventListeners();
   }, 100);
 
-  // Simplified: Play video when section comes into view
+  // Intersection Observer for aggressive autoplay when section comes into view
   if ('IntersectionObserver' in window) {
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          playCurrentVideo(currentSlideIndex);
-        } else {
-          pauseAllVideos();
+          // Section is visible, force autoplay
+          setTimeout(() => {
+            forcePlayAllVideos();
+            playCurrentVideo(currentSlideIndex);
+          }, 100);
         }
       });
     }, {
-      threshold: 0.1
+      threshold: 0.1 // Trigger when 10% of section is visible
     });
 
     sectionObserver.observe(section);
