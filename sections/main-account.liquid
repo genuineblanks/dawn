@@ -41,7 +41,7 @@
 
     {%- if is_wholesale -%}
       <!-- WHOLESALE CUSTOMER DASHBOARD -->
-      {% render 'v10-wholesale-dashboard', customer: customer %}
+      {% render 'v10-wholesale-dashboard', customer: customer, section: section %}
     {%- else -%}
       <!-- RETAIL CUSTOMER VIEW (Original Shopify Account) -->
     {%- endif -%}
@@ -222,6 +222,69 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Wholesale Dashboard - Garment Images"
+    },
+    {
+      "type": "paragraph",
+      "content": "Upload images for different garment types. These will appear on submission cards in the wholesale dashboard."
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_tshirt",
+      "label": "T-Shirt Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_hoodie",
+      "label": "Hoodie Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_polo",
+      "label": "Polo Shirt Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_sweatshirt",
+      "label": "Sweatshirt Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_jacket",
+      "label": "Jacket Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_pants",
+      "label": "Pants Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_shorts",
+      "label": "Shorts Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_tanktop",
+      "label": "Tank Top Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_longsleeve",
+      "label": "Long Sleeve Shirt Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_dress",
+      "label": "Dress Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "garment_image_default",
+      "label": "Default Garment Image (Fallback)"
     }
   ]
 }
