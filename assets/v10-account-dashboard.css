@@ -785,7 +785,7 @@
    ============================================== */
 
 .v10-recent-section {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .v10-recent-section h2 {
@@ -813,6 +813,28 @@
   #recent-orders-grid {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+.v10-view-all-btn {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.v10-view-all-btn:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
 }
 
 /* ==============================================
@@ -1066,12 +1088,15 @@
   gap: 2px;
   background: #1a1a1a;
   margin-bottom: 0;
-  min-height: 200px;
+  min-height: 140px;
+  max-height: 180px;
 }
 
 /* Single Image Layout */
 .v10-card-image-grid.v10-grid-single {
   grid-template-columns: 1fr;
+  min-height: 180px;
+  max-height: 220px;
 }
 
 /* Double Image Layout (50/50 split) */
@@ -1082,6 +1107,7 @@
 /* Triple Image Layout (33/33/33 split) */
 .v10-card-image-grid.v10-grid-triple {
   grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
 }
 
 /* Quad Image Layout (2x2 grid) */
@@ -1095,7 +1121,9 @@
   position: relative;
   overflow: hidden;
   background: #2d2d2d;
-  aspect-ratio: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
 }
 
 .v10-card-image img {
@@ -1103,6 +1131,7 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+  display: block;
 }
 
 .v10-submission-card:hover .v10-card-image img {
@@ -1115,14 +1144,15 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 0.5rem;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 0.4rem 0.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3));
   color: #ffffff;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
+  line-height: 1.2;
 }
 
 /* Placeholder (No Images Available) */
@@ -1131,7 +1161,7 @@
   align-items: center;
   justify-content: center;
   background: #2d2d2d;
-  min-height: 200px;
+  min-height: 150px;
 }
 
 .v10-image-placeholder {

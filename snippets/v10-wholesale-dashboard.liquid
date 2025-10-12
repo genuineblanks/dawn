@@ -67,57 +67,7 @@
        ============================================ -->
   <div class="v10-view-content" id="view-dashboard">
 
-    <!-- Module Cards -->
-    <div class="v10-module-cards">
-      <button class="v10-module-card" data-navigate="orders">
-        <div class="v10-module-icon">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
-            <polyline points="3.29 7 12 12 20.71 7"></polyline>
-            <line x1="12" y1="22" x2="12" y2="12"></line>
-          </svg>
-        </div>
-        <h3 class="v10-module-title">ORDERS</h3>
-        <p class="v10-module-description">View & manage all submissions</p>
-        <span class="v10-module-cta">View All →</span>
-      </button>
-
-      <button class="v10-module-card" data-navigate="files">
-        <div class="v10-module-icon">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          </svg>
-        </div>
-        <h3 class="v10-module-title">FILES</h3>
-        <p class="v10-module-description">Upload reworked files</p>
-        <span class="v10-module-cta">Upload →</span>
-      </button>
-
-      <button class="v10-module-card" data-navigate="account">
-        <div class="v10-module-icon">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10zm0 5v5l4 2"></path>
-          </svg>
-        </div>
-        <h3 class="v10-module-title">ACCOUNT & TRACKING</h3>
-        <p class="v10-module-description">Track delivery timelines</p>
-        <span class="v10-module-cta">View Status →</span>
-      </button>
-    </div>
-
-    <!-- Recent Orders -->
-    <div class="v10-recent-section">
-      <h2 class="v10-section-title">YOUR RECENT ORDERS</h2>
-      <div class="v10-recent-orders-grid" id="recent-orders-grid">
-        <div class="v10-loading-state">
-          <div class="v10-spinner"></div>
-          <p>Loading recent orders...</p>
-        </div>
-      </div>
-      <button class="v10-view-all-btn" data-navigate="orders">VIEW ALL ORDERS →</button>
-    </div>
-
-    <!-- Quick Action -->
+    <!-- Quick Action - New Submission -->
     <div class="v10-quick-actions">
       <a href="/pages/tech-pack-submission" class="v10-action-card v10-action-primary">
         <div class="v10-action-icon">
@@ -135,6 +85,18 @@
           </svg>
         </div>
       </a>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="v10-recent-section">
+      <h2 class="v10-section-title">YOUR RECENT ORDERS</h2>
+      <div class="v10-recent-orders-grid" id="recent-orders-grid">
+        <div class="v10-loading-state">
+          <div class="v10-spinner"></div>
+          <p>Loading recent orders...</p>
+        </div>
+      </div>
+      <button class="v10-view-all-btn" data-navigate="orders">VIEW ALL ORDERS →</button>
     </div>
 
   </div>
@@ -386,5 +348,4 @@
     </div>
 
   </div>
-
 </div>

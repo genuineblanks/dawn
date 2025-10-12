@@ -53,6 +53,22 @@ const V10_AccountDashboard = {
   },
 
   /**
+   * Format order ID from request_id
+   * Example: "GNNA-88-017" -> "Order #17"
+   */
+  formatOrderId(requestId, submissionId) {
+    if (!requestId) {
+      return `Order #${submissionId}`;
+    }
+
+    // Extract number after last dash
+    const parts = requestId.split('-');
+    const orderNumber = parts[parts.length - 1];
+
+    return `Order #${orderNumber}`;
+  },
+
+  /**
    * Load garment images from data attributes
    */
   loadGarmentImages() {
@@ -276,6 +292,9 @@ const V10_AccountDashboard = {
     // Generate image grid
     const imageGridHTML = this.generateGarmentImageGrid(garments);
 
+    // Format order ID
+    const orderIdDisplay = this.formatOrderId(submission.request_id, submission.id);
+
     return `
       <div class="v10-submission-card" data-id="${submission.id}">
         ${imageGridHTML}
@@ -289,7 +308,7 @@ const V10_AccountDashboard = {
           </span>
         </div>
 
-        <h3 class="v10-submission-id">${submission.request_id || 'ID-' + submission.id}</h3>
+        <h3 class="v10-submission-id">${orderIdDisplay}</h3>
         <p class="v10-submission-date">Submitted ${formattedDate}</p>
 
         <div class="v10-submission-meta">
@@ -328,7 +347,8 @@ const V10_AccountDashboard = {
       'bulk-order-request': 'Bulk Order'
     };
 
-    document.getElementById('modal-title').textContent = submission.request_id || `Submission #${submission.id}`;
+    const orderIdDisplay = this.formatOrderId(submission.request_id, submission.id);
+    document.getElementById('modal-title').textContent = orderIdDisplay;
     document.getElementById('modal-subtitle').textContent = typeLabels[submission.submission_type] || submission.submission_type;
 
     // Build modal body
@@ -735,14 +755,13 @@ const V10_AccountDashboard = {
       });
     });
 
-    // Module cards navigation (on dashboard home)
-    const moduleCards = document.querySelectorAll('.v10-module-card[data-navigate]');
-    moduleCards.forEach(card => {
-      card.addEventListener('click', () => {
-        const targetView = card.dataset.navigate;
-        this.switchView(targetView);
+    // View All Orders button
+    const viewAllBtn = document.querySelector('.v10-view-all-btn[data-navigate="orders"]');
+    if (viewAllBtn) {
+      viewAllBtn.addEventListener('click', () => {
+        this.switchView('orders');
       });
-    });
+    }
 
     console.log('✅ View switching setup complete');
   },
@@ -950,7 +969,8 @@ const V10_AccountDashboard = {
       .forEach(submission => {
         const option = document.createElement('option');
         option.value = submission.id;
-        option.textContent = `${submission.request_id || 'ID-' + submission.id} - ${submission.submission_type}`;
+        const orderIdDisplay = this.formatOrderId(submission.request_id, submission.id);
+        option.textContent = orderIdDisplay;
         select.appendChild(option);
       });
 
@@ -973,7 +993,8 @@ const V10_AccountDashboard = {
       .forEach(submission => {
         const option = document.createElement('option');
         option.value = submission.id;
-        option.textContent = `${submission.request_id || 'ID-' + submission.id} - ${submission.submission_type}`;
+        const orderIdDisplay = this.formatOrderId(submission.request_id, submission.id);
+        option.textContent = orderIdDisplay;
         select.appendChild(option);
       });
 
