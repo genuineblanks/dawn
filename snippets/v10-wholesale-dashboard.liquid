@@ -1,6 +1,6 @@
 {% comment %}
-  V10 Wholesale Customer Dashboard
-  Shows submission history for brand clients
+  V10 Wholesale Customer Dashboard - UPGRADED with 4 Views
+  Dashboard | Orders | Files | Account & Tracking
 {% endcomment %}
 
 {%- assign access_code = customer.metafields.custom.access_code | default: 'PENDING' -%}
@@ -14,13 +14,13 @@
   {%- assign summary = '{"total":0,"pending":0,"in_production":0,"completed":0,"recent":[]}' | parse_json -%}
 {%- endif -%}
 
-<div class="v10-wholesale-dashboard" id="v10-wholesale-dashboard" data-customer-email="{{ customer.email }}" data-has-submissions="{{ summary.total }}">
+<div class="v10-wholesale-dashboard" id="v10-wholesale-dashboard" data-customer-email="{{ customer.email }}" data-customer-name="{{ customer.first_name }} {{ customer.last_name }}" data-has-submissions="{{ summary.total }}" data-garment-image-tshirt="{{ section.settings.garment_image_tshirt | image_url: width: 400 }}" data-garment-image-hoodie="{{ section.settings.garment_image_hoodie | image_url: width: 400 }}" data-garment-image-polo="{{ section.settings.garment_image_polo | image_url: width: 400 }}" data-garment-image-sweatshirt="{{ section.settings.garment_image_sweatshirt | image_url: width: 400 }}" data-garment-image-jacket="{{ section.settings.garment_image_jacket | image_url: width: 400 }}" data-garment-image-pants="{{ section.settings.garment_image_pants | image_url: width: 400 }}" data-garment-image-shorts="{{ section.settings.garment_image_shorts | image_url: width: 400 }}" data-garment-image-tanktop="{{ section.settings.garment_image_tanktop | image_url: width: 400 }}" data-garment-image-longsleeve="{{ section.settings.garment_image_longsleeve | image_url: width: 400 }}" data-garment-image-dress="{{ section.settings.garment_image_dress | image_url: width: 400 }}" data-garment-image-default="{{ section.settings.garment_image_default | image_url: width: 400 }}">
 
   <!-- Welcome Section with Access Code -->
   <div class="v10-dashboard-welcome">
     <div class="v10-welcome-content">
       <h2 class="v10-welcome-title">Welcome back, {{ company_name }}!</h2>
-      <p class="v10-welcome-subtitle">Manage your garment development projects and track submissions</p>
+      <p class="v10-welcome-subtitle">Manage your garment development projects</p>
     </div>
     <div class="v10-access-code-card">
       <div class="v10-access-code-label">Your Access Code</div>
@@ -29,31 +29,122 @@
     </div>
   </div>
 
-  <!-- Quick Actions -->
-  <div class="v10-quick-actions">
-    <a href="/pages/tech-pack-submission" class="v10-action-card v10-action-primary">
-      <div class="v10-action-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 5v14M5 12h14"/>
-        </svg>
-      </div>
-      <div class="v10-action-content">
-        <h3>New Submission</h3>
-        <p>Start a new garment development project</p>
-      </div>
-      <div class="v10-action-arrow">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </div>
-    </a>
+  <!-- View Navigation Tabs -->
+  <div class="v10-view-tabs">
+    <button class="v10-view-tab active" data-view="dashboard">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      Dashboard
+    </button>
+    <button class="v10-view-tab" data-view="orders">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+        <polyline points="3.29 7 12 12 20.71 7"></polyline>
+        <line x1="12" y1="22" x2="12" y2="12"></line>
+      </svg>
+      Orders
+    </button>
+    <button class="v10-view-tab" data-view="files">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+      </svg>
+      Files
+    </button>
+    <button class="v10-view-tab" data-view="account">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10zm0 5v5l4 2"></path>
+      </svg>
+      Account & Tracking
+    </button>
   </div>
 
-  <!-- Submissions Section -->
-  <div class="v10-submissions-section">
+  <!-- ============================================
+       DASHBOARD HOME VIEW
+       ============================================ -->
+  <div class="v10-view-content" id="view-dashboard">
 
-    <!-- Title -->
-    <h2 class="v10-section-title-standalone">Your Submissions</h2>
+    <!-- Module Cards -->
+    <div class="v10-module-cards">
+      <button class="v10-module-card" data-navigate="orders">
+        <div class="v10-module-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+            <line x1="12" y1="22" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <h3 class="v10-module-title">ORDERS</h3>
+        <p class="v10-module-description">View & manage all submissions</p>
+        <span class="v10-module-cta">View All →</span>
+      </button>
+
+      <button class="v10-module-card" data-navigate="files">
+        <div class="v10-module-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <h3 class="v10-module-title">FILES</h3>
+        <p class="v10-module-description">Upload reworked files</p>
+        <span class="v10-module-cta">Upload →</span>
+      </button>
+
+      <button class="v10-module-card" data-navigate="account">
+        <div class="v10-module-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10zm0 5v5l4 2"></path>
+          </svg>
+        </div>
+        <h3 class="v10-module-title">ACCOUNT & TRACKING</h3>
+        <p class="v10-module-description">Track delivery timelines</p>
+        <span class="v10-module-cta">View Status →</span>
+      </button>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="v10-recent-section">
+      <h2 class="v10-section-title">YOUR RECENT ORDERS</h2>
+      <div class="v10-recent-orders-grid" id="recent-orders-grid">
+        <div class="v10-loading-state">
+          <div class="v10-spinner"></div>
+          <p>Loading recent orders...</p>
+        </div>
+      </div>
+      <button class="v10-view-all-btn" data-navigate="orders">VIEW ALL ORDERS →</button>
+    </div>
+
+    <!-- Quick Action -->
+    <div class="v10-quick-actions">
+      <a href="/pages/tech-pack-submission" class="v10-action-card v10-action-primary">
+        <div class="v10-action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </div>
+        <div class="v10-action-content">
+          <h3>New Submission</h3>
+          <p>Start a new garment development project</p>
+        </div>
+        <div class="v10-action-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ============================================
+       ORDERS VIEW (Original Submissions Section)
+       ============================================ -->
+  <div class="v10-view-content" id="view-orders" style="display: none;">
+
+    <h2 class="v10-section-title">YOUR ORDERS</h2>
 
     <!-- Filters Container (Type Filters LEFT | Status Filters RIGHT) -->
     <div class="v10-filters-container">
@@ -118,6 +209,158 @@
 
   </div>
 
+  <!-- ============================================
+       FILES VIEW
+       ============================================ -->
+  <div class="v10-view-content" id="view-files" style="display: none;">
+
+    <h2 class="v10-section-title">FILE MANAGER</h2>
+    <p class="v10-section-subtitle">Upload new or reworked files to existing orders</p>
+
+    <div class="v10-files-container">
+
+      <!-- Order Selection -->
+      <div class="v10-form-group">
+        <label class="v10-form-label">SELECT ORDER</label>
+        <select id="file-order-select" class="v10-form-select">
+          <option value="">Loading orders...</option>
+        </select>
+      </div>
+
+      <!-- Current Files -->
+      <div class="v10-form-group">
+        <label class="v10-form-label">CURRENT FILES</label>
+        <div id="current-files-list" class="v10-files-list">
+          <p class="v10-placeholder-text">Select an order to view files</p>
+        </div>
+      </div>
+
+      <!-- Upload Zone -->
+      <div class="v10-form-group">
+        <label class="v10-form-label">UPLOAD NEW FILE</label>
+        <div id="upload-zone" class="v10-upload-zone">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <p class="v10-upload-text">Click to upload or drag and drop</p>
+          <p class="v10-upload-subtext">PDF, JPG, PNG up to 10MB</p>
+          <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" multiple>
+        </div>
+      </div>
+
+      <!-- File Preview -->
+      <div id="file-preview-section" class="v10-form-group" style="display: none;">
+        <label class="v10-form-label">FILES TO UPLOAD</label>
+        <div id="files-to-upload-list" class="v10-files-to-upload"></div>
+        <div class="v10-button-group">
+          <button id="upload-file-btn" class="v10-btn-primary">UPLOAD FILES</button>
+          <button id="cancel-upload-btn" class="v10-btn-secondary">CANCEL</button>
+        </div>
+      </div>
+
+      <!-- Upload Status -->
+      <div id="upload-status" class="v10-status-message" style="display: none;"></div>
+
+    </div>
+
+  </div>
+
+  <!-- ============================================
+       ACCOUNT & TRACKING VIEW
+       ============================================ -->
+  <div class="v10-view-content" id="view-account" style="display: none;">
+
+    <h2 class="v10-section-title">ACCOUNT & TRACKING</h2>
+
+    <div class="v10-account-container">
+
+      <!-- Delivery Timeline Section -->
+      <div class="v10-card">
+        <h3 class="v10-card-title">DELIVERY TIMELINES</h3>
+        <div class="v10-timeline-placeholder">
+          <div class="v10-placeholder-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <h4>⚠️ TO BE IMPLEMENTED</h4>
+          <p>Connect to Google Sheets via Vercel for real-time tracking</p>
+          <p style="margin-top: 1rem; font-size: 0.875rem; color: #999;">
+            Timeline will show: Order Placed → In Production → Quality Check → Shipping → Delivered
+          </p>
+        </div>
+      </div>
+
+      <!-- Account Information -->
+      <div class="v10-card">
+        <h3 class="v10-card-title">ACCOUNT INFORMATION</h3>
+        <div class="v10-account-info">
+          <div class="v10-info-row">
+            <span class="v10-info-label">Company Name</span>
+            <span class="v10-info-value">{{ company_name }}</span>
+          </div>
+          <div class="v10-info-row">
+            <span class="v10-info-label">Email</span>
+            <span class="v10-info-value">{{ customer.email }}</span>
+          </div>
+          <div class="v10-info-row">
+            <span class="v10-info-label">Access Code</span>
+            <span class="v10-info-value v10-access-code-inline">{{ access_code }}</span>
+          </div>
+          <div class="v10-info-row">
+            <span class="v10-info-label">Member Since</span>
+            <span class="v10-info-value">{{ customer.created_at | date: "%B %Y" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Request Changes Section -->
+      <div class="v10-card">
+        <h3 class="v10-card-title">REQUEST CHANGES</h3>
+        <p class="v10-card-description">Need modifications to an existing order? Submit a change request.</p>
+
+        <form id="change-request-form" class="v10-change-form">
+          <div class="v10-form-group">
+            <label class="v10-form-label">SELECT ORDER</label>
+            <select id="change-order-select" class="v10-form-select" required>
+              <option value="">Loading orders...</option>
+            </select>
+          </div>
+
+          <div class="v10-form-group">
+            <label class="v10-form-label">CHANGE TYPE</label>
+            <select id="change-type-select" class="v10-form-select" required>
+              <option value="">Select change type...</option>
+              <option value="design">Design Modification</option>
+              <option value="fabric">Fabric Change</option>
+              <option value="color">Color Adjustment</option>
+              <option value="sizing">Sizing Change</option>
+              <option value="quantity">Quantity Update</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="v10-form-group">
+            <label class="v10-form-label">DESCRIBE YOUR REQUEST</label>
+            <textarea id="change-description" class="v10-form-textarea" rows="6" placeholder="Please describe the changes you'd like to make..." required></textarea>
+          </div>
+
+          <div class="v10-button-group">
+            <button type="submit" class="v10-btn-primary">SUBMIT REQUEST</button>
+            <button type="reset" class="v10-btn-secondary">CLEAR FORM</button>
+          </div>
+
+          <div id="change-request-status" class="v10-status-message" style="display: none;"></div>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
 <!-- Submission Details Modal -->
@@ -143,4 +386,5 @@
     </div>
 
   </div>
+
 </div>
