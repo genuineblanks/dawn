@@ -8,7 +8,9 @@ const V10_AccountDashboard = {
   submissions: [],
   currentFilter: 'all',
   currentStatusFilter: 'pending', // Default to 'pending', options: 'pending', 'completed'
+  currentView: 'dashboard', // Current active view: dashboard, orders, files, account
   customerEmail: null,
+  garmentImages: {}, // Stores garment type to image URL mappings
 
   // DOM Elements
   dashboard: null,
@@ -38,12 +40,44 @@ const V10_AccountDashboard = {
     this.modal = document.getElementById('v10-submission-modal');
     this.modalClose = document.getElementById('modal-close');
 
+    this.loadGarmentImages();
     this.setupEventListeners();
+    this.setupViewSwitching();
+    this.setupFileUpload();
+    this.setupChangeRequest();
 
     // ✅ Fetch submissions directly (no authentication required)
     // Security: API validates email ownership server-side
     console.log('📊 Fetching submissions from API...');
     this.fetchSubmissions();
+  },
+
+  /**
+   * Load garment images from data attributes
+   */
+  loadGarmentImages() {
+    if (!this.dashboard) return;
+
+    // Load all garment image URLs from data attributes
+    this.garmentImages = {
+      'tshirt': this.dashboard.dataset.garmentImageTshirt || '',
+      't-shirt': this.dashboard.dataset.garmentImageTshirt || '',
+      'hoodie': this.dashboard.dataset.garmentImageHoodie || '',
+      'polo': this.dashboard.dataset.garmentImagePolo || '',
+      'polo shirt': this.dashboard.dataset.garmentImagePolo || '',
+      'sweatshirt': this.dashboard.dataset.garmentImageSweatshirt || '',
+      'jacket': this.dashboard.dataset.garmentImageJacket || '',
+      'pants': this.dashboard.dataset.garmentImagePants || '',
+      'shorts': this.dashboard.dataset.garmentImageShorts || '',
+      'tanktop': this.dashboard.dataset.garmentImageTanktop || '',
+      'tank top': this.dashboard.dataset.garmentImageTanktop || '',
+      'longsleeve': this.dashboard.dataset.garmentImageLongsleeve || '',
+      'long sleeve': this.dashboard.dataset.garmentImageLongsleeve || '',
+      'dress': this.dashboard.dataset.garmentImageDress || '',
+      'default': this.dashboard.dataset.garmentImageDefault || ''
+    };
+
+    console.log('✅ Garment images loaded:', Object.keys(this.garmentImages).filter(k => this.garmentImages[k]).length, 'types');
   },
 
   /**
@@ -236,10 +270,16 @@ const V10_AccountDashboard = {
     };
 
     // Count garments
-    const garmentCount = submission.data?.records?.garments?.length || 0;
+    const garments = submission.data?.records?.garments || [];
+    const garmentCount = garments.length;
+
+    // Generate image grid
+    const imageGridHTML = this.generateGarmentImageGrid(garments);
 
     return `
       <div class="v10-submission-card" data-id="${submission.id}">
+        ${imageGridHTML}
+
         <div class="v10-submission-header">
           <span class="v10-submission-type-badge ${submission.submission_type}">
             ${typeLabels[submission.submission_type] || submission.submission_type}
@@ -680,6 +720,348 @@ const V10_AccountDashboard = {
    */
   hideEmpty() {
     if (this.emptyState) this.emptyState.style.display = 'none';
+  },
+
+  /**
+   * Setup view switching between Dashboard, Orders, Files, Account
+   */
+  setupViewSwitching() {
+    // View tabs navigation
+    const viewTabs = document.querySelectorAll('.v10-view-tab');
+    viewTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const viewName = tab.dataset.view;
+        this.switchView(viewName);
+      });
+    });
+
+    // Module cards navigation (on dashboard home)
+    const moduleCards = document.querySelectorAll('.v10-module-card[data-navigate]');
+    moduleCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const targetView = card.dataset.navigate;
+        this.switchView(targetView);
+      });
+    });
+
+    console.log('✅ View switching setup complete');
+  },
+
+  /**
+   * Switch between views
+   */
+  switchView(viewName) {
+    console.log(`🔄 Switching to view: ${viewName}`);
+
+    this.currentView = viewName;
+
+    // Hide all views
+    document.querySelectorAll('.v10-view-content').forEach(view => {
+      view.style.display = 'none';
+    });
+
+    // Show selected view
+    const targetView = document.getElementById(`view-${viewName}`);
+    if (targetView) {
+      targetView.style.display = 'block';
+    }
+
+    // Update active tab
+    document.querySelectorAll('.v10-view-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.view === viewName);
+    });
+
+    // Load view-specific content
+    if (viewName === 'dashboard') {
+      this.loadRecentOrders();
+    } else if (viewName === 'orders') {
+      // Orders view reuses existing renderSubmissions() which is already called
+      this.renderSubmissions();
+    } else if (viewName === 'files') {
+      this.loadFileOrdersDropdown();
+    } else if (viewName === 'account') {
+      this.loadChangeOrdersDropdown();
+    }
+  },
+
+  /**
+   * Load recent orders for dashboard home
+   */
+  loadRecentOrders() {
+    const recentOrdersGrid = document.getElementById('recent-orders-grid');
+    if (!recentOrdersGrid) return;
+
+    // Get 4 most recent submissions
+    const recentSubmissions = [...this.submissions]
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 4);
+
+    if (recentSubmissions.length === 0) {
+      recentOrdersGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: #999999;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 48px; height: 48px; margin: 0 auto 1rem; opacity: 0.5;">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/>
+          </svg>
+          <p style="margin: 0; font-size: 0.875rem;">No submissions yet</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Render recent submissions
+    recentOrdersGrid.innerHTML = recentSubmissions.map(submission =>
+      this.renderSubmissionCard(submission)
+    ).join('');
+
+    // Add click handlers
+    recentOrdersGrid.querySelectorAll('.v10-submission-card').forEach((card, index) => {
+      card.addEventListener('click', () => {
+        this.showSubmissionDetails(recentSubmissions[index]);
+      });
+    });
+
+    console.log(`✅ Loaded ${recentSubmissions.length} recent orders`);
+  },
+
+  /**
+   * Setup file upload functionality
+   */
+  setupFileUpload() {
+    const uploadZone = document.getElementById('upload-zone');
+    const fileInput = document.getElementById('file-input');
+    const uploadBtn = document.getElementById('upload-trigger');
+
+    if (!uploadZone || !fileInput) return;
+
+    // Trigger file input when clicking upload zone or button
+    const triggerFileInput = () => fileInput.click();
+
+    if (uploadZone) {
+      uploadZone.addEventListener('click', triggerFileInput);
+    }
+
+    if (uploadBtn) {
+      uploadBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerFileInput();
+      });
+    }
+
+    // Handle drag and drop
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+
+      const files = Array.from(e.dataTransfer.files);
+      this.handleFileUpload(files);
+    });
+
+    // Handle file input change
+    fileInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      this.handleFileUpload(files);
+    });
+
+    console.log('✅ File upload setup complete (AppScript integration pending)');
+  },
+
+  /**
+   * Handle file upload (placeholder for AppScript integration)
+   */
+  handleFileUpload(files) {
+    const orderSelect = document.getElementById('file-order-select');
+    const selectedOrder = orderSelect?.value;
+
+    if (!selectedOrder) {
+      alert('Please select an order first');
+      return;
+    }
+
+    console.log('📎 Files to upload:', files.map(f => f.name));
+    console.log('📦 Target order:', selectedOrder);
+
+    // TODO: Phase 4 - Integrate with AppScript API
+    // This will upload files to Google Drive like the TechPack app does
+    alert(`⚠️ File upload integration pending\n\nFiles ready to upload:\n${files.map(f => f.name).join('\n')}\n\nTo: ${selectedOrder}\n\n(AppScript API integration in Phase 4)`);
+  },
+
+  /**
+   * Setup change request form
+   */
+  setupChangeRequest() {
+    const form = document.getElementById('change-request-form');
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.handleChangeRequest();
+    });
+
+    console.log('✅ Change request form setup complete');
+  },
+
+  /**
+   * Handle change request submission
+   */
+  handleChangeRequest() {
+    const orderSelect = document.getElementById('change-order-select');
+    const typeSelect = document.getElementById('change-type-select');
+    const descriptionTextarea = document.getElementById('change-description');
+
+    const formData = {
+      orderId: orderSelect?.value,
+      changeType: typeSelect?.value,
+      description: descriptionTextarea?.value,
+      customerEmail: this.customerEmail,
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('📝 Change request data:', formData);
+
+    // TODO: Phase 4 - Send to Google Sheets "Client Change Request" page
+    alert(`⚠️ Change request integration pending\n\nRequest details:\nOrder: ${formData.orderId}\nType: ${formData.changeType}\nDescription: ${formData.description}\n\n(Google Sheets integration in Phase 4)`);
+
+    // Reset form
+    if (descriptionTextarea) descriptionTextarea.value = '';
+  },
+
+  /**
+   * Load orders dropdown for file upload
+   */
+  loadFileOrdersDropdown() {
+    const select = document.getElementById('file-order-select');
+    if (!select) return;
+
+    // Clear existing options except the first one
+    select.innerHTML = '<option value="">Select an order...</option>';
+
+    // Add options for each submission
+    this.submissions
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .forEach(submission => {
+        const option = document.createElement('option');
+        option.value = submission.id;
+        option.textContent = `${submission.request_id || 'ID-' + submission.id} - ${submission.submission_type}`;
+        select.appendChild(option);
+      });
+
+    console.log(`✅ Loaded ${this.submissions.length} orders into file upload dropdown`);
+  },
+
+  /**
+   * Load orders dropdown for change requests
+   */
+  loadChangeOrdersDropdown() {
+    const select = document.getElementById('change-order-select');
+    if (!select) return;
+
+    // Clear existing options except the first one
+    select.innerHTML = '<option value="">Select an order...</option>';
+
+    // Add options for each submission
+    this.submissions
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .forEach(submission => {
+        const option = document.createElement('option');
+        option.value = submission.id;
+        option.textContent = `${submission.request_id || 'ID-' + submission.id} - ${submission.submission_type}`;
+        select.appendChild(option);
+      });
+
+    console.log(`✅ Loaded ${this.submissions.length} orders into change request dropdown`);
+  },
+
+  /**
+   * Get image URL for a garment type
+   */
+  getGarmentImageUrl(garmentType) {
+    if (!garmentType) return this.garmentImages['default'] || '';
+
+    // Normalize garment type (lowercase, trim)
+    const normalized = garmentType.toLowerCase().trim();
+
+    // Try exact match first
+    if (this.garmentImages[normalized]) {
+      return this.garmentImages[normalized];
+    }
+
+    // Try partial matches
+    for (const key in this.garmentImages) {
+      if (normalized.includes(key) || key.includes(normalized)) {
+        return this.garmentImages[key];
+      }
+    }
+
+    // Fallback to default
+    return this.garmentImages['default'] || '';
+  },
+
+  /**
+   * Generate dynamic image grid HTML based on garment count
+   * 1 garment: Single large image
+   * 2 garments: 50/50 horizontal split
+   * 3 garments: 33/33/33 horizontal split
+   * 4+ garments: 2x2 grid (max 4 images)
+   */
+  generateGarmentImageGrid(garments) {
+    if (!garments || garments.length === 0) return '';
+
+    // Get up to 4 garment images
+    const garmentImages = garments.slice(0, 4).map(g => ({
+      type: g.type || 'Unknown',
+      imageUrl: this.getGarmentImageUrl(g.type)
+    }));
+
+    // Filter out garments without images
+    const withImages = garmentImages.filter(g => g.imageUrl);
+
+    if (withImages.length === 0) {
+      // No images available, show placeholder
+      return `
+        <div class="v10-card-image-grid v10-grid-placeholder">
+          <div class="v10-image-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            </svg>
+          </div>
+        </div>
+      `;
+    }
+
+    const count = withImages.length;
+    let gridClass = '';
+
+    if (count === 1) {
+      gridClass = 'v10-grid-single';
+    } else if (count === 2) {
+      gridClass = 'v10-grid-double';
+    } else if (count === 3) {
+      gridClass = 'v10-grid-triple';
+    } else {
+      gridClass = 'v10-grid-quad';
+    }
+
+    const imagesHTML = withImages.map(g => `
+      <div class="v10-card-image">
+        <img src="${g.imageUrl}" alt="${g.type}" loading="lazy">
+        <div class="v10-image-label">${g.type}</div>
+      </div>
+    `).join('');
+
+    return `
+      <div class="v10-card-image-grid ${gridClass}">
+        ${imagesHTML}
+      </div>
+    `;
   },
 };
 
