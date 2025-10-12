@@ -13,7 +13,18 @@
       "type": "main-account",
       "settings": {
         "padding_top": 36,
-        "padding_bottom": 36
+        "padding_bottom": 36,
+        "garment_image_tshirt": "shopify://shop_images/High_End_TSHIRT_PNG_94323d07-7fb6-47f0-82b8-a96342a99851.png",
+        "garment_image_hoodie": "shopify://shop_images/OVERSIZED_HOODIE_GREY.png",
+        "garment_image_polo": "shopify://shop_images/OVERSIZED_HOODIE_GREY_1da77ee1-a2e0-47ad-8c88-3ee516e4506f.png",
+        "garment_image_sweatshirt": "shopify://shop_images/OVERSIZED_JACKET_PURPLE_f18dc414-5fec-4bce-b6a9-89e7440d07d7.png",
+        "garment_image_jacket": "shopify://shop_images/High_End_Jacket_PNG.png",
+        "garment_image_pants": "shopify://shop_images/High_End_SWEATSHIRT_PNG_356ec5e5-c846-47e2-823f-00f08f3bdc03.png",
+        "garment_image_shorts": "shopify://shop_images/High_End_TSHIRT_PNG.png",
+        "garment_image_tanktop": "shopify://shop_images/OVERSIZED_HOODIE_GREY.png",
+        "garment_image_longsleeve": "shopify://shop_images/OVERSIZED_JACKET_BLACK.png",
+        "garment_image_dress": "shopify://shop_images/RELAXED_SWEATPANTS_BLACK2.png",
+        "garment_image_default": "shopify://shop_images/OVERSIZED_JACKET_BLACK.png"
       }
     }
   },
