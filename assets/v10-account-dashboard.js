@@ -186,6 +186,7 @@ const V10_AccountDashboard = {
       this.hideLoading();
       this.updateStatistics();
       this.renderSubmissions();
+      this.loadRecentOrders(); // ✅ Load recent orders for dashboard home view
 
     } catch (error) {
       console.error('❌ Failed to fetch submissions:', error);
@@ -258,7 +259,8 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Render individual submission row (table-like layout)
+   * Render individual submission row - Option 3: Information Hierarchy
+   * Clean, professional Notion-style layout with single-line header
    */
   renderSubmissionRow(submission) {
     const date = new Date(submission.created_at);
@@ -267,19 +269,15 @@ const V10_AccountDashboard = {
       month: 'short',
       day: 'numeric'
     });
-    const formattedTime = date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
 
     // Get type label
     const typeLabels = {
-      'quotation': 'Quotation',
+      'quotation': 'Quotation Request',
       'sample-request': 'Sample Request',
-      'bulk-order-request': 'Bulk Order'
+      'bulk-order-request': 'Bulk Order Request'
     };
 
-    // Get status label and format
+    // Get status label (color-coded text, no background)
     const statusLabels = {
       'pending': 'Pending',
       'in_progress': 'In Progress',
@@ -291,35 +289,49 @@ const V10_AccountDashboard = {
     const garmentCount = garments.length;
     const fileCount = submission.data?.files?.length || 0;
 
-    // Format order ID
-    const orderIdDisplay = this.formatOrderId(submission.request_id, submission.id);
+    // Extract just the number for Order #
+    const orderNumber = submission.request_id
+      ? submission.request_id.split('-').pop()
+      : submission.id;
 
-    // Generate smart thumbnails
+    // Delivery timeline (with professional fallback)
+    const timeline = submission.delivery_timeline || null;
+    const timelineHTML = timeline
+      ? `Delivery Timeline - ${timeline}`
+      : 'Timeline to be confirmed';
+
+    // Generate smart thumbnails (100px for Option 3)
     const thumbnailsHTML = this.generateSmartThumbnails(garments);
 
     return `
       <div class="v10-submission-row" data-id="${submission.id}">
-        <div class="v10-row-info">
-          <h3 class="v10-row-order-id">${orderIdDisplay}</h3>
-          <div class="v10-row-badges">
-            <span class="v10-type-badge ${submission.submission_type}">
-              ${typeLabels[submission.submission_type] || submission.submission_type}
-            </span>
-            <span class="v10-status-badge v10-status-${submission.status}">
-              ${statusLabels[submission.status] || submission.status}
-            </span>
+        <!-- Single-line header with bullets -->
+        <div class="v10-row-header">
+          <div class="v10-row-header-left">
+            <span class="v10-row-order-number">#${orderNumber}</span>
+            <span class="v10-row-separator">•</span>
+            <span class="v10-row-type">${typeLabels[submission.submission_type] || submission.submission_type}</span>
+            <span class="v10-row-separator">•</span>
+            <span class="v10-row-status v10-status-${submission.status}">${statusLabels[submission.status]}</span>
           </div>
-          <div class="v10-row-meta">
-            <span>${garmentCount} garment${garmentCount !== 1 ? 's' : ''}</span>
-            ${fileCount > 0 ? ` • <span>${fileCount} file${fileCount !== 1 ? 's' : ''}</span>` : ''}
+          <div class="v10-row-header-right">
+            <span class="v10-row-date">${formattedDate}</span>
           </div>
         </div>
 
+        <!-- Horizontal divider -->
+        <div class="v10-row-divider"></div>
+
+        <!-- Thumbnails (hero section) -->
         ${thumbnailsHTML}
 
-        <div class="v10-row-date">
-          <span class="v10-date">${formattedDate}</span>
-          <span class="v10-time">${formattedTime}</span>
+        <!-- Footer metadata -->
+        <div class="v10-row-footer">
+          <span>${garmentCount} garment${garmentCount !== 1 ? 's' : ''}</span>
+          <span class="v10-row-separator">•</span>
+          <span>${fileCount} file${fileCount !== 1 ? 's' : ''}</span>
+          <span class="v10-row-separator">•</span>
+          <span class="v10-row-timeline">${timelineHTML}</span>
         </div>
       </div>
     `;
@@ -947,7 +959,7 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Load orders dropdown for file upload
+   * Load orders dropdown for file upload (pending orders only)
    */
   loadFileOrdersDropdown() {
     const select = document.getElementById('file-order-select');
@@ -956,8 +968,11 @@ const V10_AccountDashboard = {
     // Clear existing options except the first one
     select.innerHTML = '<option value="">Select an order...</option>';
 
-    // Add options for each submission
-    this.submissions
+    // Filter to pending orders only (in-progress/completed don't need file swaps)
+    const pendingOrders = this.submissions.filter(s => s.status === 'pending');
+
+    // Add options for each pending submission
+    pendingOrders
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
       .forEach(submission => {
         const option = document.createElement('option');
@@ -967,7 +982,7 @@ const V10_AccountDashboard = {
         select.appendChild(option);
       });
 
-    console.log(`✅ Loaded ${this.submissions.length} orders into file upload dropdown`);
+    console.log(`✅ Loaded ${pendingOrders.length} pending orders into file upload dropdown`);
   },
 
   /**
@@ -1020,9 +1035,9 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Generate smart thumbnail grid for row layout
-   * 1-5 garments: Single row (70px tall)
-   * 6-10 garments: Double row (35px tall each = 70px total)
+   * Generate smart thumbnail grid for row layout - Option 3
+   * 1-5 garments: Single row (100px tall) - Hero showcase
+   * 6-10 garments: Double row (50px tall each = 100px total) - Compact grid
    * 10+ garments: Show first 10 + "+N more" indicator
    */
   generateSmartThumbnails(garments) {
@@ -1038,18 +1053,18 @@ const V10_AccountDashboard = {
     let remaining = 0;
 
     if (totalGarments <= 5) {
-      // Single row layout - larger thumbnails
+      // Single row layout - larger 100px thumbnails (hero showcase)
       layoutClass = 'v10-thumbnails-single-row';
       toShow = garments.slice(0, 5);
     } else if (totalGarments <= 10) {
-      // Double row layout - 2 rows of smaller thumbnails
+      // Double row layout - 2 rows of 50px thumbnails (compact grid)
       layoutClass = 'v10-thumbnails-double-row';
       toShow = garments.slice(0, 10);
     } else {
-      // More than 10 - show first 9 in double row + "+N more"
+      // More than 10 - show first 10 in double row + "+N more"
       layoutClass = 'v10-thumbnails-double-row';
-      toShow = garments.slice(0, 9); // Leave space for "+N more"
-      remaining = totalGarments - 9;
+      toShow = garments.slice(0, 10); // Show 10 garments
+      remaining = totalGarments - 10;
     }
 
     let html = `<div class="v10-row-thumbnails ${layoutClass}">`;

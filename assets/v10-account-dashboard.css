@@ -417,7 +417,8 @@
 }
 
 /* ==============================================
-   SUBMISSIONS LIST (Row Layout)
+   SUBMISSIONS LIST - OPTION 3: Information Hierarchy
+   Clean, professional Notion-style layout
    ============================================== */
 
 .v10-submissions-list {
@@ -426,132 +427,139 @@
   gap: 0.75rem;
 }
 
-/* Individual Row */
+/* Individual Row Container */
 .v10-submission-row {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1rem 1.5rem;
+  padding: 1.75rem;
   background: #242424;
   border: 1px solid #3a3a3a;
   border-radius: 0;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 90px; /* Accommodates 70px thumbnails + padding */
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .v10-submission-row:hover {
-  border-color: #10b981;
+  border-color: #555555;
   background: #2a2a2a;
-  transform: translateX(4px);
 }
 
-/* Left Section: Order Info */
-.v10-row-info {
-  flex: 0 0 220px;
-  min-width: 0;
-}
+/* ============================================
+   HEADER ROW (Single Line)
+   ============================================ */
 
-.v10-row-order-id {
-  font-family: 'Courier New', monospace;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 0.5rem 0;
-}
-
-.v10-row-badges {
+.v10-row-header {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 1.5;
+  gap: 1rem;
+}
+
+.v10-row-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   flex-wrap: wrap;
-}
-
-.v10-row-meta {
-  font-size: 0.8125rem;
-  color: #999999;
-}
-
-/* Badge Styles for Row Layout */
-.v10-type-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  border-radius: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.v10-type-badge.quotation {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-}
-
-.v10-type-badge.sample-request {
-  background: rgba(168, 85, 247, 0.1);
-  color: #a855f7;
-}
-
-.v10-type-badge.bulk-order-request {
-  background: rgba(249, 115, 22, 0.1);
-  color: #f97316;
-}
-
-.v10-status-badge {
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0;
-  text-transform: uppercase;
-}
-
-.v10-status-badge.v10-status-pending {
-  background: rgba(251, 191, 36, 0.15);
-  color: #f59e0b;
-  border: 1px solid rgba(251, 191, 36, 0.3);
-}
-
-.v10-status-badge.v10-status-in_progress {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-}
-
-.v10-status-badge.v10-status-completed {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.v10-status-badge.v10-status-rejected {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-/* Center Section: Smart Thumbnails */
-.v10-row-thumbnails {
   flex: 1;
-  display: grid;
-  gap: 4px;
   min-width: 0;
+}
+
+.v10-row-header-right {
+  flex-shrink: 0;
+}
+
+/* Order Number (#017) - Accent Green */
+.v10-row-order-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  color: #10b981;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+/* Type Label */
+.v10-row-type {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+/* Status (Color-coded text only, no background) */
+.v10-row-status {
+  font-size: 1rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.v10-row-status.v10-status-pending {
+  color: #f59e0b;
+}
+
+.v10-row-status.v10-status-in_progress {
+  color: #3b82f6;
+}
+
+.v10-row-status.v10-status-completed {
+  color: #22c55e;
+}
+
+.v10-row-status.v10-status-rejected {
+  color: #ef4444;
+}
+
+/* Bullet Separators */
+.v10-row-separator {
+  color: #555555;
+  font-weight: 300;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Date (Right Side) */
+.v10-row-date {
+  font-size: 0.875rem;
+  color: #999999;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ============================================
+   HORIZONTAL DIVIDER
+   ============================================ */
+
+.v10-row-divider {
+  height: 1px;
+  background: #3a3a3a;
+  margin: 0;
+}
+
+/* ============================================
+   THUMBNAILS SECTION (Hero)
+   ============================================ */
+
+.v10-row-thumbnails {
+  display: grid;
+  gap: 16px;
   align-items: center;
 }
 
-/* Single Row Layout (1-5 garments) - Larger thumbnails */
+/* Single Row Layout (1-5 garments) - 100px Hero Showcase */
 .v10-row-thumbnails.v10-thumbnails-single-row {
-  grid-template-columns: repeat(auto-fit, 70px);
-  grid-auto-rows: 70px;
-  max-height: 70px;
+  grid-template-columns: repeat(auto-fit, 100px);
+  grid-auto-rows: 100px;
+  max-height: 100px;
 }
 
-/* Double Row Layout (6-10 garments) - Smaller thumbnails */
+/* Double Row Layout (6-10 garments) - 50px Compact Grid */
 .v10-row-thumbnails.v10-thumbnails-double-row {
-  grid-template-columns: repeat(auto-fit, 70px);
-  grid-auto-rows: 35px;
+  grid-template-columns: repeat(auto-fit, 100px);
+  grid-auto-rows: 50px;
   grid-auto-flow: row;
-  max-height: 74px; /* 35px + 4px gap + 35px */
+  max-height: 116px; /* 50px + 16px gap + 50px */
 }
 
 /* Empty State */
@@ -561,23 +569,27 @@
   justify-content: center;
   color: #666666;
   font-size: 0.875rem;
+  min-height: 100px;
 }
 
 /* Individual Thumbnail */
 .v10-thumbnail {
-  width: 70px;
+  width: 100px;
   height: 100%;
   background: #2d2d2d;
   border: 1px solid #3a3a3a;
+  border-radius: 4px;
   position: relative;
   overflow: hidden;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .v10-thumbnail:hover {
   border-color: #10b981;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   z-index: 10;
-  transform: scale(1.05);
 }
 
 .v10-thumbnail img {
@@ -594,42 +606,43 @@
   justify-content: center;
   background: #3a3a3a;
   color: #cccccc;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
 }
 
 /* "+N More" Indicator */
 .v10-thumbnail-more {
-  width: 70px;
+  width: 100px;
   height: 100%;
   background: rgba(16, 185, 129, 0.15);
   border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #10b981;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Right Section: Date & Time */
-.v10-row-date {
-  flex: 0 0 100px;
-  text-align: right;
+/* ============================================
+   FOOTER ROW (Metadata)
+   ============================================ */
+
+.v10-row-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   font-size: 0.875rem;
+  color: #999999;
+}
+
+/* Timeline Text (Slightly Emphasized) */
+.v10-row-timeline {
   color: #cccccc;
-}
-
-.v10-date {
-  display: block;
   font-weight: 500;
-}
-
-.v10-time {
-  display: block;
-  font-size: 0.75rem;
-  color: #777777;
-  margin-top: 0.25rem;
 }
 
 /* ==============================================
@@ -1261,39 +1274,48 @@
     font-size: 1rem;
   }
 
-  /* Submission Row Mobile Layout */
+  /* Submission Row Mobile Layout - Option 3 */
   .v10-submission-row {
-    flex-direction: column;
-    align-items: stretch;
+    padding: 1.25rem;
     gap: 1rem;
-    padding: 1rem;
-    min-height: auto;
   }
 
-  .v10-row-info {
-    flex: 1 1 auto;
+  .v10-row-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 
-  .v10-row-thumbnails {
-    flex: 1 1 auto;
-    justify-content: flex-start;
+  .v10-row-header-left {
+    gap: 0.5rem;
+  }
+
+  .v10-row-order-number {
+    font-size: 1.125rem;
+  }
+
+  .v10-row-type {
+    font-size: 0.9375rem;
+  }
+
+  .v10-row-status {
+    font-size: 0.9375rem;
+  }
+
+  .v10-row-separator {
+    font-size: 0.875rem;
   }
 
   .v10-row-date {
-    flex: 1 1 auto;
-    text-align: left;
-    display: flex;
+    font-size: 0.8125rem;
+  }
+
+  .v10-row-footer {
+    font-size: 0.8125rem;
     gap: 0.5rem;
-    align-items: center;
   }
 
-  .v10-date,
-  .v10-time {
-    display: inline;
-  }
-
-  .v10-time::before {
-    content: '• ';
-    margin-right: 0.25rem;
+  .v10-row-timeline {
+    width: 100%;
   }
 }
