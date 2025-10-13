@@ -422,10 +422,9 @@
    ============================================== */
 
 .v10-submissions-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
-  width: 100%;
 }
 
 /* Individual Row Container */
@@ -554,100 +553,30 @@
 }
 
 /* ============================================
-   THUMBNAILS SECTION (Carousel with Arrows)
+   THUMBNAILS SECTION (Hero)
    ============================================ */
 
-/* Carousel Wrapper */
 .v10-row-thumbnails {
-  position: relative;
-  width: 100%;
-  overflow: visible;
-}
-
-/* Scrollable Thumbnail Grid */
-.v10-thumbnails-scroll {
   display: grid;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: #10b981 #2d2d2d;
-  padding-bottom: 8px;
-  padding-top: 2px;
 }
 
-.v10-thumbnails-scroll::-webkit-scrollbar {
-  height: 6px;
+/* Single Row Layout (1-5 garments) - 100px Hero Showcase */
+.v10-row-thumbnails.v10-thumbnails-single-row {
+  grid-template-columns: repeat(auto-fill, 100px);
+  grid-auto-rows: 100px;
+  max-height: 100px;
+  justify-content: start;
 }
 
-.v10-thumbnails-scroll::-webkit-scrollbar-track {
-  background: #2d2d2d;
-  border-radius: 3px;
-}
-
-.v10-thumbnails-scroll::-webkit-scrollbar-thumb {
-  background: #10b981;
-  border-radius: 3px;
-}
-
-.v10-thumbnails-scroll::-webkit-scrollbar-thumb:hover {
-  background: #059669;
-}
-
-/* Single Row Layout - Horizontal Scroll */
-.v10-thumbnails-scroll.v10-thumbnails-single-row {
-  grid-auto-flow: column;
-  grid-auto-columns: 100px;
-  grid-template-rows: 100px;
-  max-height: 108px;
-}
-
-/* Double Row Layout - Horizontal Scroll */
-.v10-thumbnails-scroll.v10-thumbnails-double-row {
-  grid-auto-flow: column;
-  grid-auto-columns: 100px;
-  grid-template-rows: 50px 50px;
-  max-height: 124px;
-}
-
-/* Navigation Arrows */
-.v10-thumbnail-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
-  background: rgba(16, 185, 129, 0.95);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.v10-thumbnail-nav:hover {
-  background: #10b981;
-  transform: translateY(-50%) scale(1.15);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-}
-
-.v10-thumbnail-nav:active {
-  transform: translateY(-50%) scale(1.05);
-}
-
-.v10-thumbnail-prev {
-  left: -12px;
-}
-
-.v10-thumbnail-next {
-  right: -12px;
+/* Double Row Layout (6-10 garments) - 50px Compact Grid */
+.v10-row-thumbnails.v10-thumbnails-double-row {
+  grid-template-columns: repeat(auto-fill, 100px);
+  grid-auto-rows: 50px;
+  grid-auto-flow: row;
+  max-height: 116px; /* 50px + 16px gap + 50px */
+  justify-content: start;
 }
 
 /* Empty State */
@@ -1411,17 +1340,5 @@
 
   .v10-row-timeline {
     width: 100%;
-  }
-
-  /* Hide navigation arrows on mobile */
-  .v10-thumbnail-nav {
-    display: none;
-  }
-}
-
-/* Tablet and below: Single column */
-@media (max-width: 1024px) {
-  .v10-submissions-list {
-    grid-template-columns: 1fr;
   }
 }
