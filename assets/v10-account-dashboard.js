@@ -315,7 +315,10 @@ const V10_AccountDashboard = {
             <span class="v10-row-status v10-status-${submission.status}">${statusLabels[submission.status]}</span>
           </div>
           <div class="v10-row-header-right">
-            <span class="v10-row-date">${formattedDate}</span>
+            <div class="v10-date-container">
+              <span class="v10-date-label">Submitted</span>
+              <span class="v10-row-date">${formattedDate}</span>
+            </div>
           </div>
         </div>
 
@@ -325,11 +328,24 @@ const V10_AccountDashboard = {
         <!-- Thumbnails (hero section) -->
         ${thumbnailsHTML}
 
-        <!-- Footer metadata -->
+        <!-- Footer metadata with green icons -->
         <div class="v10-row-footer">
-          <span>${garmentCount} garment${garmentCount !== 1 ? 's' : ''}</span>
+          <span class="v10-footer-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981; margin-right: 0.35rem; vertical-align: middle;">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            ${garmentCount} garment${garmentCount !== 1 ? 's' : ''}
+          </span>
           <span class="v10-row-separator">•</span>
-          <span>${fileCount} file${fileCount !== 1 ? 's' : ''}</span>
+          <span class="v10-footer-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981; margin-right: 0.35rem; vertical-align: middle;">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+              <polyline points="13 2 13 9 20 9"></polyline>
+            </svg>
+            ${fileCount} file${fileCount !== 1 ? 's' : ''}
+          </span>
           <span class="v10-row-separator">•</span>
           <span class="v10-row-timeline">${timelineHTML}</span>
         </div>
@@ -813,26 +829,35 @@ const V10_AccountDashboard = {
    */
   loadRecentOrders() {
     const recentOrdersGrid = document.getElementById('recent-orders-grid');
-    if (!recentOrdersGrid) return;
+    if (!recentOrdersGrid) {
+      console.warn('⚠️ recent-orders-grid element not found');
+      return;
+    }
 
-    // Get 4 most recent submissions
-    const recentSubmissions = [...this.submissions]
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-      .slice(0, 4);
+    console.log('🔄 Loading recent orders... (submissions count:', this.submissions.length, ')');
 
-    if (recentSubmissions.length === 0) {
+    // If no submissions yet, show empty state
+    if (this.submissions.length === 0) {
       recentOrdersGrid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: #999999;">
+        <div style="text-align: center; padding: 3rem 1rem; color: #999999;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 48px; height: 48px; margin: 0 auto 1rem; opacity: 0.5;">
             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/>
           </svg>
           <p style="margin: 0; font-size: 0.875rem;">No submissions yet</p>
         </div>
       `;
+      console.log('📭 No submissions to display');
       return;
     }
 
-    // Render recent submissions using row layout
+    // Get 4 most recent submissions
+    const recentSubmissions = [...this.submissions]
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 4);
+
+    console.log('📦 Rendering', recentSubmissions.length, 'recent submissions');
+
+    // Clear any loading state and render submissions
     recentOrdersGrid.innerHTML = recentSubmissions.map(submission =>
       this.renderSubmissionRow(submission)
     ).join('');
@@ -844,7 +869,7 @@ const V10_AccountDashboard = {
       });
     });
 
-    console.log(`✅ Loaded ${recentSubmissions.length} recent orders`);
+    console.log(`✅ Successfully loaded ${recentSubmissions.length} recent orders into dashboard`);
   },
 
   /**

@@ -470,9 +470,9 @@
   flex-shrink: 0;
 }
 
-/* Order Number (#017) - Accent Green */
+/* Order Number (#017) - Accent Green - BIGGER */
 .v10-row-order-number {
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 700;
   font-family: 'Courier New', monospace;
   color: #10b981;
@@ -480,18 +480,18 @@
   flex-shrink: 0;
 }
 
-/* Type Label */
+/* Type Label - BIGGER */
 .v10-row-type {
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.125rem;
+  font-weight: 600;
   color: #ffffff;
   flex-shrink: 0;
 }
 
-/* Status (Color-coded text only, no background) */
+/* Status (Color-coded text only, no background) - BIGGER */
 .v10-row-status {
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.125rem;
+  font-weight: 600;
   flex-shrink: 0;
 }
 
@@ -519,10 +519,25 @@
   flex-shrink: 0;
 }
 
-/* Date (Right Side) */
+/* Date Container with Label */
+.v10-date-container {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.v10-date-label {
+  font-size: 0.75rem;
+  color: #666666;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
 .v10-row-date {
-  font-size: 0.875rem;
-  color: #999999;
+  font-size: 1rem;
+  color: #cccccc;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -549,17 +564,19 @@
 
 /* Single Row Layout (1-5 garments) - 100px Hero Showcase */
 .v10-row-thumbnails.v10-thumbnails-single-row {
-  grid-template-columns: repeat(auto-fit, 100px);
+  grid-template-columns: repeat(auto-fill, 100px);
   grid-auto-rows: 100px;
   max-height: 100px;
+  justify-content: start;
 }
 
 /* Double Row Layout (6-10 garments) - 50px Compact Grid */
 .v10-row-thumbnails.v10-thumbnails-double-row {
-  grid-template-columns: repeat(auto-fit, 100px);
+  grid-template-columns: repeat(auto-fill, 100px);
   grid-auto-rows: 50px;
   grid-auto-flow: row;
   max-height: 116px; /* 50px + 16px gap + 50px */
+  justify-content: start;
 }
 
 /* Empty State */
@@ -635,14 +652,20 @@
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #999999;
 }
 
-/* Timeline Text (Slightly Emphasized) */
+.v10-footer-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Timeline Text (Slightly Emphasized) - BIGGER */
 .v10-row-timeline {
   color: #cccccc;
   font-weight: 500;
+  font-size: 1rem;
 }
 
 /* ==============================================
