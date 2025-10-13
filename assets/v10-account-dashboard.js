@@ -250,42 +250,10 @@ const V10_AccountDashboard = {
     // Render rows
     this.submissionsList.innerHTML = filtered.map(submission => this.renderSubmissionRow(submission)).join('');
 
-    // Add click handlers for rows
+    // Add click handlers
     this.submissionsList.querySelectorAll('.v10-submission-row').forEach((row, index) => {
       row.addEventListener('click', () => {
         this.showSubmissionDetails(filtered[index]);
-      });
-    });
-
-    // Add carousel navigation handlers
-    this.setupCarouselNavigation();
-  },
-
-  /**
-   * Setup carousel navigation for thumbnail arrows
-   */
-  setupCarouselNavigation() {
-    // Get all navigation arrows
-    const prevButtons = document.querySelectorAll('.v10-thumbnail-prev');
-    const nextButtons = document.querySelectorAll('.v10-thumbnail-next');
-
-    prevButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent row click
-        const scrollContainer = btn.nextElementSibling; // Get the .v10-thumbnails-scroll
-        if (scrollContainer) {
-          scrollContainer.scrollBy({ left: -120, behavior: 'smooth' });
-        }
-      });
-    });
-
-    nextButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent row click
-        const scrollContainer = btn.previousElementSibling; // Get the .v10-thumbnails-scroll
-        if (scrollContainer) {
-          scrollContainer.scrollBy({ left: 120, behavior: 'smooth' });
-        }
       });
     });
   },
@@ -894,15 +862,12 @@ const V10_AccountDashboard = {
       this.renderSubmissionRow(submission)
     ).join('');
 
-    // Add click handlers for rows
+    // Add click handlers
     recentOrdersGrid.querySelectorAll('.v10-submission-row').forEach((row, index) => {
       row.addEventListener('click', () => {
         this.showSubmissionDetails(recentSubmissions[index]);
       });
     });
-
-    // Add carousel navigation handlers
-    this.setupCarouselNavigation();
 
     console.log(`✅ Successfully loaded ${recentSubmissions.length} recent orders into dashboard`);
   },
@@ -1095,11 +1060,10 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Generate smart thumbnail grid for row layout - Option 3 with Carousel
+   * Generate smart thumbnail grid for row layout - Option 3
    * 1-5 garments: Single row (100px tall) - Hero showcase
    * 6-10 garments: Double row (50px tall each = 100px total) - Compact grid
    * 10+ garments: Show first 10 + "+N more" indicator
-   * With carousel navigation arrows for >3 garments
    */
   generateSmartThumbnails(garments) {
     if (!garments || garments.length === 0) {
@@ -1128,22 +1092,7 @@ const V10_AccountDashboard = {
       remaining = totalGarments - 10;
     }
 
-    // Wrapper for thumbnails and arrows
-    let html = `<div class="v10-row-thumbnails">`;
-
-    // Add prev arrow if more than 3 garments (carousel navigation)
-    if (totalGarments > 3) {
-      html += `
-        <button class="v10-thumbnail-nav v10-thumbnail-prev" aria-label="Previous thumbnails">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
-      `;
-    }
-
-    // Scrollable container for thumbnails
-    html += `<div class="v10-thumbnails-scroll ${layoutClass}">`;
+    let html = `<div class="v10-row-thumbnails ${layoutClass}">`;
 
     toShow.forEach(garment => {
       const imageUrl = this.getGarmentImageUrl(garment.type);
@@ -1168,20 +1117,7 @@ const V10_AccountDashboard = {
       html += `<div class="v10-thumbnail v10-thumbnail-more">+${remaining}</div>`;
     }
 
-    html += `</div>`; // Close scroll container
-
-    // Add next arrow if more than 3 garments (carousel navigation)
-    if (totalGarments > 3) {
-      html += `
-        <button class="v10-thumbnail-nav v10-thumbnail-next" aria-label="Next thumbnails">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
-      `;
-    }
-
-    html += `</div>`; // Close wrapper
+    html += '</div>';
     return html;
   },
 };
