@@ -417,151 +417,219 @@
 }
 
 /* ==============================================
-   SUBMISSIONS GRID
+   SUBMISSIONS LIST (Row Layout)
    ============================================== */
 
-.v10-submissions-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+.v10-submissions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-@media (min-width: 1024px) {
-  .v10-submissions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.v10-submission-card {
+/* Individual Row */
+.v10-submission-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
   background: #242424;
   border: 1px solid #3a3a3a;
   border-radius: 0;
-  padding: 0;
-  transition: all 0.3s ease;
   cursor: pointer;
-  overflow: hidden;
+  transition: all 0.2s ease;
+  min-height: 90px; /* Accommodates 70px thumbnails + padding */
 }
 
-.v10-submission-card:hover {
+.v10-submission-row:hover {
   border-color: #10b981;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px);
+  background: #2a2a2a;
+  transform: translateX(4px);
 }
 
-/* Card Content Padding (exclude image grid) */
-.v10-submission-header,
-.v10-submission-id,
-.v10-submission-date,
-.v10-submission-meta {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+/* Left Section: Order Info */
+.v10-row-info {
+  flex: 0 0 220px;
+  min-width: 0;
 }
 
-.v10-submission-header {
-  padding-top: 1.5rem;
+.v10-row-order-id {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.5rem 0;
 }
 
-.v10-submission-meta {
-  padding-bottom: 1.5rem;
-}
-
-.v10-submission-header {
+.v10-row-badges {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.v10-submission-type-badge {
+.v10-row-meta {
+  font-size: 0.8125rem;
+  color: #999999;
+}
+
+/* Badge Styles for Row Layout */
+.v10-type-badge {
   display: inline-block;
-  padding: 0.375rem 0.75rem;
-  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
   font-weight: 600;
   border-radius: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.v10-submission-type-badge.quotation {
+.v10-type-badge.quotation {
   background: rgba(59, 130, 246, 0.1);
   color: #3b82f6;
 }
 
-.v10-submission-type-badge.sample-request {
+.v10-type-badge.sample-request {
   background: rgba(168, 85, 247, 0.1);
   color: #a855f7;
 }
 
-.v10-submission-type-badge.bulk-order-request {
+.v10-type-badge.bulk-order-request {
   background: rgba(249, 115, 22, 0.1);
   color: #f97316;
 }
 
-.v10-submission-status {
-  font-size: 0.75rem;
+.v10-status-badge {
+  font-size: 0.7rem;
   font-weight: 600;
-  padding: 0.25rem 0.625rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 0;
   text-transform: uppercase;
 }
 
-/* Status badge colors */
-.v10-status-pending {
+.v10-status-badge.v10-status-pending {
   background: rgba(251, 191, 36, 0.15);
   color: #f59e0b;
   border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
-.v10-status-in_progress {
+.v10-status-badge.v10-status-in_progress {
   background: rgba(59, 130, 246, 0.15);
   color: #3b82f6;
   border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
-.v10-status-completed {
+.v10-status-badge.v10-status-completed {
   background: rgba(34, 197, 94, 0.15);
   color: #22c55e;
   border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-.v10-status-rejected {
+.v10-status-badge.v10-status-rejected {
   background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-.v10-submission-id {
-  font-family: 'Courier New', monospace;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 0.5rem 0;
+/* Center Section: Smart Thumbnails */
+.v10-row-thumbnails {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  align-items: center;
 }
 
-.v10-submission-date {
-  font-size: 0.875rem;
-  color: #cccccc;
+/* Single Row Layout (1-5 garments) - Larger thumbnails */
+.v10-row-thumbnails.v10-thumbnails-single-row {
+  grid-template-columns: repeat(auto-fit, 70px);
+  grid-auto-rows: 70px;
+  max-height: 70px;
 }
 
-.v10-submission-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #3a3a3a;
+/* Double Row Layout (6-10 garments) - Smaller thumbnails */
+.v10-row-thumbnails.v10-thumbnails-double-row {
+  grid-template-columns: repeat(auto-fit, 70px);
+  grid-auto-rows: 35px;
+  grid-auto-flow: row;
+  max-height: 74px; /* 35px + 4px gap + 35px */
 }
 
-.v10-meta-item {
+/* Empty State */
+.v10-row-thumbnails.v10-thumbnails-empty {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  color: #666666;
+  font-size: 0.875rem;
+}
+
+/* Individual Thumbnail */
+.v10-thumbnail {
+  width: 70px;
+  height: 100%;
+  background: #2d2d2d;
+  border: 1px solid #3a3a3a;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.v10-thumbnail:hover {
+  border-color: #10b981;
+  z-index: 10;
+  transform: scale(1.05);
+}
+
+.v10-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder Thumbnail (no image) */
+.v10-thumbnail-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3a3a3a;
+  color: #cccccc;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* "+N More" Indicator */
+.v10-thumbnail-more {
+  width: 70px;
+  height: 100%;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* Right Section: Date & Time */
+.v10-row-date {
+  flex: 0 0 100px;
+  text-align: right;
   font-size: 0.875rem;
   color: #cccccc;
 }
 
-.v10-meta-item svg {
-  color: #10b981;
+.v10-date {
+  display: block;
+  font-weight: 500;
+}
+
+.v10-time {
+  display: block;
+  font-size: 0.75rem;
+  color: #777777;
+  margin-top: 0.25rem;
 }
 
 /* ==============================================
@@ -798,21 +866,9 @@
 }
 
 #recent-orders-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-@media (min-width: 768px) {
-  #recent-orders-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1200px) {
-  #recent-orders-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .v10-view-all-btn {
@@ -1203,5 +1259,41 @@
 
   .v10-module-card h3 {
     font-size: 1rem;
+  }
+
+  /* Submission Row Mobile Layout */
+  .v10-submission-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1rem;
+    min-height: auto;
+  }
+
+  .v10-row-info {
+    flex: 1 1 auto;
+  }
+
+  .v10-row-thumbnails {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+  }
+
+  .v10-row-date {
+    flex: 1 1 auto;
+    text-align: left;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .v10-date,
+  .v10-time {
+    display: inline;
+  }
+
+  .v10-time::before {
+    content: '• ';
+    margin-right: 0.25rem;
   }
 }

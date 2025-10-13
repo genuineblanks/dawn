@@ -36,7 +36,7 @@ const V10_AccountDashboard = {
     this.customerEmail = this.dashboard.dataset.customerEmail;
     this.loadingState = document.getElementById('v10-loading-state');
     this.emptyState = document.getElementById('v10-empty-state');
-    this.submissionsGrid = document.getElementById('v10-submissions-grid');
+    this.submissionsList = document.getElementById('v10-submissions-list');
     this.modal = document.getElementById('v10-submission-modal');
     this.modalClose = document.getElementById('modal-close');
 
@@ -212,10 +212,10 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Render submissions grid
+   * Render submissions list (row layout)
    */
   renderSubmissions() {
-    if (!this.submissionsGrid) return;
+    if (!this.submissionsList) return;
 
     // Filter submissions by type
     let filtered = this.submissions;
@@ -235,37 +235,39 @@ const V10_AccountDashboard = {
     // Show empty state if no submissions
     if (filtered.length === 0) {
       this.showEmpty(this.currentFilter);
-      this.submissionsGrid.innerHTML = '';
-      this.submissionsGrid.style.display = 'none';
+      this.submissionsList.innerHTML = '';
+      this.submissionsList.style.display = 'none';
       return;
     }
 
     this.hideEmpty();
-    this.submissionsGrid.style.display = 'grid';
+    this.submissionsList.style.display = 'flex';
 
     // Sort by date (newest first)
     filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    // Render cards
-    this.submissionsGrid.innerHTML = filtered.map(submission => this.renderSubmissionCard(submission)).join('');
+    // Render rows
+    this.submissionsList.innerHTML = filtered.map(submission => this.renderSubmissionRow(submission)).join('');
 
     // Add click handlers
-    this.submissionsGrid.querySelectorAll('.v10-submission-card').forEach((card, index) => {
-      card.addEventListener('click', () => {
+    this.submissionsList.querySelectorAll('.v10-submission-row').forEach((row, index) => {
+      row.addEventListener('click', () => {
         this.showSubmissionDetails(filtered[index]);
       });
     });
   },
 
   /**
-   * Render individual submission card
+   * Render individual submission row (table-like layout)
    */
-  renderSubmissionCard(submission) {
+  renderSubmissionRow(submission) {
     const date = new Date(submission.created_at);
     const formattedDate = date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric',
+      day: 'numeric'
+    });
+    const formattedTime = date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -285,48 +287,39 @@ const V10_AccountDashboard = {
       'rejected': 'Rejected'
     };
 
-    // Count garments
     const garments = submission.data?.records?.garments || [];
     const garmentCount = garments.length;
-
-    // Generate image grid
-    const imageGridHTML = this.generateGarmentImageGrid(garments);
+    const fileCount = submission.data?.files?.length || 0;
 
     // Format order ID
     const orderIdDisplay = this.formatOrderId(submission.request_id, submission.id);
 
-    return `
-      <div class="v10-submission-card" data-id="${submission.id}">
-        ${imageGridHTML}
+    // Generate smart thumbnails
+    const thumbnailsHTML = this.generateSmartThumbnails(garments);
 
-        <div class="v10-submission-header">
-          <span class="v10-submission-type-badge ${submission.submission_type}">
-            ${typeLabels[submission.submission_type] || submission.submission_type}
-          </span>
-          <span class="v10-submission-status v10-status-${submission.status}">
-            ${statusLabels[submission.status] || submission.status}
-          </span>
+    return `
+      <div class="v10-submission-row" data-id="${submission.id}">
+        <div class="v10-row-info">
+          <h3 class="v10-row-order-id">${orderIdDisplay}</h3>
+          <div class="v10-row-badges">
+            <span class="v10-type-badge ${submission.submission_type}">
+              ${typeLabels[submission.submission_type] || submission.submission_type}
+            </span>
+            <span class="v10-status-badge v10-status-${submission.status}">
+              ${statusLabels[submission.status] || submission.status}
+            </span>
+          </div>
+          <div class="v10-row-meta">
+            <span>${garmentCount} garment${garmentCount !== 1 ? 's' : ''}</span>
+            ${fileCount > 0 ? ` • <span>${fileCount} file${fileCount !== 1 ? 's' : ''}</span>` : ''}
+          </div>
         </div>
 
-        <h3 class="v10-submission-id">${orderIdDisplay}</h3>
-        <p class="v10-submission-date">Submitted ${formattedDate}</p>
+        ${thumbnailsHTML}
 
-        <div class="v10-submission-meta">
-          <div class="v10-meta-item">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-            </svg>
-            <span>${garmentCount} garment${garmentCount !== 1 ? 's' : ''}</span>
-          </div>
-          ${submission.data?.files && submission.data.files.length > 0 ? `
-          <div class="v10-meta-item">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-              <polyline points="13 2 13 9 20 9"/>
-            </svg>
-            <span>${submission.data.files.length} file${submission.data.files.length !== 1 ? 's' : ''}</span>
-          </div>
-          ` : ''}
+        <div class="v10-row-date">
+          <span class="v10-date">${formattedDate}</span>
+          <span class="v10-time">${formattedTime}</span>
         </div>
       </div>
     `;
@@ -679,7 +672,7 @@ const V10_AccountDashboard = {
   showLoading() {
     if (this.loadingState) this.loadingState.style.display = 'block';
     if (this.emptyState) this.emptyState.style.display = 'none';
-    if (this.submissionsGrid) this.submissionsGrid.style.display = 'none';
+    if (this.submissionsList) this.submissionsList.style.display = 'none';
   },
 
   /**
@@ -687,7 +680,7 @@ const V10_AccountDashboard = {
    */
   hideLoading() {
     if (this.loadingState) this.loadingState.style.display = 'none';
-    if (this.submissionsGrid) this.submissionsGrid.style.display = 'grid';
+    if (this.submissionsList) this.submissionsList.style.display = 'flex';
   },
 
   /**
@@ -732,7 +725,7 @@ const V10_AccountDashboard = {
     }
 
     this.emptyState.style.display = 'block';
-    if (this.submissionsGrid) this.submissionsGrid.style.display = 'none';
+    if (this.submissionsList) this.submissionsList.style.display = 'none';
   },
 
   /**
@@ -804,7 +797,7 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Load recent orders for dashboard home
+   * Load recent orders for dashboard home (row layout)
    */
   loadRecentOrders() {
     const recentOrdersGrid = document.getElementById('recent-orders-grid');
@@ -827,14 +820,14 @@ const V10_AccountDashboard = {
       return;
     }
 
-    // Render recent submissions
+    // Render recent submissions using row layout
     recentOrdersGrid.innerHTML = recentSubmissions.map(submission =>
-      this.renderSubmissionCard(submission)
+      this.renderSubmissionRow(submission)
     ).join('');
 
     // Add click handlers
-    recentOrdersGrid.querySelectorAll('.v10-submission-card').forEach((card, index) => {
-      card.addEventListener('click', () => {
+    recentOrdersGrid.querySelectorAll('.v10-submission-row').forEach((row, index) => {
+      row.addEventListener('click', () => {
         this.showSubmissionDetails(recentSubmissions[index]);
       });
     });
@@ -1027,62 +1020,65 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Generate dynamic image grid HTML based on garment count
-   * 1 garment: Single large image
-   * 2 garments: 50/50 horizontal split
-   * 3 garments: 33/33/33 horizontal split
-   * 4+ garments: 2x2 grid (max 4 images)
+   * Generate smart thumbnail grid for row layout
+   * 1-5 garments: Single row (70px tall)
+   * 6-10 garments: Double row (35px tall each = 70px total)
+   * 10+ garments: Show first 10 + "+N more" indicator
    */
-  generateGarmentImageGrid(garments) {
-    if (!garments || garments.length === 0) return '';
-
-    // Get up to 4 garment images
-    const garmentImages = garments.slice(0, 4).map(g => ({
-      type: g.type || 'Unknown',
-      imageUrl: this.getGarmentImageUrl(g.type)
-    }));
-
-    // Filter out garments without images
-    const withImages = garmentImages.filter(g => g.imageUrl);
-
-    if (withImages.length === 0) {
-      // No images available, show placeholder
-      return `
-        <div class="v10-card-image-grid v10-grid-placeholder">
-          <div class="v10-image-placeholder">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-            </svg>
-          </div>
-        </div>
-      `;
+  generateSmartThumbnails(garments) {
+    if (!garments || garments.length === 0) {
+      return '<div class="v10-row-thumbnails v10-thumbnails-empty"><span>No images</span></div>';
     }
 
-    const count = withImages.length;
-    let gridClass = '';
+    const totalGarments = garments.length;
+    const maxShow = 10; // Maximum garments to display
 
-    if (count === 1) {
-      gridClass = 'v10-grid-single';
-    } else if (count === 2) {
-      gridClass = 'v10-grid-double';
-    } else if (count === 3) {
-      gridClass = 'v10-grid-triple';
+    let layoutClass = '';
+    let toShow = [];
+    let remaining = 0;
+
+    if (totalGarments <= 5) {
+      // Single row layout - larger thumbnails
+      layoutClass = 'v10-thumbnails-single-row';
+      toShow = garments.slice(0, 5);
+    } else if (totalGarments <= 10) {
+      // Double row layout - 2 rows of smaller thumbnails
+      layoutClass = 'v10-thumbnails-double-row';
+      toShow = garments.slice(0, 10);
     } else {
-      gridClass = 'v10-grid-quad';
+      // More than 10 - show first 9 in double row + "+N more"
+      layoutClass = 'v10-thumbnails-double-row';
+      toShow = garments.slice(0, 9); // Leave space for "+N more"
+      remaining = totalGarments - 9;
     }
 
-    const imagesHTML = withImages.map(g => `
-      <div class="v10-card-image">
-        <img src="${g.imageUrl}" alt="${g.type}" loading="lazy">
-        <div class="v10-image-label">${g.type}</div>
-      </div>
-    `).join('');
+    let html = `<div class="v10-row-thumbnails ${layoutClass}">`;
 
-    return `
-      <div class="v10-card-image-grid ${gridClass}">
-        ${imagesHTML}
-      </div>
-    `;
+    toShow.forEach(garment => {
+      const imageUrl = this.getGarmentImageUrl(garment.type);
+      if (imageUrl) {
+        html += `
+          <div class="v10-thumbnail" title="${garment.type}">
+            <img src="${imageUrl}" alt="${garment.type}" loading="lazy">
+          </div>
+        `;
+      } else {
+        // Placeholder if no image - show first letter
+        html += `
+          <div class="v10-thumbnail v10-thumbnail-placeholder" title="${garment.type}">
+            <span>${garment.type.substring(0, 1).toUpperCase()}</span>
+          </div>
+        `;
+      }
+    });
+
+    // Add "+N more" indicator if needed
+    if (remaining > 0) {
+      html += `<div class="v10-thumbnail v10-thumbnail-more">+${remaining}</div>`;
+    }
+
+    html += '</div>';
+    return html;
   },
 };
 
