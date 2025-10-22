@@ -178,7 +178,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 </section>
 
 <!-- Client Information Form Section (Hidden until workflow completes) -->
-<section id="techpack-v10-step-1" class="v10-techpack-step" data-step="1" style="display: none;">
+<section id="techpack-v10-step-1" class="v10-techpack-step v10-hidden" data-step="1">
   <div class="techpack-container">
     
     <!-- Compact Progress Steps -->
@@ -247,7 +247,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         </div>
 
         <!-- Quantity Slider for Quotations Only - Full Width -->
-        <div class="v10-form-field v10-form-field--full" id="v10-quantity-slider-field" style="display: none;">
+        <div class="v10-form-field v10-form-field--full v10-hidden" id="v10-quantity-slider-field">
           <div class="v10-quantity-slider-container">
             <div class="v10-quantity-slider-header">
               <label class="v10-form-label-enhanced">
@@ -281,7 +281,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         </div>
 
         <!-- Delivery Address -->
-        <div class="v10-form-field v10-form-field--full" id="v10-delivery-address-field" style="display: none;">
+        <div class="v10-form-field v10-form-field--full v10-hidden" id="v10-delivery-address-field">
           <label class="v10-form-label-enhanced">
             <span class="v10-required">DELIVERY ADDRESS</span>
           </label>
@@ -323,7 +323,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
 
     <!-- Different Address Form (conditional) -->
-    <div class="v10-studio-card v10-different-address-card" id="v10-different-address-form" style="display: none;">
+    <div class="v10-studio-card v10-different-address-card v10-hidden" id="v10-different-address-form">
       <div class="v10-form-section">
         <!-- Contact Info Row -->
         <div class="v10-form-field v10-form-field--half">
@@ -462,7 +462,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
 
     <!-- Delivery Information Studio (Sample/Bulk Only) -->
-    <div class="v10-studio-card" id="v10-delivery-section" style="display: none;">
+    <div class="v10-studio-card v10-hidden" id="v10-delivery-section">
       <div class="v10-studio-header">
         <h2 class="v10-studio-title">Delivery Information</h2>
         <p class="v10-studio-subtitle">Where should we send your order?</p>
@@ -470,13 +470,13 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
     </div>
 
     <!-- Shipping Options Studio (Bulk Only) -->
-    <div class="v10-studio-card" id="v10-shipping-section" style="display: none;">
-      <div class="v10-studio-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <div class="v10-studio-card v10-hidden" id="v10-shipping-section">
+      <div class="v10-studio-header v10-flex-between">
         <div>
           <h2 class="v10-studio-title">Shipping & Insurance</h2>
           <p class="v10-studio-subtitle">Choose your preferred shipping method and protection level</p>
         </div>
-        <button type="button" class="v10-guidance-btn" onclick="showShippingGuidance()" style="flex-shrink: 0;">
+        <button type="button" class="v10-guidance-btn" onclick="showShippingGuidance()">
           WHAT SHOULD I CHOOSE
         </button>
       </div>
@@ -572,7 +572,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       </button>
     </div>
       
-    <div class="v10-studio-card" id="v10-project-details-section" style="display: none;">
+    <div class="v10-studio-card v10-hidden" id="v10-project-details-section">
         <div class="v10-studio-header">
           <h2 class="v10-studio-title">Project Details</h2>
           <p class="v10-studio-subtitle">Describe your project requirements and specifications</p>
@@ -624,8 +624,14 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
   <div class="v10-unlock-text">ACCESS GRANTED</div>
 </div>
 
+<!-- Matrix Animation Overlay -->
+<div class="v10-matrix-overlay" id="v10-matrix-overlay">
+  <canvas class="v10-matrix-canvas" id="v10-matrix-canvas"></canvas>
+  <div class="v10-matrix-text">PROCESSING</div>
+</div>
+
 <!-- Client Verification Modal -->
-<div class="v10-modal-overlay" id="v10-client-verification-modal" style="display: none;">
+<div class="v10-modal-overlay v10-hidden" id="v10-client-verification-modal">
   <div class="v10-modal v10-modal--verification">
     <div class="v10-modal-header">
       <div class="v10-modal-header-spacer"></div>
@@ -687,7 +693,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 </div>
 
 <!-- Submission Type Selection Modal -->
-<div class="v10-modal-overlay" id="v10-submission-type-modal" style="display: none;">
+<div class="v10-modal-overlay v10-hidden" id="v10-submission-type-modal">
   <div class="v10-modal v10-modal--submission">
     <div class="v10-modal-header">
       <div class="v10-modal-header-spacer"></div>
@@ -702,7 +708,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
     <div class="v10-modal-body">
       <div class="v10-submission-selection">
         <!-- Registration Notice for New Clients -->
-        <div class="v10-warning-box-enhanced v10-warning-box-enhanced--blue" id="v10-registration-notice" style="display: none;">
+        <div class="v10-warning-box-enhanced v10-warning-box-enhanced--blue v10-hidden" id="v10-registration-notice">
           <div class="v10-warning-icon">ℹ️</div>
           <div class="v10-warning-content">
             <h4>New Client</h4>
@@ -711,7 +717,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         </div>
 
         <!-- Registration Warning for Registered Clients -->
-        <div class="v10-warning-box-enhanced" id="v10-registration-warning" style="display: none;">
+        <div class="v10-warning-box-enhanced v10-hidden" id="v10-registration-warning">
           <div class="v10-warning-icon">⚠️</div>
           <div class="v10-warning-content">
             <h4>Registered Client</h4>
@@ -783,7 +789,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </button>
           
           <!-- Lab Dips & Brand Accessories Option - HIDDEN -->
-          <button type="button" class="v10-submission-option v10-submission-option--disabled" id="v10-lab-dips-btn" data-submission-type="lab-dips-accessories" style="display: none;">
+          <button type="button" class="v10-submission-option v10-submission-option--disabled v10-hidden" id="v10-lab-dips-btn" data-submission-type="lab-dips-accessories">
             <div class="v10-submission-card">
               <div class="v10-submission-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -808,7 +814,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 </div>
 
 <!-- Request ID Validation Modal -->
-<div class="v10-modal-overlay" id="v10-request-id-modal" style="display: none;">
+<div class="v10-modal-overlay v10-hidden" id="v10-request-id-modal">
   <div class="v10-modal v10-modal--validation">
     <div class="v10-modal-header">
       <div class="v10-modal-header-spacer"></div>

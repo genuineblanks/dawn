@@ -4,7 +4,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
 
-<section id="techpack-v10-step-4" class="v10-techpack-step" data-step="4" style="display: none;">
+<section id="techpack-v10-step-4" class="v10-techpack-step v10-hidden" data-step="4">
   <div class="techpack-container">
     
     <!-- Compact Progress Steps -->
@@ -94,7 +94,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     </div>
 
     <!-- Fabric Swatches & Design Applications - Side by Side -->
-    <div class="v10-review-grid" id="review-samples-section" style="display: none;">
+    <div class="v10-review-grid v10-hidden" id="review-samples-section">
       
       <!-- Fabric Swatches -->
       <div class="v10-studio-card">
@@ -137,7 +137,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     </div>
 
     <!-- Production Quantities (Bulk Orders Only) -->
-    <div class="v10-studio-card" id="review-quantities-section" style="display: none;">
+    <div class="v10-studio-card v10-hidden" id="review-quantities-section">
       <div class="v10-studio-header">
         <h3 class="v10-studio-title">Production Quantities</h3>
         <button type="button" class="v10-edit-btn" data-edit-step="3" data-studio="quantities">
@@ -230,7 +230,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
 
 
   <!-- Success Modal -->
-  <div class="v10-modal-overlay" id="success-modal" style="display: none;">
+  <div class="v10-modal-overlay v10-hidden" id="success-modal">
     <div class="v10-modal v10-modal--success">
       <div class="v10-modal-header">
         <div class="v10-modal-icon v10-modal-icon--success">
@@ -253,7 +253,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
           <!-- Populated by JavaScript -->
         </div>
       </div>
-      <div class="v10-modal-actions" style="justify-content: center;">
+      <div class="v10-modal-actions v10-flex-center">
         <button type="button" class="v10-btn v10-btn--primary" id="success-continue">
           Close & Return
         </button>
@@ -262,7 +262,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
   </div>
 
   <!-- Loading Progress Modal -->
-  <div class="v10-modal-overlay" id="loading-modal" style="display: none;">
+  <div class="v10-modal-overlay v10-hidden" id="loading-modal">
     <div class="v10-modal v10-modal--loading">
       <div class="v10-modal-header">
         <div class="v10-modal-icon v10-modal-icon--loading">
@@ -325,7 +325,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
   </div>
 
   <!-- Error Modal -->
-  <div class="v10-modal-overlay" id="error-modal" style="display: none;">
+  <div class="v10-modal-overlay v10-hidden" id="error-modal">
     <div class="v10-modal v10-modal--error">
       <div class="v10-modal-header">
         <div class="v10-modal-icon v10-modal-icon--error">
@@ -380,8 +380,8 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
       <div class="v10-garment-identity">
         <div class="v10-garment-visual">
           <div class="v10-color-display">
-            <div class="v10-color-circle" style="background-color: #ccc;"></div>
-            <div class="v10-color-overlay" style="display: none;"></div>
+            <div class="v10-color-circle"></div>
+            <div class="v10-color-overlay v10-hidden"></div>
           </div>
           <div class="v10-garment-badge">
             <span class="v10-garment-number">1</span>
@@ -395,7 +395,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
                 <span class="v10-garment-subtitle">Premium sample</span>
               </h4>
             </div>
-            <div class="v10-garment-total-section" style="display: none;">
+            <div class="v10-garment-total-section v10-hidden">
               <span class="v10-garment-total">0</span>
             </div>
           </div>
@@ -424,7 +424,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
           <span class="v10-spec-label">Sample Type</span>
           <span class="v10-spec-value">Stock Color</span>
         </div>
-        <div class="v10-spec-item v10-spec-item--full" style="display: none;">
+        <div class="v10-spec-item v10-spec-item--full v10-hidden">
           <span class="v10-spec-label">Size Distribution</span>
           <div class="v10-size-chips">
             <!-- Populated for bulk orders -->
@@ -432,7 +432,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
         </div>
       </div>
       
-      <div class="v10-garment-assignments" style="display: none;">
+      <div class="v10-garment-assignments v10-hidden">
         <div class="v10-assignments-header">
           <span class="v10-assignments-label">Applied Customizations</span>
         </div>
@@ -448,7 +448,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
 <template id="review-labdip-template">
   <div class="v10-swatch-card">
     <div class="v10-swatch-visual">
-      <div class="v10-swatch-color" style="background-color: #000000;"></div>
+      <div class="v10-swatch-color"></div>
       <div class="v10-swatch-info">
         <span class="v10-swatch-type">Fabric Swatch</span>
       </div>
@@ -488,7 +488,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
 
 
 <!-- New Terms & Conditions Modal -->
-<div class="v10-modal-overlay" id="new-terms-modal" style="display: none;">
+<div class="v10-modal-overlay v10-hidden" id="new-terms-modal">
   <div class="v10-modal v10-new-terms-modal">
     <div class="v10-modal-header">
       <h3 class="v10-modal-title">Terms & Conditions</h3>
