@@ -5,7 +5,7 @@ Enhanced with Visual Studio Guide System
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
 
-<section id="techpack-v10-step-3" class="v10-techpack-step v10-hidden" data-step="3">
+<section id="techpack-v10-step-3" class="v10-techpack-step" data-step="3" style="display: none;">
   <div class="techpack-container">
     
     <!-- Compact Progress Steps -->
@@ -35,7 +35,7 @@ Enhanced with Visual Studio Guide System
 
       <!-- Studio Navigator -->
       <div class="studio-navigator">
-        <div class="studio-tabs-header v10-flex-between" style="margin-bottom: 8px;">
+        <div class="studio-tabs-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
         </div>
         <div class="studio-tabs">
           <button type="button" class="studio-tab studio-tab--active" data-studio="garment" id="garment-studio-tab">
@@ -52,7 +52,7 @@ Enhanced with Visual Studio Guide System
             </div>
           </button>
 
-          <button type="button" class="studio-tab v10-hidden" data-studio="design" id="design-studio-tab">
+          <button type="button" class="studio-tab" data-studio="design" id="design-studio-tab" style="display: none;">
             <div class="studio-tab__icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -65,7 +65,7 @@ Enhanced with Visual Studio Guide System
             </div>
           </button>
 
-          <button type="button" class="studio-tab v10-hidden" data-studio="quantities" id="quantities-studio-tab">
+          <button type="button" class="studio-tab" data-studio="quantities" id="quantities-studio-tab" style="display: none;">
             <div class="studio-tab__icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -125,7 +125,7 @@ Enhanced with Visual Studio Guide System
       </div>
 
       <!-- Studio 2: Design & Lab Dip Studio (Sample Requests Only) -->
-      <div class="studio-container v10-hidden" id="design-studio">
+      <div class="studio-container" id="design-studio" style="display: none;">
         <div class="studio-header">
           <div class="studio-header__content">
             <h3 class="studio-header__title">Color Studio</h3>
@@ -192,24 +192,24 @@ Enhanced with Visual Studio Guide System
                 <div class="popular-colors-section">
                   <h5>Popular Colors</h5>
                   <div class="popular-colors-grid">
-                    <div class="popular-color-circle" data-color="#000000" data-pantone="19-4007 TPX" title="Black"></div>
-                    <div class="popular-color-circle" data-color="#ffffff" data-pantone="11-4001 TPX" title="White"></div>
-                    <div class="popular-color-circle" data-color="#dc2626" data-pantone="18-1664 TPX" title="Red"></div>
-                    <div class="popular-color-circle" data-color="#2563eb" data-pantone="19-4052 TPX" title="Blue"></div>
-                    <div class="popular-color-circle" data-color="#16a34a" data-pantone="17-6153 TPX" title="Green"></div>
-                    <div class="popular-color-circle" data-color="#eab308" data-pantone="13-0859 TPX" title="Yellow"></div>
-                    <div class="popular-color-circle" data-color="#f97316" data-pantone="16-1164 TPX" title="Orange"></div>
-                    <div class="popular-color-circle" data-color="#8b5cf6" data-pantone="18-3838 TPX" title="Purple"></div>
-                    <div class="popular-color-circle" data-color="#ec4899" data-pantone="17-2034 TPX" title="Pink"></div>
-                    <div class="popular-color-circle" data-color="#6b7280" data-pantone="18-4005 TPX" title="Gray"></div>
-                    <div class="popular-color-circle" data-color="#991b1b" data-pantone="19-1664 TPX" title="Dark Red"></div>
-                    <div class="popular-color-circle" data-color="#1e40af" data-pantone="19-4150 TPX" title="Navy Blue"></div>
-                    <div class="popular-color-circle" data-color="#166534" data-pantone="19-6026 TPX" title="Forest Green"></div>
-                    <div class="popular-color-circle" data-color="#a16207" data-pantone="16-1139 TPX" title="Dark Yellow"></div>
-                    <div class="popular-color-circle" data-color="#c2410c" data-pantone="17-1145 TPX" title="Dark Orange"></div>
-                    <div class="popular-color-circle" data-color="#7c2d12" data-pantone="18-1142 TPX" title="Brown"></div>
-                    <div class="popular-color-circle" data-color="#374151" data-pantone="19-4005 TPX" title="Dark Gray"></div>
-                    <div class="popular-color-circle" data-color="#f3f4f6" data-pantone="11-4001 TPX" title="Light Gray"></div>
+                    <div class="popular-color-circle" data-color="#000000" data-pantone="19-4007 TPX" style="background-color: #000000;" title="Black"></div>
+                    <div class="popular-color-circle" data-color="#ffffff" data-pantone="11-4001 TPX" style="background-color: #ffffff; border: 1px solid #e5e7eb;" title="White"></div>
+                    <div class="popular-color-circle" data-color="#dc2626" data-pantone="18-1664 TPX" style="background-color: #dc2626;" title="Red"></div>
+                    <div class="popular-color-circle" data-color="#2563eb" data-pantone="19-4052 TPX" style="background-color: #2563eb;" title="Blue"></div>
+                    <div class="popular-color-circle" data-color="#16a34a" data-pantone="17-6153 TPX" style="background-color: #16a34a;" title="Green"></div>
+                    <div class="popular-color-circle" data-color="#eab308" data-pantone="13-0859 TPX" style="background-color: #eab308;" title="Yellow"></div>
+                    <div class="popular-color-circle" data-color="#f97316" data-pantone="16-1164 TPX" style="background-color: #f97316;" title="Orange"></div>
+                    <div class="popular-color-circle" data-color="#8b5cf6" data-pantone="18-3838 TPX" style="background-color: #8b5cf6;" title="Purple"></div>
+                    <div class="popular-color-circle" data-color="#ec4899" data-pantone="17-2034 TPX" style="background-color: #ec4899;" title="Pink"></div>
+                    <div class="popular-color-circle" data-color="#6b7280" data-pantone="18-4005 TPX" style="background-color: #6b7280;" title="Gray"></div>
+                    <div class="popular-color-circle" data-color="#991b1b" data-pantone="19-1664 TPX" style="background-color: #991b1b;" title="Dark Red"></div>
+                    <div class="popular-color-circle" data-color="#1e40af" data-pantone="19-4150 TPX" style="background-color: #1e40af;" title="Navy Blue"></div>
+                    <div class="popular-color-circle" data-color="#166534" data-pantone="19-6026 TPX" style="background-color: #166534;" title="Forest Green"></div>
+                    <div class="popular-color-circle" data-color="#a16207" data-pantone="16-1139 TPX" style="background-color: #a16207;" title="Dark Yellow"></div>
+                    <div class="popular-color-circle" data-color="#c2410c" data-pantone="17-1145 TPX" style="background-color: #c2410c;" title="Dark Orange"></div>
+                    <div class="popular-color-circle" data-color="#7c2d12" data-pantone="18-1142 TPX" style="background-color: #7c2d12;" title="Brown"></div>
+                    <div class="popular-color-circle" data-color="#374151" data-pantone="19-4005 TPX" style="background-color: #374151;" title="Dark Gray"></div>
+                    <div class="popular-color-circle" data-color="#f3f4f6" data-pantone="11-4001 TPX" style="background-color: #f3f4f6; border: 1px solid #d1d5db;" title="Light Gray"></div>
                   </div>
                 </div>
 
@@ -242,7 +242,7 @@ Enhanced with Visual Studio Guide System
                 </div>
                 
                 <!-- Tip Message for Multiple Lab Dips -->
-                <div class="collection-tip v10-hidden" id="labdips-tip">
+                <div class="collection-tip" id="labdips-tip" style="display: none;">
                   <span>💡 <strong>Tip:</strong> Assign different lab dips to the same garment to create color variants<span class="mobile-hide-auto"> automatically</span></span>
                 </div>
                 
@@ -383,7 +383,7 @@ Enhanced with Visual Studio Guide System
       </div>
 
       <!-- Studio 3: Quantities Studio (Bulk Orders Only) -->
-      <div class="studio-container v10-hidden" id="quantities-studio">
+      <div class="studio-container" id="quantities-studio" style="display: none;">
         <div class="studio-header">
           <div class="studio-header__content">
             <h3 class="studio-header__title">Quantity Studio</h3>
@@ -446,7 +446,7 @@ Enhanced with Visual Studio Guide System
           <div class="quantities-mode quantities-mode--active" id="sizes-mode-content">
             
             <!-- Bulk Input Tools -->
-            <div class="bulk-input-tools v10-hidden">
+            <div class="bulk-input-tools" style="display: none;">
               <div class="bulk-tools-header">
                 <h4>Quick Fill Tools</h4>
                 <div class="bulk-tools-actions">
@@ -544,7 +544,7 @@ Enhanced with Visual Studio Guide System
             </div>
             
             <!-- Legacy Distribution Analysis (fallback) -->
-            <div class="distribution-analysis legacy-analysis v10-hidden">
+            <div class="distribution-analysis legacy-analysis" style="display: none;">
               <div class="analysis-header">
                 <h4>Size Distribution Analysis</h4>
                 <div class="analysis-summary" id="distribution-summary">
@@ -612,7 +612,7 @@ Enhanced with Visual Studio Guide System
       </div>
 
       <!-- Standalone Items Summary (Sample Requests Only) -->
-      <div class="standalone-items v10-hidden" id="standalone-items">
+      <div class="standalone-items" id="standalone-items" style="display: none;">
         <div class="standalone-header">
           <h4>Standalone Items</h4>
           <p>Items not assigned to garments will be sent as separate samples</p>
@@ -641,7 +641,7 @@ Enhanced with Visual Studio Guide System
       </div>
 
       <!-- Garments with Colorways Assigned Section -->
-      <div class="garment-assignments-overview v10-hidden" id="garment-assignments-overview">
+      <div class="garment-assignments-overview" id="garment-assignments-overview" style="display: none;">
         <div class="assignments-header">
           <h3 class="assignments-title">Garments with colorways assigned</h3>
           <span class="assignments-count" id="assignments-count">0 assignments</span>
@@ -670,7 +670,7 @@ Enhanced with Visual Studio Guide System
           </svg>
           Previous
         </button>
-        <button type="button" class="v10-btn v10-btn--tour v10-hidden" id="color-studio-tour">
+        <button type="button" class="v10-btn v10-btn--tour" id="color-studio-tour" style="display: none;">
           <svg class="v10-btn-icon v10-btn-icon--left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M2 3h20v18H2z"/>
             <path d="m8 21 4-7-4-7"/>
@@ -680,7 +680,7 @@ Enhanced with Visual Studio Guide System
           <span class="tour-btn-text-desktop">COLOR STUDIO VISUAL GUIDE</span>
           <span class="tour-btn-text-mobile">COLOR STUDIO GUIDE</span>
         </button>
-        <button type="button" class="v10-btn v10-btn--tour v10-hidden" id="garment-studio-tour">
+        <button type="button" class="v10-btn v10-btn--tour" id="garment-studio-tour" style="display: none;">
           <svg class="v10-btn-icon v10-btn-icon--left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
             <line x1="16" y1="8" x2="2" y2="22"/>
@@ -714,13 +714,13 @@ Enhanced with Visual Studio Guide System
         </div>
       </div>
       <div class="garment-card__actions">
-        <button type="button" class="garment-card__finalize v10-hidden" title="Finalize edit">
+        <button type="button" class="garment-card__finalize" title="Finalize edit" style="display: none;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 6L9 17l-5-5"/>
           </svg>
           <span>Finalize Edit</span>
         </button>
-        <button type="button" class="garment-summary__edit-btn v10-hidden" title="Edit garment">
+        <button type="button" class="garment-summary__edit-btn" title="Edit garment" style="display: none;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -743,20 +743,20 @@ Enhanced with Visual Studio Guide System
     </div>
 
     <!-- Garment Summary (shown when complete) -->
-    <div class="garment-card__summary v10-hidden">
+    <div class="garment-card__summary" style="display: none;">
       <div class="garment-summary">
         <div class="garment-summary__content">
           <div class="garment-summary__title">
-            <div class="garment-summary__color-circle v10-hidden"></div>
+            <div class="garment-summary__color-circle" style="display: none;"></div>
             <span class="garment-summary__type">T-Shirt</span>
             <span class="garment-summary__separator">-</span>
-            <span class="garment-summary__color-name v10-hidden"></span>
+            <span class="garment-summary__color-name" style="display: none;"></span>
             <span class="garment-summary__fabric">Cotton</span>
           </div>
         </div>
 
         <!-- Sample Size Selector - Inline on Right (only for sample-request) -->
-        <div class="garment-summary__sample-size-inline v10-hidden" data-show-for="sample">
+        <div class="garment-summary__sample-size-inline" data-show-for="sample" style="display: none;">
           <label class="sample-size-label-inline">Size <span class="required-asterisk">*</span></label>
           <div class="sample-size-selector-inline">
             <button type="button" class="size-option-inline" data-size="XS">XS</button>
@@ -798,7 +798,7 @@ Enhanced with Visual Studio Guide System
               </svg>
             </div>
             
-            <div class="selection-display v10-hidden" id="garment-display">
+            <div class="selection-display" id="garment-display" style="display: none;">
               <div class="selected-item">
                 <span class="selected-icon" id="garment-selected-icon">{% render 'icon', name: 't-shirt', size: 20 %}</span>
                 <span class="selected-name" id="garment-selected-name">T-Shirt</span>
@@ -816,7 +816,7 @@ Enhanced with Visual Studio Guide System
           </div>
           
           <!-- Expanded State -->
-          <div class="selection-expanded v10-hidden" id="garment-expanded">
+          <div class="selection-expanded" id="garment-expanded" style="display: none;">
             <div class="compact-radio-grid" id="garment-type-grid">
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Zip-Up Hoodie">
@@ -929,7 +929,7 @@ Enhanced with Visual Studio Guide System
               </svg>
             </div>
             
-            <div class="selection-display v10-hidden" id="fabric-display">
+            <div class="selection-display" id="fabric-display" style="display: none;">
               <div class="selected-item">
                 <span class="selected-icon" id="fabric-selected-icon">🧵</span>
                 <span class="selected-name" id="fabric-selected-name">100% Cotton</span>
@@ -947,7 +947,7 @@ Enhanced with Visual Studio Guide System
           </div>
           
           <!-- Expanded State -->
-          <div class="selection-expanded v10-hidden" id="fabric-expanded">
+          <div class="selection-expanded" id="fabric-expanded" style="display: none;">
             <div class="compact-radio-grid" id="fabric-type-grid">
               <!-- Fabric options will be populated dynamically based on garment type -->
             </div>
@@ -977,7 +977,7 @@ Enhanced with Visual Studio Guide System
               </svg>
             </div>
             
-            <div class="selection-display v10-hidden" id="sample-reference-display">
+            <div class="selection-display" id="sample-reference-display" style="display: none;">
               <div class="selected-item">
                 <span class="selected-icon" id="sample-reference-selected-icon">📋</span>
                 <span class="selected-name" id="sample-reference-selected-name">Select sample reference</span>
@@ -995,7 +995,7 @@ Enhanced with Visual Studio Guide System
           </div>
           
           <!-- Expanded State -->
-          <div class="selection-expanded v10-hidden" id="sample-reference-expanded">
+          <div class="selection-expanded" id="sample-reference-expanded" style="display: none;">
             <div class="compact-radio-grid" id="sample-reference-grid">
               <label class="compact-radio-card">
                 <input type="radio" name="sampleReference" value="blank">
@@ -1435,10 +1435,10 @@ Enhanced with Visual Studio Guide System
         <div class="garment-details">
           <!-- Rich Garment Summary Integration -->
           <div class="garment-summary__title">
-            <div class="garment-summary__color-circle v10-hidden"></div>
+            <div class="garment-summary__color-circle" style="display: none;"></div>
             <span class="garment-summary__type garment-name" id="garment-type-display">Select garment type</span>
             <span class="garment-summary__separator" style="display: none;">-</span>
-            <span class="garment-summary__color-name v10-hidden"></span>
+            <span class="garment-summary__color-name" style="display: none;"></span>
             <!-- For sample-request: shows fabric, for bulk-order-request: shows sample reference -->
             <span class="garment-summary__fabric garment-sample" id="garment-fabric-display" data-show-for="sample">Select fabric</span>
             <span class="garment-summary__sample-reference garment-sample" id="garment-sample-reference-display" data-show-for="bulk" style="display: none;">Select sample reference</span>

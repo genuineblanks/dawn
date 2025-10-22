@@ -4,7 +4,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
 
-<section id="techpack-v10-step-2" class="v10-techpack-step v10-hidden" data-step="2">
+<section id="techpack-v10-step-2" class="v10-techpack-step" data-step="2" style="display: none;">
   <div class="techpack-container">
     
     <!-- Compact Progress Steps -->
@@ -43,7 +43,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
     <!-- Upload Studio -->
     <div class="v10-studio-card">
       <!-- File Upload Warning -->
-      <div class="v10-warning-box-enhanced v10-hidden" id="v10-file-upload-warning">
+      <div class="v10-warning-box-enhanced" id="v10-file-upload-warning" style="display: none;">
         <div class="v10-warning-icon">⚠️</div>
         <div class="v10-warning-content">
           <strong>File Upload Required</strong>
@@ -52,7 +52,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
       </div>
 
       <!-- Maximum Files Warning -->
-      <div class="v10-warning-box-enhanced v10-hidden" id="v10-max-files-warning">
+      <div class="v10-warning-box-enhanced" id="v10-max-files-warning" style="display: none;">
         <div class="v10-warning-icon">⚠️</div>
         <div class="v10-warning-content">
           <strong>Maximum Files Exceeded</strong>
@@ -86,7 +86,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
     </div>
 
     <!-- Measurement Requirements Studio (Conditional) -->
-    <div class="v10-studio-card v10-measurement-compact v10-hidden" id="techpack-v10-measurement-studio">
+    <div class="v10-studio-card v10-measurement-compact" id="techpack-v10-measurement-studio" style="display: none;">
       <div class="v10-studio-header">
         <h2 class="v10-studio-title">Measurement Requirements</h2>
         <p class="v10-studio-subtitle">Confirm which measurements are included in your tech pack files</p>
@@ -119,7 +119,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
           </div>
         </label>
 
-        <label class="v10-measurement-item v10-hidden" id="techpack-v10-design-placement-item">
+        <label class="v10-measurement-item" id="techpack-v10-design-placement-item" style="display: none;">
           <div class="v10-measurement-text">
             <strong>Design Placement <span class="v10-measurement-status v10-measurement-status--optional">OPTIONAL</span></strong>
             <span>Logo and graphic positioning</span>
@@ -133,7 +133,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
         </label>
       </div>
 
-      <div class="v10-warning-box-enhanced v10-hidden" id="techpack-v10-measurement-warning">
+      <div class="v10-warning-box-enhanced" id="techpack-v10-measurement-warning" style="display: none;">
         <div class="v10-warning-icon">⚠️</div>
         <div class="v10-warning-content">
           <strong>Important</strong>
@@ -185,9 +185,9 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
     </div>
 
 
-    <div class="v10-file-progress v10-hidden">
+    <div class="v10-file-progress" style="display: none;">
       <div class="v10-progress-bar">
-        <div class="v10-progress-fill"></div>
+        <div class="v10-progress-fill" style="width: 0%"></div>
       </div>
       <span class="v10-progress-text">Uploading...</span>
     </div>
@@ -195,7 +195,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
 </template>
 
 <!-- Measurement Warning Modal -->
-<div class="v10-modal-overlay v10-hidden" id="techpack-v10-measurement-warning-modal">
+<div class="v10-modal-overlay" id="techpack-v10-measurement-warning-modal" style="display: none;">
   <div class="v10-modal">
     <div class="v10-modal-header">
       <div class="v10-modal-icon v10-modal-icon--warning">
@@ -225,7 +225,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
       <button type="button" class="v10-btn v10-btn--ghost" id="techpack-v10-warning-back">
         Add Measurements
       </button>
-      <button type="button" class="v10-btn v10-btn--primary v10-hidden" id="techpack-v10-warning-proceed">
+      <button type="button" class="v10-btn v10-btn--primary" id="techpack-v10-warning-proceed" style="display: none;">
         Skip for Now
       </button>
     </div>
@@ -233,7 +233,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
 </div>
 
 <!-- Measurement Confirmation Modal -->
-<div class="v10-modal-overlay v10-hidden" id="techpack-v10-measurement-modal">
+<div class="v10-modal-overlay" id="techpack-v10-measurement-modal" style="display: none;">
   <div class="v10-modal v10-modal--measurement">
     <div class="v10-modal-header">
       <div class="v10-modal-icon v10-modal-icon--warning">
@@ -263,7 +263,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
       <button type="button" class="v10-btn v10-btn--ghost" id="v10-measurement-modal-back">
         Add Measurements
       </button>
-      <button type="button" class="v10-btn v10-btn--ghost v10-hidden" id="v10-measurement-modal-proceed">
+      <button type="button" class="v10-btn v10-btn--ghost" id="v10-measurement-modal-proceed" style="display: none;">
         Skip for Now
       </button>
     </div>
