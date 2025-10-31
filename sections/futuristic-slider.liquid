@@ -777,16 +777,16 @@
       text-overflow: ellipsis;
     }
 
-    /* Mobile filter tab reordering - PRODUCTION in center */
+    /* Mobile filter tab reordering - FACTORY OVERVIEW in center */
     .factory-filter-tab-{{ section.id }}[data-filter="products"] {
       order: 1;
     }
 
-    .factory-filter-tab-{{ section.id }}[data-filter="team"] {
+    .factory-filter-tab-{{ section.id }}[data-filter="factory"] {
       order: 2;
     }
 
-    .factory-filter-tab-{{ section.id }}[data-filter="factory"] {
+    .factory-filter-tab-{{ section.id }}[data-filter="team"] {
       order: 3;
     }
 
@@ -1003,22 +1003,22 @@
             </span>
             <span class="factory-filter-text-{{ section.id }}">SHOW ROOM</span>
           </button>
-          <button class="factory-filter-tab-{{ section.id }} active" data-filter="team">
+          <button class="factory-filter-tab-{{ section.id }} active" data-filter="factory">
+            <span class="factory-filter-icon-{{ section.id }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M3 17H17V9L10 3L3 9V17Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="factory-filter-text-{{ section.id }}">FACTORY OVERVIEW</span>
+          </button>
+          <button class="factory-filter-tab-{{ section.id }}" data-filter="team">
             <span class="factory-filter-icon-{{ section.id }}">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5"/>
                 <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5"/>
               </svg>
             </span>
-            <span class="factory-filter-text-{{ section.id }}">PRODUCTION</span>
-          </button>
-          <button class="factory-filter-tab-{{ section.id }}" data-filter="factory">
-            <span class="factory-filter-icon-{{ section.id }}">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M3 17H17V9L10 3L3 9V17Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            <span class="factory-filter-text-{{ section.id }}">FACTORY</span>
+            <span class="factory-filter-text-{{ section.id }}">DESIGN TECHNIQUES</span>
           </button>
         </div>
       </div>
@@ -1049,33 +1049,7 @@
                 {% assign block_subcategory = block.settings.subcategory | default: '' %}
                 {% assign block_index = forloop.index0 %}
 
-                {% comment %} Render Images {% endcomment %}
-                {% for i in (1..15) %}
-                  {% assign image_key = 'image_' | append: i %}
-                  {% assign current_image = block.settings[image_key] %}
-                  {% if current_image != blank %}
-                    <div class="factory-slide-{{ section.id }}"
-                         data-filter="{{ block_filter }}"
-                         data-subcategory="{{ block_subcategory | escape }}"
-                         data-product="{{ block_index }}"
-                         data-slide-index="{{ slide_index }}"
-                         data-media-type="image">
-                      <img src="{{ current_image | image_url: width: 1200 }}"
-                           class="factory-image-{{ section.id }}"
-                           loading="lazy"
-                           alt="{{ block.settings.product_name | escape }}"
-                           width="1200"
-                           height="900"
-                           draggable="false"
-                           oncontextmenu="return false;"
-                           onselectstart="return false;"
-                           ondragstart="return false;">
-                    </div>
-                    {% assign slide_index = slide_index | plus: 1 %}
-                  {% endif %}
-                {% endfor %}
-
-                {% comment %} Render Videos {% endcomment %}
+                {% comment %} Render Videos FIRST {% endcomment %}
                 {% for i in (1..15) %}
                   {% assign video_key = 'video_' | append: i %}
                   {% assign current_video = block.settings[video_key] %}
@@ -1109,6 +1083,32 @@
                         {% endif %}
                         <p>Your browser doesn't support video playback.</p>
                       </video>
+                    </div>
+                    {% assign slide_index = slide_index | plus: 1 %}
+                  {% endif %}
+                {% endfor %}
+
+                {% comment %} Render Images AFTER videos {% endcomment %}
+                {% for i in (1..15) %}
+                  {% assign image_key = 'image_' | append: i %}
+                  {% assign current_image = block.settings[image_key] %}
+                  {% if current_image != blank %}
+                    <div class="factory-slide-{{ section.id }}"
+                         data-filter="{{ block_filter }}"
+                         data-subcategory="{{ block_subcategory | escape }}"
+                         data-product="{{ block_index }}"
+                         data-slide-index="{{ slide_index }}"
+                         data-media-type="image">
+                      <img src="{{ current_image | image_url: width: 1200 }}"
+                           class="factory-image-{{ section.id }}"
+                           loading="lazy"
+                           alt="{{ block.settings.product_name | escape }}"
+                           width="1200"
+                           height="900"
+                           draggable="false"
+                           oncontextmenu="return false;"
+                           onselectstart="return false;"
+                           ondragstart="return false;">
                     </div>
                     {% assign slide_index = slide_index | plus: 1 %}
                   {% endif %}
@@ -1157,32 +1157,7 @@
                 {% assign block_subcategory = block.settings.subcategory | default: '' %}
                 {% assign block_index = forloop.index0 %}
 
-                {% comment %} Image Thumbnails {% endcomment %}
-                {% for i in (1..15) %}
-                  {% assign image_key = 'image_' | append: i %}
-                  {% assign current_image = block.settings[image_key] %}
-                  {% if current_image != blank %}
-                    <div class="factory-thumb-slide-{{ section.id }}"
-                         data-filter="{{ block_filter }}"
-                         data-subcategory="{{ block_subcategory | escape }}"
-                         data-product="{{ block_index }}"
-                         data-thumb-index="{{ thumb_index }}"
-                         data-media-type="image">
-                      <img src="{{ current_image | image_url: width: 200 }}"
-                           class="factory-thumb-image-{{ section.id }}"
-                           loading="lazy"
-                           width="200"
-                           height="150"
-                           draggable="false"
-                           oncontextmenu="return false;"
-                           onselectstart="return false;"
-                           ondragstart="return false;">
-                    </div>
-                    {% assign thumb_index = thumb_index | plus: 1 %}
-                  {% endif %}
-                {% endfor %}
-
-                {% comment %} Video Thumbnails {% endcomment %}
+                {% comment %} Video Thumbnails FIRST {% endcomment %}
                 {% for i in (1..15) %}
                   {% assign video_key = 'video_' | append: i %}
                   {% assign current_video = block.settings[video_key] %}
@@ -1225,6 +1200,31 @@
                     {% assign thumb_index = thumb_index | plus: 1 %}
                   {% endif %}
                 {% endfor %}
+
+                {% comment %} Image Thumbnails AFTER videos {% endcomment %}
+                {% for i in (1..15) %}
+                  {% assign image_key = 'image_' | append: i %}
+                  {% assign current_image = block.settings[image_key] %}
+                  {% if current_image != blank %}
+                    <div class="factory-thumb-slide-{{ section.id }}"
+                         data-filter="{{ block_filter }}"
+                         data-subcategory="{{ block_subcategory | escape }}"
+                         data-product="{{ block_index }}"
+                         data-thumb-index="{{ thumb_index }}"
+                         data-media-type="image">
+                      <img src="{{ current_image | image_url: width: 200 }}"
+                           class="factory-thumb-image-{{ section.id }}"
+                           loading="lazy"
+                           width="200"
+                           height="150"
+                           draggable="false"
+                           oncontextmenu="return false;"
+                           onselectstart="return false;"
+                           ondragstart="return false;">
+                    </div>
+                    {% assign thumb_index = thumb_index | plus: 1 %}
+                  {% endif %}
+                {% endfor %}
               {% endfor %}
             </div>
           </div>
@@ -1254,7 +1254,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!section) return;
   
   let currentSlideIndex = 0;
-  let currentFilter = 'team';
+  let currentFilter = 'factory';
   let currentSubcategory = 'all';
   let allSlides = [];
   let categoryMap = [];
@@ -1451,7 +1451,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Update active filter tab
   function updateActiveFilterTab(slideIndex) {
-    const category = categoryMap[slideIndex]?.filter || 'team';
+    const category = categoryMap[slideIndex]?.filter || 'factory';
     currentFilter = category;
     
     section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(tab => {
@@ -2001,9 +2001,9 @@ document.addEventListener('DOMContentLoaded', function() {
     sectionObserver.observe(section);
   }
 
-  // Set initial state - jump to PRODUCTION (team) category
+  // Set initial state - jump to FACTORY OVERVIEW (factory) category
   setTimeout(() => {
-    jumpToCategory('team');
+    jumpToCategory('factory');
   }, 100);
   
   // Auto-play functionality (optional)
@@ -2108,7 +2108,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "show_collection_filter",
       "label": "Show collection type filter",
       "default": true,
-      "info": "Allows filtering between Products, Factory, and Team"
+      "info": "Allows filtering between Show Room, Factory Overview, and Design Techniques"
     },
     {
       "type": "header",
@@ -2156,15 +2156,15 @@ document.addEventListener('DOMContentLoaded', function() {
           "options": [
             {
               "value": "products",
-              "label": "Our Products"
+              "label": "Show Room"
             },
             {
               "value": "factory",
-              "label": "Our Factory"
+              "label": "Factory Overview"
             },
             {
               "value": "team",
-              "label": "Our Team"
+              "label": "Design Techniques"
             }
           ],
           "default": "factory"
