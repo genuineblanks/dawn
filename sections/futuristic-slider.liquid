@@ -317,6 +317,30 @@
       transform: none;
     }
   }
+  
+  /* Mobile: Apply same positioning to thumbnails */
+  @media (max-width: 768px) {
+    .factory-thumb-slide-{{ section.id }}[data-filter="products"] .factory-thumb-image-{{ section.id }} {
+      /* Match main image positioning */
+      object-position: -20% center;
+      transform: scale(1.15);
+    }
+    
+    /* Keep default for other categories */
+    .factory-thumb-slide-{{ section.id }}[data-filter="team"] .factory-thumb-image-{{ section.id }},
+    .factory-thumb-slide-{{ section.id }}[data-filter="factory"] .factory-thumb-image-{{ section.id }} {
+      object-position: center;
+      transform: none;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .factory-thumb-slide-{{ section.id }}[data-filter="products"] .factory-thumb-image-{{ section.id }} {
+      /* Match smaller screen positioning */
+      object-position: -25% center;
+      transform: scale(1.2);
+    }
+  }
 
   .factory-video-{{ section.id }} {
     width: 100%;
@@ -545,6 +569,7 @@
     width: 110px;
     height: 82px;
     object-fit: cover;
+    object-position: center;
     border-radius: 6px;
     transition: all 0.3s ease;
     -webkit-user-select: none;
