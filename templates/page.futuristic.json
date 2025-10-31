@@ -16,6 +16,36 @@
           "type": "item",
           "settings": {
             "collection_type": "products",
+            "subcategory": "Hoodies",
+            "product_name": "Show Room",
+            "product_description": "",
+            "details": "",
+            "image_1": "shopify://shop_images/JACKET_00_SEAM_WASHED.jpg",
+            "image_2": "shopify://shop_images/JACKET_00_SEAM_WASHED_f67c581d-759d-4e3c-9a8b-8506a8af80d8.jpg",
+            "image_3": "shopify://shop_images/DSC09649_copiar.jpg",
+            "image_4": "shopify://shop_images/DSC09685_copiar.jpg",
+            "image_5": "shopify://shop_images/DSC09677_copiar.jpg",
+            "image_6": "shopify://shop_images/DSC09676_copiar.jpg",
+            "image_7": "shopify://shop_images/DSC09673_copiar.jpg",
+            "image_8": "shopify://shop_images/DSC09666_copiar.jpg",
+            "image_9": "shopify://shop_images/DSC09682_copiar.jpg",
+            "image_10": "shopify://shop_images/DSC09678_copiar.jpg",
+            "image_11": "shopify://shop_images/DSC09690_copiar.jpg",
+            "image_12": "shopify://shop_images/DSC09687_copiar.jpg",
+            "image_13": "shopify://shop_images/DSC09665_copiar.jpg",
+            "image_14": "shopify://shop_images/DSC09662_copiar.jpg",
+            "image_15": "shopify://shop_images/DSC09693_copiar.jpg",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        "item_4n3Lfh": {
+          "type": "item",
+          "settings": {
+            "collection_type": "products",
+            "subcategory": "Sweatshirts",
             "product_name": "Show Room",
             "product_description": "",
             "details": "",
@@ -44,6 +74,7 @@
           "type": "item",
           "settings": {
             "collection_type": "team",
+            "subcategory": "General",
             "product_name": "Meet our team",
             "product_description": "",
             "details": "",
@@ -58,6 +89,7 @@
           "type": "item",
           "settings": {
             "collection_type": "factory",
+            "subcategory": "General",
             "product_name": "Manufacturing Facility",
             "product_description": "",
             "details": "",
@@ -74,6 +106,7 @@
       },
       "block_order": [
         "item_jdMBxi",
+        "item_4n3Lfh",
         "item_6xbdbt",
         "item_rGjhm8"
       ],
