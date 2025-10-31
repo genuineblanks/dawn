@@ -318,15 +318,17 @@
     }
   }
   
-  /* Mobile: Apply same positioning to thumbnails */
+  /* Mobile: Apply positioning ONLY to image thumbnails, not videos */
   @media (max-width: 768px) {
-    .factory-thumb-slide-{{ section.id }}[data-filter="products"] .factory-thumb-image-{{ section.id }} {
+    /* Only apply to image thumbnails in products category */
+    .factory-thumb-slide-{{ section.id }}[data-filter="products"][data-media-type="image"] .factory-thumb-image-{{ section.id }} {
       /* Match main image positioning */
       object-position: -20% center;
       transform: scale(1.15);
     }
     
-    /* Keep default for other categories */
+    /* Keep default for video thumbnails and other categories */
+    .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-image-{{ section.id }},
     .factory-thumb-slide-{{ section.id }}[data-filter="team"] .factory-thumb-image-{{ section.id }},
     .factory-thumb-slide-{{ section.id }}[data-filter="factory"] .factory-thumb-image-{{ section.id }} {
       object-position: center;
@@ -335,10 +337,17 @@
   }
   
   @media (max-width: 480px) {
-    .factory-thumb-slide-{{ section.id }}[data-filter="products"] .factory-thumb-image-{{ section.id }} {
+    /* Only apply to image thumbnails in products category */
+    .factory-thumb-slide-{{ section.id }}[data-filter="products"][data-media-type="image"] .factory-thumb-image-{{ section.id }} {
       /* Match smaller screen positioning */
       object-position: -25% center;
       transform: scale(1.2);
+    }
+    
+    /* Ensure video thumbnails stay normal */
+    .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-image-{{ section.id }} {
+      object-position: center;
+      transform: none;
     }
   }
 
