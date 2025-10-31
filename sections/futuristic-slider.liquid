@@ -696,6 +696,19 @@
     object-position: -20% center;
     transform: scale(1.15);
   }
+  
+  /* Desktop: Enhance image colors to match mobile richness */
+  @media (min-width: 769px) {
+    .factory-image-{{ section.id }},
+    .factory-thumb-image-{{ section.id }} {
+      filter: contrast(1.1) saturate(1.08) brightness(0.96);
+    }
+    
+    .factory-video-{{ section.id }},
+    .factory-thumb-video-{{ section.id }} {
+      filter: contrast(1.08) saturate(1.06) brightness(0.97);
+    }
+  }
 
   .factory-thumb-video-wrapper-{{ section.id }} {
     position: relative;
