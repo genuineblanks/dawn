@@ -288,27 +288,26 @@
   /* Mobile: Center the left garment */
   @media (max-width: 768px) {
     .factory-slide-{{ section.id }} {
-      overflow: visible !important;
+      overflow: hidden !important;
     }
     
     .factory-image-{{ section.id }} {
-      /* Keep cover but shift position */
+      /* Keep cover but zoom in on the left garment */
       object-fit: cover;
-      object-position: 25% center;
-      /* Scale and position to show left garment */
-      width: 150%;
-      max-width: none;
-      margin-left: -25%;
+      /* The garment is at about 20% from left in the original image */
+      object-position: 20% center;
+      /* Scale up to show only the garment */
+      transform: scale(2.5) translateX(-15%);
+      transform-origin: center center;
     }
   }
   
   /* Smaller mobile screens: Fine-tune positioning */
   @media (max-width: 480px) {
     .factory-image-{{ section.id }} {
-      /* Adjust for smaller screens */
-      width: 160%;
-      margin-left: -30%;
-      object-position: 25% center;
+      /* Fine-tune for smaller screens */
+      transform: scale(2.8) translateX(-15%);
+      object-position: 20% center;
     }
   }
 
