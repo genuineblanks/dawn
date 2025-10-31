@@ -1524,17 +1524,27 @@ document.addEventListener('DOMContentLoaded', function() {
       if (slideData.filter !== currentFilter) {
         currentFilter = slideData.filter;
         updateActiveFilterTab(slideIndex);
+        // Always rebuild submenu when category changes
         buildSubmenu();
-      }
-      
-      // Update subcategory selection
-      const slideSubcategory = slideData.subcategory;
-      if (slideSubcategory && slideSubcategory !== 'General') {
-        currentSubcategory = slideSubcategory;
+        
+        // Update subcategory selection after building submenu
+        const slideSubcategory = slideData.subcategory;
+        if (slideSubcategory && slideSubcategory !== 'General') {
+          currentSubcategory = slideSubcategory;
+        } else {
+          currentSubcategory = 'all';
+        }
+        updateActiveSubmenuTab();
       } else {
-        currentSubcategory = 'all';
+        // Same category, just update subcategory
+        const slideSubcategory = slideData.subcategory;
+        if (slideSubcategory && slideSubcategory !== 'General') {
+          currentSubcategory = slideSubcategory;
+        } else {
+          currentSubcategory = 'all';
+        }
+        updateActiveSubmenuTab();
       }
-      updateActiveSubmenuTab();
     }
   }
   
