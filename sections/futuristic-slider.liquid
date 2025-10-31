@@ -349,9 +349,17 @@
     }
     
     /* Ensure video thumbnails stay normal */
-    .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-image-{{ section.id }} {
-      object-position: center;
-      transform: none;
+    .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-image-{{ section.id }},
+    .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-video-{{ section.id }} {
+      object-position: center !important;
+      transform: none !important;
+    }
+    
+    /* Extra specificity for video wrapper to prevent inheritance */
+    .factory-thumb-video-wrapper-{{ section.id }} .factory-thumb-image-{{ section.id }},
+    .factory-thumb-video-wrapper-{{ section.id }} .factory-thumb-video-{{ section.id }} {
+      object-position: center !important;
+      transform: none !important;
     }
   }
 
@@ -612,6 +620,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     border-radius: 6px;
     transition: all 0.3s ease;
     -webkit-user-select: none;
