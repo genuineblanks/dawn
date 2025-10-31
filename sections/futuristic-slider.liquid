@@ -261,9 +261,8 @@
     overflow: hidden;
     transform-style: preserve-3d;
     backface-visibility: hidden;
-    transform: rotateY(-90deg);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: center center;
+    transition: none;
+    transform-origin: left center;
   }
   
   .factory-slide-{{ section.id }}.active {
@@ -271,20 +270,85 @@
     transform: rotateY(0deg);
   }
   
-  .factory-slide-{{ section.id }}.flipping-out {
-    transform: rotateY(90deg);
-    opacity: 0;
+  /* Page turn animation */
+  @keyframes pageTurnOut-{{ section.id }} {
+    0% {
+      transform: rotateY(0deg) scale(1);
+      opacity: 1;
+      filter: brightness(1);
+    }
+    20% {
+      transform: rotateY(-15deg) scale(0.98);
+      filter: brightness(0.9);
+    }
+    50% {
+      transform: rotateY(-90deg) scale(0.95) translateX(-10%);
+      opacity: 1;
+      filter: brightness(0.7);
+    }
+    100% {
+      transform: rotateY(-180deg) scale(0.9) translateX(-20%);
+      opacity: 0;
+      filter: brightness(0.5);
+    }
   }
   
-  .factory-slide-{{ section.id }}.flipping-in {
-    transform: rotateY(-90deg);
-    opacity: 0;
+  @keyframes pageTurnIn-{{ section.id }} {
+    0% {
+      transform: rotateY(180deg) scale(0.9) translateX(20%);
+      opacity: 0;
+      filter: brightness(0.5);
+    }
+    50% {
+      transform: rotateY(90deg) scale(0.95) translateX(10%);
+      opacity: 1;
+      filter: brightness(0.7);
+    }
+    80% {
+      transform: rotateY(15deg) scale(0.98);
+      filter: brightness(0.9);
+    }
+    100% {
+      transform: rotateY(0deg) scale(1);
+      opacity: 1;
+      filter: brightness(1);
+    }
   }
   
-  /* Add perspective to container for 3D effect */
+  .factory-slide-{{ section.id }}.page-turning-out {
+    animation: pageTurnOut-{{ section.id }} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    z-index: 10;
+  }
+  
+  .factory-slide-{{ section.id }}.page-turning-in {
+    animation: pageTurnIn-{{ section.id }} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    z-index: 5;
+  }
+  
+  /* Add perspective and shadow to container for 3D effect */
   .factory-main-container-{{ section.id }} {
-    perspective: 2000px;
+    perspective: 1500px;
     transform-style: preserve-3d;
+    position: relative;
+  }
+  
+  /* Page shadow effect */
+  .factory-slide-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50px;
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+  
+  .factory-slide-{{ section.id }}.page-turning-out::after,
+  .factory-slide-{{ section.id }}.page-turning-in::after {
+    opacity: 1;
   }
   
   .factory-image-{{ section.id }} {
@@ -1202,21 +1266,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Remove all animation classes first
     allSlides.forEach(slide => {
-      slide.classList.remove('active', 'flipping-out', 'flipping-in');
+      slide.classList.remove('active', 'page-turning-out', 'page-turning-in');
     });
+
+    // Determine direction based on slide index
+    const isForward = slideIndex > currentSlideIndex || 
+                     (currentSlideIndex === allSlides.length - 1 && slideIndex === 0);
 
     // Animate current slide out
     if (currentSlide) {
-      currentSlide.classList.add('flipping-out');
+      currentSlide.classList.add('page-turning-out');
     }
 
-    // Animate new slide in
+    // Start new slide animation slightly delayed for overlap effect
+    setTimeout(() => {
+      nextSlide.classList.add('page-turning-in', 'active');
+    }, 200);
+
+    // Clean up after animation
     setTimeout(() => {
       if (currentSlide) {
-        currentSlide.classList.remove('active', 'flipping-out');
+        currentSlide.classList.remove('active', 'page-turning-out');
       }
       
-      nextSlide.classList.add('active');
+      nextSlide.classList.remove('page-turning-in');
       
       // Update thumbnails
       const thumbSlides = section.querySelectorAll('.factory-thumb-slide-' + sectionId);
@@ -1231,10 +1304,8 @@ document.addEventListener('DOMContentLoaded', function() {
       scrollToActiveSlide(slideIndex);
 
       // Play video if current slide is a video
-      setTimeout(() => {
-        playCurrentVideo(slideIndex);
-      }, 400);
-    }, 400); // Half of the transition duration
+      playCurrentVideo(slideIndex);
+    }, 1200); // Match animation duration
   }
   
   
