@@ -348,19 +348,6 @@
       transform: scale(1.2);
     }
     
-    /* Ensure video thumbnails stay normal */
-    .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-image-{{ section.id }},
-    .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-video-{{ section.id }} {
-      object-position: center !important;
-      transform: none !important;
-    }
-    
-    /* Extra specificity for video wrapper to prevent inheritance */
-    .factory-thumb-video-wrapper-{{ section.id }} .factory-thumb-image-{{ section.id }},
-    .factory-thumb-video-wrapper-{{ section.id }} .factory-thumb-video-{{ section.id }} {
-      object-position: center !important;
-      transform: none !important;
-    }
   }
 
   .factory-video-{{ section.id }} {
@@ -764,6 +751,19 @@
       width: 85px;
       height: 64px;
     }
+    
+    /* Keep video thumbnails at proper size */
+    .factory-thumb-video-wrapper-{{ section.id }} {
+      width: 85px;
+      height: 64px;
+    }
+    
+    .factory-thumb-video-{{ section.id }} {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
 
     .factory-thumb-container-{{ section.id }} {
       padding: 1.5rem 3rem;
@@ -822,6 +822,12 @@
     }
 
     .factory-thumb-image-{{ section.id }} {
+      width: 75px;
+      height: 56px;
+    }
+    
+    /* Keep video thumbnails at proper size */
+    .factory-thumb-video-wrapper-{{ section.id }} {
       width: 75px;
       height: 56px;
     }
