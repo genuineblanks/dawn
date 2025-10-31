@@ -288,18 +288,18 @@
   /* Mobile: Focus on left garment */
   @media (max-width: 768px) {
     .factory-image-{{ section.id }} {
-      /* Use object-position to show the left portion */
+      /* Shift right to center the garment better */
       object-fit: cover;
-      object-position: left center;
+      object-position: 15% center;
     }
   }
   
   /* Smaller mobile screens */
   @media (max-width: 480px) {
     .factory-image-{{ section.id }} {
-      /* Same positioning for consistency */
+      /* Slightly more to the right for smaller screens */
       object-fit: cover;
-      object-position: left center;
+      object-position: 18% center;
     }
   }
 
