@@ -1323,15 +1323,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const submenuWrapper = section.querySelector('.factory-submenu-wrapper-' + sectionId);
     const submenuContainer = section.querySelector('.factory-submenu-' + sectionId);
     
-    if (!submenuWrapper || !submenuContainer) return;
+    if (!submenuWrapper || !submenuContainer) {
+      console.log('Submenu elements not found');
+      return;
+    }
     
-    // Clear existing submenu items except "All"
-    const allTab = submenuWrapper.querySelector('[data-subcategory="all"]');
+    // Clear all existing submenu items
     submenuWrapper.innerHTML = '';
+    
+    // Always create "All" tab first
+    const allTab = document.createElement('button');
+    allTab.className = 'factory-submenu-tab-' + sectionId + ' active';
+    allTab.setAttribute('data-subcategory', 'all');
+    allTab.innerHTML = `<span class="factory-submenu-text-${sectionId}">All</span>`;
     submenuWrapper.appendChild(allTab);
     
     // Get subcategories for current filter
     const subcategories = Array.from(subcategoriesMap[currentFilter] || []);
+    console.log('Building submenu for', currentFilter, 'with subcategories:', subcategories);
     
     if (subcategories.length > 0) {
       // Add subcategory tabs
@@ -1345,9 +1354,11 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Show submenu
       submenuContainer.classList.add('show');
+      console.log('Submenu shown for', currentFilter);
     } else {
       // Hide submenu if no subcategories
       submenuContainer.classList.remove('show');
+      console.log('Submenu hidden for', currentFilter, '- no subcategories');
     }
     
     // Reset to "All" when switching categories
