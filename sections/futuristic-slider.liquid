@@ -311,23 +311,6 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  .factory-main-container-{{ section.id }}::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.02) 0%, transparent 50%),
-      radial-gradient(circle at 70% 70%, rgba(255,255,255,0.01) 0%, transparent 50%),
-      linear-gradient(135deg, rgba(255,255,255,0.01) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 2;
-    opacity: 0.3;
-    transition: opacity 0.4s ease;
-  }
-
   .factory-main-container-{{ section.id }}:hover {
     transform: translateY(-2px);
     box-shadow:
@@ -335,10 +318,6 @@
       0 25px 70px rgba(0,0,0,0.6),
       inset 0 1px 0 rgba(255,255,255,0.15);
     border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  .factory-main-container-{{ section.id }}:hover::before {
-    opacity: 0.4;
   }
   
   .factory-slide-{{ section.id }} {
@@ -695,19 +674,6 @@
     /* Show same cropping as main image for SHOW ROOM */
     object-position: -20% center;
     transform: scale(1.15);
-  }
-  
-  /* Desktop: Enhance image colors to match mobile richness */
-  @media (min-width: 769px) {
-    .factory-image-{{ section.id }},
-    .factory-thumb-image-{{ section.id }} {
-      filter: contrast(1.1) saturate(1.08) brightness(0.96);
-    }
-    
-    .factory-video-{{ section.id }},
-    .factory-thumb-video-{{ section.id }} {
-      filter: contrast(1.08) saturate(1.06) brightness(0.97);
-    }
   }
 
   .factory-thumb-video-wrapper-{{ section.id }} {
