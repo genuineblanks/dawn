@@ -170,9 +170,10 @@
   
   /* Submenu Styles */
   .factory-submenu-{{ section.id }} {
-    padding: 0 0 2rem;
+    padding: 2rem 0;
     display: flex;
     justify-content: center;
+    align-items: center;
     z-index: 99;
     width: 100%;
     opacity: 0;
@@ -412,32 +413,37 @@
     }
   }
   
-  /* Mobile: Apply positioning ONLY to image thumbnails, not videos */
+  /* Mobile: Apply positioning ONLY to SHOW ROOM image thumbnails, not videos */
   @media (max-width: 768px) {
-    /* Only apply to image thumbnails in products category */
+    /* SHOW ROOM thumbnails - show same cropping as main image */
     .factory-thumb-slide-{{ section.id }}[data-filter="products"][data-media-type="image"] .factory-thumb-image-{{ section.id }} {
-      /* Match main image positioning */
-      object-position: -20% center;
-      transform: scale(1.15);
+      object-position: -20% center !important;
+      transform: scale(1.15) !important;
     }
     
     /* Keep default for video thumbnails and other categories */
     .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-image-{{ section.id }},
     .factory-thumb-slide-{{ section.id }}[data-filter="team"] .factory-thumb-image-{{ section.id }},
     .factory-thumb-slide-{{ section.id }}[data-filter="factory"] .factory-thumb-image-{{ section.id }} {
-      object-position: center;
-      transform: none;
+      object-position: center !important;
+      transform: none !important;
     }
   }
   
   @media (max-width: 480px) {
-    /* Only apply to image thumbnails in products category */
+    /* SHOW ROOM thumbnails - smaller screen positioning */
     .factory-thumb-slide-{{ section.id }}[data-filter="products"][data-media-type="image"] .factory-thumb-image-{{ section.id }} {
-      /* Match smaller screen positioning */
-      object-position: -25% center;
-      transform: scale(1.2);
+      object-position: -25% center !important;
+      transform: scale(1.2) !important;
     }
     
+    /* Ensure other categories stay centered on small screens */
+    .factory-thumb-slide-{{ section.id }}[data-media-type="video"] .factory-thumb-image-{{ section.id }},
+    .factory-thumb-slide-{{ section.id }}[data-filter="team"] .factory-thumb-image-{{ section.id }},
+    .factory-thumb-slide-{{ section.id }}[data-filter="factory"] .factory-thumb-image-{{ section.id }} {
+      object-position: center !important;
+      transform: none !important;
+    }
   }
 
   .factory-video-{{ section.id }} {
@@ -1433,10 +1439,12 @@ document.addEventListener('DOMContentLoaded', function() {
       slide.classList.toggle('active', index === slideIndex);
     });
 
-    // Update thumbnails
+    // Update thumbnails - always show all thumbnails regardless of subcategory
     const thumbSlides = section.querySelectorAll('.factory-thumb-slide-' + sectionId);
     thumbSlides.forEach((thumb, index) => {
       thumb.classList.toggle('active', index === slideIndex);
+      // Ensure all thumbnails are visible
+      thumb.style.display = 'flex';
     });
 
     currentSlideIndex = slideIndex;
@@ -1504,28 +1512,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Navigation functions
+  // Navigation functions - navigate through ALL slides, auto-update subcategory
   function nextSlide() {
-    const filteredSlides = getFilteredSlides();
-    const currentFilteredIndex = filteredSlides.findIndex(slide => 
-      slide.index === currentSlideIndex
-    );
-    
-    if (currentFilteredIndex !== -1) {
-      const nextFilteredIndex = (currentFilteredIndex + 1) % filteredSlides.length;
-      showSlide(filteredSlides[nextFilteredIndex].index);
-    }
+    const nextIndex = (currentSlideIndex + 1) % allSlides.length;
+    showSlide(nextIndex);
+    updateSubcategoryFromSlide(nextIndex);
   }
   
   function prevSlide() {
-    const filteredSlides = getFilteredSlides();
-    const currentFilteredIndex = filteredSlides.findIndex(slide => 
-      slide.index === currentSlideIndex
-    );
-    
-    if (currentFilteredIndex !== -1) {
-      const prevFilteredIndex = (currentFilteredIndex - 1 + filteredSlides.length) % filteredSlides.length;
-      showSlide(filteredSlides[prevFilteredIndex].index);
+    const prevIndex = (currentSlideIndex - 1 + allSlides.length) % allSlides.length;
+    showSlide(prevIndex);
+    updateSubcategoryFromSlide(prevIndex);
+  }
+  
+  // Update subcategory selection based on current slide
+  function updateSubcategoryFromSlide(slideIndex) {
+    const slideData = categoryMap[slideIndex];
+    if (slideData) {
+      // Update main category if needed
+      if (slideData.filter !== currentFilter) {
+        currentFilter = slideData.filter;
+        updateActiveFilterTab(slideIndex);
+        buildSubmenu();
+      }
+      
+      // Update subcategory selection
+      const slideSubcategory = slideData.subcategory;
+      if (slideSubcategory && slideSubcategory !== 'General') {
+        currentSubcategory = slideSubcategory;
+      } else {
+        currentSubcategory = 'all';
+      }
+      updateActiveSubmenuTab();
     }
   }
   
