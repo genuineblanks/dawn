@@ -168,6 +168,96 @@
     transform: scale(1.1);
   }
   
+  /* Submenu Styles */
+  .factory-submenu-{{ section.id }} {
+    padding: 0 0 2rem;
+    display: flex;
+    justify-content: center;
+    z-index: 99;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  
+  .factory-submenu-{{ section.id }}.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .factory-submenu-wrapper-{{ section.id }} {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    max-width: 900px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .factory-submenu-tab-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    min-width: 70px;
+    justify-content: center;
+  }
+  
+  .factory-submenu-tab-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .factory-submenu-tab-{{ section.id }}:hover::before {
+    left: 100%;
+  }
+  
+  .factory-submenu-tab-{{ section.id }}.active {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  .factory-submenu-tab-{{ section.id }}:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+  }
+  
+  .factory-submenu-tab-{{ section.id }}:focus {
+    outline: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  
   /* Gallery Section */
   .factory-gallery-{{ section.id }} {
     padding: 3rem 0;
@@ -708,6 +798,18 @@
       order: 3;
     }
 
+    /* Mobile submenu styles */
+    .factory-submenu-wrapper-{{ section.id }} {
+      padding: 1rem;
+      gap: 0.75rem;
+    }
+    
+    .factory-submenu-tab-{{ section.id }} {
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      min-width: 60px;
+    }
+
     .factory-gallery-wrapper-{{ section.id }} {
       padding: 0 0.5rem;
     }
@@ -923,6 +1025,16 @@
           </button>
         </div>
       </div>
+      
+      <!-- Submenu Navigation -->
+      <div class="factory-submenu-{{ section.id }}">
+        <div class="factory-submenu-wrapper-{{ section.id }}">
+          <button class="factory-submenu-tab-{{ section.id }} active" data-subcategory="all">
+            <span class="factory-submenu-text-{{ section.id }}">All</span>
+          </button>
+          <!-- Dynamic subcategories will be added by JavaScript -->
+        </div>
+      </div>
     {% endif %}
     
     <!-- Gallery Section -->
@@ -937,6 +1049,7 @@
               {% assign slide_index = 0 %}
               {% for block in section.blocks %}
                 {% assign block_filter = block.settings.collection_type | default: 'products' %}
+                {% assign block_subcategory = block.settings.subcategory | default: '' %}
                 {% assign block_index = forloop.index0 %}
 
                 {% comment %} Render Images {% endcomment %}
@@ -946,6 +1059,7 @@
                   {% if current_image != blank %}
                     <div class="factory-slide-{{ section.id }}"
                          data-filter="{{ block_filter }}"
+                         data-subcategory="{{ block_subcategory | escape }}"
                          data-product="{{ block_index }}"
                          data-slide-index="{{ slide_index }}"
                          data-media-type="image">
@@ -971,6 +1085,7 @@
                   {% if current_video != blank %}
                     <div class="factory-slide-{{ section.id }}"
                          data-filter="{{ block_filter }}"
+                         data-subcategory="{{ block_subcategory | escape }}"
                          data-product="{{ block_index }}"
                          data-slide-index="{{ slide_index }}"
                          data-media-type="video">
@@ -1042,6 +1157,7 @@
               {% assign thumb_index = 0 %}
               {% for block in section.blocks %}
                 {% assign block_filter = block.settings.collection_type | default: 'products' %}
+                {% assign block_subcategory = block.settings.subcategory | default: '' %}
                 {% assign block_index = forloop.index0 %}
 
                 {% comment %} Image Thumbnails {% endcomment %}
@@ -1051,6 +1167,7 @@
                   {% if current_image != blank %}
                     <div class="factory-thumb-slide-{{ section.id }}"
                          data-filter="{{ block_filter }}"
+                         data-subcategory="{{ block_subcategory | escape }}"
                          data-product="{{ block_index }}"
                          data-thumb-index="{{ thumb_index }}"
                          data-media-type="image">
@@ -1075,6 +1192,7 @@
                   {% if current_video != blank %}
                     <div class="factory-thumb-slide-{{ section.id }}"
                          data-filter="{{ block_filter }}"
+                         data-subcategory="{{ block_subcategory | escape }}"
                          data-product="{{ block_index }}"
                          data-thumb-index="{{ thumb_index }}"
                          data-media-type="video">
@@ -1140,6 +1258,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   let currentSlideIndex = 0;
   let currentFilter = 'team';
+  let currentSubcategory = 'all';
   let allSlides = [];
   let categoryMap = [];
   let categoryRanges = {
@@ -1147,37 +1266,106 @@ document.addEventListener('DOMContentLoaded', function() {
     factory: { start: null, end: null },
     team: { start: null, end: null }
   };
+  let subcategoriesMap = {
+    products: new Set(),
+    factory: new Set(), 
+    team: new Set()
+  };
   
   // Build category mapping
   function buildCategoryMapping() {
     const slides = section.querySelectorAll('.factory-slide-' + sectionId);
     categoryMap = [];
     
-    // Reset category ranges
+    // Reset category ranges and subcategories
     categoryRanges = {
       products: { start: null, end: null },
       factory: { start: null, end: null },
       team: { start: null, end: null }
     };
     
+    subcategoriesMap = {
+      products: new Set(),
+      factory: new Set(), 
+      team: new Set()
+    };
+    
     slides.forEach((slide, index) => {
       const filter = slide.getAttribute('data-filter');
+      const subcategory = slide.getAttribute('data-subcategory') || '';
       const productIndex = slide.getAttribute('data-product');
       
       categoryMap.push({
         index: index,
         filter: filter,
+        subcategory: subcategory,
         productIndex: parseInt(productIndex),
         element: slide
       });
       
       allSlides.push(slide);
       
+      // Track subcategories for each main category (skip "General" as it's the default)
+      if (subcategory && subcategory.trim() !== '' && subcategory.trim() !== 'General') {
+        subcategoriesMap[filter].add(subcategory.trim());
+      }
+      
       // Track category ranges
       if (categoryRanges[filter].start === null) {
         categoryRanges[filter].start = index;
       }
       categoryRanges[filter].end = index;
+    });
+    
+    // Build submenu after collecting subcategories
+    buildSubmenu();
+  }
+  
+  // Build submenu based on current category
+  function buildSubmenu() {
+    const submenuWrapper = section.querySelector('.factory-submenu-wrapper-' + sectionId);
+    const submenuContainer = section.querySelector('.factory-submenu-' + sectionId);
+    
+    if (!submenuWrapper || !submenuContainer) return;
+    
+    // Clear existing submenu items except "All"
+    const allTab = submenuWrapper.querySelector('[data-subcategory="all"]');
+    submenuWrapper.innerHTML = '';
+    submenuWrapper.appendChild(allTab);
+    
+    // Get subcategories for current filter
+    const subcategories = Array.from(subcategoriesMap[currentFilter] || []);
+    
+    if (subcategories.length > 0) {
+      // Add subcategory tabs
+      subcategories.forEach(subcategory => {
+        const tab = document.createElement('button');
+        tab.className = 'factory-submenu-tab-' + sectionId;
+        tab.setAttribute('data-subcategory', subcategory);
+        tab.innerHTML = `<span class="factory-submenu-text-${sectionId}">${subcategory}</span>`;
+        submenuWrapper.appendChild(tab);
+      });
+      
+      // Show submenu
+      submenuContainer.classList.add('show');
+    } else {
+      // Hide submenu if no subcategories
+      submenuContainer.classList.remove('show');
+    }
+    
+    // Reset to "All" when switching categories
+    currentSubcategory = 'all';
+    updateActiveSubmenuTab();
+  }
+  
+  // Update active submenu tab
+  function updateActiveSubmenuTab() {
+    const submenuTabs = section.querySelectorAll('.factory-submenu-tab-' + sectionId);
+    submenuTabs.forEach(tab => {
+      tab.classList.remove('active');
+      if (tab.getAttribute('data-subcategory') === currentSubcategory) {
+        tab.classList.add('active');
+      }
     });
   }
   
@@ -1279,7 +1467,38 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Jump to category
   function jumpToCategory(category) {
+    currentFilter = category;
+    currentSubcategory = 'all';
+    
+    // Build submenu for this category
+    buildSubmenu();
+    
+    // Find first slide in category
     const firstSlideIndex = categoryMap.findIndex(item => item.filter === category);
+    if (firstSlideIndex !== -1) {
+      showSlide(firstSlideIndex);
+    }
+  }
+  
+  // Jump to subcategory
+  function jumpToSubcategory(subcategory) {
+    currentSubcategory = subcategory;
+    updateActiveSubmenuTab();
+    
+    let firstSlideIndex = -1;
+    
+    if (subcategory === 'all') {
+      // Show first slide of current category
+      firstSlideIndex = categoryMap.findIndex(item => item.filter === currentFilter);
+    } else {
+      // Show first slide of current category + subcategory
+      firstSlideIndex = categoryMap.findIndex(item => 
+        item.filter === currentFilter && 
+        item.subcategory === subcategory &&
+        item.subcategory !== 'General'
+      );
+    }
+    
     if (firstSlideIndex !== -1) {
       showSlide(firstSlideIndex);
     }
@@ -1287,13 +1506,37 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Navigation functions
   function nextSlide() {
-    const nextIndex = (currentSlideIndex + 1) % allSlides.length;
-    showSlide(nextIndex);
+    const filteredSlides = getFilteredSlides();
+    const currentFilteredIndex = filteredSlides.findIndex(slide => 
+      slide.index === currentSlideIndex
+    );
+    
+    if (currentFilteredIndex !== -1) {
+      const nextFilteredIndex = (currentFilteredIndex + 1) % filteredSlides.length;
+      showSlide(filteredSlides[nextFilteredIndex].index);
+    }
   }
   
   function prevSlide() {
-    const prevIndex = (currentSlideIndex - 1 + allSlides.length) % allSlides.length;
-    showSlide(prevIndex);
+    const filteredSlides = getFilteredSlides();
+    const currentFilteredIndex = filteredSlides.findIndex(slide => 
+      slide.index === currentSlideIndex
+    );
+    
+    if (currentFilteredIndex !== -1) {
+      const prevFilteredIndex = (currentFilteredIndex - 1 + filteredSlides.length) % filteredSlides.length;
+      showSlide(filteredSlides[prevFilteredIndex].index);
+    }
+  }
+  
+  // Get slides filtered by current category and subcategory
+  function getFilteredSlides() {
+    return categoryMap.filter(item => {
+      const matchesCategory = item.filter === currentFilter;
+      const matchesSubcategory = currentSubcategory === 'all' || 
+                                 (item.subcategory === currentSubcategory && currentSubcategory !== 'General');
+      return matchesCategory && matchesSubcategory;
+    });
   }
   
   // Thumbnail navigation with mouse drag support
@@ -1490,6 +1733,20 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+  
+  // Submenu tabs event handling (using event delegation)
+  const submenuWrapper = section.querySelector('.factory-submenu-wrapper-' + sectionId);
+  if (submenuWrapper) {
+    submenuWrapper.addEventListener('click', function(e) {
+      const tab = e.target.closest('.factory-submenu-tab-' + sectionId);
+      if (tab) {
+        const subcategory = tab.getAttribute('data-subcategory');
+        jumpToSubcategory(subcategory);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+  }
   
   // Navigation buttons
   const prevBtn = section.querySelector('.factory-nav-prev-' + sectionId);
@@ -1902,6 +2159,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           ],
           "default": "factory"
+        },
+        {
+          "type": "text",
+          "id": "subcategory",
+          "label": "Subcategory",
+          "default": "General",
+          "info": "Enter subcategory name or leave as 'General'. Examples: Hoodies, T-Shirts, Cutting, Sewing, Equipment"
         },
         {
           "type": "text",
