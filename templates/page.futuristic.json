@@ -16,54 +16,98 @@
           "type": "item",
           "settings": {
             "collection_type": "products",
-            "subcategory": "Hoodies",
+            "subcategory": "Zip-up Jacket",
             "product_name": "Show Room",
-            "product_description": "",
-            "details": "",
-            "image_1": "shopify://shop_images/JACKET_00_SEAM_WASHED.jpg",
+            "product_description": "<p>bfgddfgfd</p>",
+            "details": "<p>fdfdbfbdbdf</p>",
+            "image_1": "shopify://shop_images/JACKET_001_WASHED.jpg",
             "image_2": "shopify://shop_images/JACKET_00_SEAM_WASHED_f67c581d-759d-4e3c-9a8b-8506a8af80d8.jpg",
-            "image_3": "shopify://shop_images/DSC09649_copiar.jpg",
-            "image_4": "shopify://shop_images/DSC09685_copiar.jpg",
-            "image_5": "shopify://shop_images/DSC09677_copiar.jpg",
-            "image_6": "shopify://shop_images/DSC09676_copiar.jpg",
-            "image_7": "shopify://shop_images/DSC09673_copiar.jpg",
-            "image_8": "shopify://shop_images/DSC09666_copiar.jpg",
-            "image_9": "shopify://shop_images/DSC09682_copiar.jpg",
-            "image_10": "shopify://shop_images/DSC09678_copiar.jpg",
-            "image_11": "shopify://shop_images/DSC09690_copiar.jpg",
-            "image_12": "shopify://shop_images/DSC09687_copiar.jpg",
-            "image_13": "shopify://shop_images/DSC09665_copiar.jpg",
-            "image_14": "shopify://shop_images/DSC09662_copiar.jpg",
-            "image_15": "shopify://shop_images/DSC09693_copiar.jpg",
+            "image_3": "shopify://shop_images/JACKET_0_SHERPA_TRIKKO_fbd0b180-a404-4fc7-9fd7-7ca75b18160d.jpg",
+            "image_4": "shopify://shop_images/JACKET_PLUSH_1.jpg",
             "video_autoplay": true,
             "video_muted": true,
             "video_loop": true,
             "video_controls": true
           }
         },
-        "item_4n3Lfh": {
+        "item_e9QYfQ": {
           "type": "item",
           "settings": {
             "collection_type": "products",
-            "subcategory": "Sweatshirts",
+            "subcategory": "Hoodie",
             "product_name": "Show Room",
             "product_description": "",
             "details": "",
-            "image_1": "shopify://shop_images/JACKET_00_SEAM_WASHED.jpg",
-            "image_2": "shopify://shop_images/JACKET_00_SEAM_WASHED_f67c581d-759d-4e3c-9a8b-8506a8af80d8.jpg",
-            "image_3": "shopify://shop_images/DSC09649_copiar.jpg",
-            "image_4": "shopify://shop_images/DSC09685_copiar.jpg",
-            "image_5": "shopify://shop_images/DSC09677_copiar.jpg",
-            "image_6": "shopify://shop_images/DSC09676_copiar.jpg",
-            "image_7": "shopify://shop_images/DSC09673_copiar.jpg",
-            "image_8": "shopify://shop_images/DSC09666_copiar.jpg",
-            "image_9": "shopify://shop_images/DSC09682_copiar.jpg",
-            "image_10": "shopify://shop_images/DSC09678_copiar.jpg",
-            "image_11": "shopify://shop_images/DSC09690_copiar.jpg",
-            "image_12": "shopify://shop_images/DSC09687_copiar.jpg",
-            "image_13": "shopify://shop_images/DSC09665_copiar.jpg",
-            "image_14": "shopify://shop_images/DSC09662_copiar.jpg",
-            "image_15": "shopify://shop_images/DSC09693_copiar.jpg",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        "item_7KRmkH": {
+          "type": "item",
+          "settings": {
+            "collection_type": "products",
+            "subcategory": "Sweatshirt",
+            "product_name": "Show Room",
+            "product_description": "",
+            "details": "",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        "item_H8VW9e": {
+          "type": "item",
+          "settings": {
+            "collection_type": "products",
+            "subcategory": "Longsleeve",
+            "product_name": "Show Room",
+            "product_description": "",
+            "details": "",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        "item_RxamQt": {
+          "type": "item",
+          "settings": {
+            "collection_type": "products",
+            "subcategory": "T-shirt",
+            "product_name": "Show Room",
+            "product_description": "",
+            "details": "",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        "item_b6GUHY": {
+          "type": "item",
+          "settings": {
+            "collection_type": "products",
+            "subcategory": "Shirt",
+            "product_name": "Show Room",
+            "product_description": "",
+            "details": "",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        "item_bChPDi": {
+          "type": "item",
+          "settings": {
+            "collection_type": "products",
+            "subcategory": "Bottoms",
+            "product_name": "Show Room",
+            "product_description": "",
+            "details": "",
             "video_autoplay": true,
             "video_muted": true,
             "video_loop": true,
@@ -106,7 +150,12 @@
       },
       "block_order": [
         "item_jdMBxi",
-        "item_4n3Lfh",
+        "item_e9QYfQ",
+        "item_7KRmkH",
+        "item_H8VW9e",
+        "item_RxamQt",
+        "item_b6GUHY",
+        "item_bChPDi",
         "item_6xbdbt",
         "item_rGjhm8"
       ],
