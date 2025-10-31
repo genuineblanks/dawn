@@ -285,16 +285,18 @@
     pointer-events: none;
   }
   
-  /* Mobile: Center garment ONLY for SHOW ROOM (products) category */
+  /* Mobile: Center garment ONLY for SHOW ROOM (products) category IMAGES */
   @media (max-width: 768px) {
-    .factory-slide-{{ section.id }}[data-filter="products"] .factory-image-{{ section.id }} {
+    /* Only apply to images, not videos */
+    .factory-slide-{{ section.id }}[data-filter="products"][data-media-type="image"] .factory-image-{{ section.id }} {
       /* Use negative offset to center garment */
       object-position: -20% center;
       /* Scale up slightly to eliminate grey space */
       transform: scale(1.15);
     }
     
-    /* Keep default centering for PRODUCTION and FACTORY */
+    /* Keep default for all videos and other categories */
+    .factory-slide-{{ section.id }}[data-media-type="video"] .factory-video-{{ section.id }},
     .factory-slide-{{ section.id }}[data-filter="team"] .factory-image-{{ section.id }},
     .factory-slide-{{ section.id }}[data-filter="factory"] .factory-image-{{ section.id }} {
       object-position: center;
@@ -304,13 +306,15 @@
   
   /* Smaller mobile screens */
   @media (max-width: 480px) {
-    .factory-slide-{{ section.id }}[data-filter="products"] .factory-image-{{ section.id }} {
+    /* Only apply to images, not videos */
+    .factory-slide-{{ section.id }}[data-filter="products"][data-media-type="image"] .factory-image-{{ section.id }} {
       /* Slightly more offset and zoom for smaller screens */
       object-position: -25% center;
       transform: scale(1.2);
     }
     
-    /* Keep default centering for PRODUCTION and FACTORY */
+    /* Keep default for all videos and other categories */
+    .factory-slide-{{ section.id }}[data-media-type="video"] .factory-video-{{ section.id }},
     .factory-slide-{{ section.id }}[data-filter="team"] .factory-image-{{ section.id }},
     .factory-slide-{{ section.id }}[data-filter="factory"] .factory-image-{{ section.id }} {
       object-position: center;
