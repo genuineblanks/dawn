@@ -689,6 +689,13 @@
     display: block;
     flex-shrink: 0;
   }
+  
+  /* Desktop: Apply same thumbnail positioning as mobile for SHOW ROOM only */
+  .factory-thumb-slide-{{ section.id }}[data-filter="products"][data-media-type="image"] .factory-thumb-image-{{ section.id }} {
+    /* Show same cropping as main image for SHOW ROOM */
+    object-position: -20% center;
+    transform: scale(1.15);
+  }
 
   .factory-thumb-video-wrapper-{{ section.id }} {
     position: relative;
