@@ -8,29 +8,14 @@
   console.log('🚀 Enhanced Scroll System Loading... VERSION 2024-07-10-FIXED');
 
 // ===============================================
-// MOBILE DETECTION UTILITIES
+// DESKTOP-ONLY SCROLL SYSTEM
 // ===============================================
-function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-         (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ||
-         window.innerWidth <= 768;
-}
-
-function isIOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-}
-
-// MOBILE DETECTION - PRESERVE DESKTOP FUNCTIONALITY
-const IS_MOBILE_DEVICE = isMobileDevice();
-const IS_HOMEPAGE = document.body.classList.contains('home-section') || 
-                    document.body.classList.contains('template-index') || 
+// Mobile devices removed - this system is desktop-only
+const IS_HOMEPAGE = document.body.classList.contains('home-section') ||
+                    document.body.classList.contains('template-index') ||
                     window.location.pathname === '/';
 
-console.log('📱 Device Detection - Device:', IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP', 'Homepage:', IS_HOMEPAGE);
-
-// Export functions for other scripts
-window.isMobileDevice = isMobileDevice;
-window.isIOS = isIOS;
+console.log('🖥️ Desktop Scroll System - Homepage:', IS_HOMEPAGE);
 
 // ===============================================
 // DESKTOP ONLY - HOMEPAGE DETECTION UTILITY
@@ -83,7 +68,7 @@ let userInteractionTimeout = null;
 let animationCompletionDelay = 500; // ms to wait after animation before allowing auto-updates
 
 // ===============================================
-// MOBILE TOUCH SUPPORT - COMPLETELY REWRITTEN FOR RELIABILITY
+// DESKTOP TOUCH SUPPORT (for touch-enabled laptops)
 // ===============================================
 let touchStartY = 0;
 let touchEndY = 0;
@@ -93,37 +78,10 @@ let touchEndX = 0;
 let initialTouchY = 0;
 let hasMoved = false;
 let touchTarget = null;
-let lastTouchTime = 0;
-
-// SECTION LOCKING MECHANISM - Prevents multi-section jumping
-let lastSwipeTime = 0;
-let swipeCooldownPeriod = 300; // 300ms cooldown between swipes
-let isSwipeInProgress = false;
-
-// ENHANCED OVERSCROLL PROTECTION
-let overscrollDetected = false;
-let lastValidScrollPosition = 0;
-let scrollBoundaryTimeout = null;
-let overscrollRecoveryActive = false;
-
-// DESKTOP ONLY - Mobile device detection (redundant but kept for compatibility)
-function isMobileDeviceCheck() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-         (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ||
-         window.innerWidth <= 768;
-}
-
-// DESKTOP ONLY - iOS specific detection (redundant but kept for compatibility) 
-function isIOSCheck() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-}
 
 function handleTouchStart(e) {
-  // DESKTOP ONLY: Mobile devices use natural scrolling + dot navigation
-  if (isMobileDevice()) return;
-  
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
-  
+
   const touch = e.touches[0];
   touchStartY = touch.clientY;
   touchStartX = touch.clientX;
@@ -131,78 +89,66 @@ function handleTouchStart(e) {
   touchStartTime = Date.now();
   hasMoved = false;
   touchTarget = e.target;
-  
-  lastTouchTime = Date.now();
-  
+
   console.log('🖥️ Desktop touch start at:', touchStartY);
 }
 
 function handleTouchMove(e) {
-  // DESKTOP ONLY: Mobile devices use natural scrolling + dot navigation  
-  if (isMobileDevice()) return;
-  
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
-  
+
   // If touching dot navigation, let it handle everything
   if (touchTarget && (
-    touchTarget.classList.contains('section-dot') || 
+    touchTarget.classList.contains('section-dot') ||
     touchTarget.closest('.section-dot-navigation')
   )) {
     return;
   }
-  
+
   const touch = e.touches[0];
   const deltaY = Math.abs(touch.clientY - initialTouchY);
   const deltaX = Math.abs(touch.clientX - touchStartX);
-  
+
   if (deltaY > 3 || deltaX > 3) {
     hasMoved = true;
-  }
-  
-  if (deltaY > 50 && deltaY > deltaX * 2) {
-    console.log('🖥️ Desktop touch movement detected, deltaY:', deltaY, 'deltaX:', deltaX);
   }
 }
 
 function handleTouchEnd(e) {
-  // DESKTOP ONLY: Mobile devices use natural scrolling + dot navigation
-  if (isMobileDevice()) return;
-  
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
-  
+
   // If touching dot navigation, let it handle everything
   if (touchTarget && (
-    touchTarget.classList.contains('section-dot') || 
+    touchTarget.classList.contains('section-dot') ||
     touchTarget.closest('.section-dot-navigation')
   )) {
     console.log('🖥️ Desktop touch on dot navigation - allowing normal behavior');
     touchTarget = null;
     return;
   }
-  
+
   const touch = e.changedTouches[0];
   touchEndY = touch.clientY;
   touchEndX = touch.clientX;
-  
+
   const touchDuration = Date.now() - touchStartTime;
   const verticalDistance = touchStartY - touchEndY; // Positive = swipe up
   const horizontalDistance = Math.abs(touchEndX - touchStartX);
   const totalVerticalDistance = Math.abs(verticalDistance);
-  
+
   // Desktop touch validation (for touch laptops)
   const minDistance = 40;
   const maxDuration = 1200;
   const ratioThreshold = 1.2;
-  
-  const isValidSwipe = touchDuration < maxDuration && 
-                      totalVerticalDistance > minDistance && 
+
+  const isValidSwipe = touchDuration < maxDuration &&
+                      totalVerticalDistance > minDistance &&
                       totalVerticalDistance > horizontalDistance * ratioThreshold &&
                       hasMoved;
-  
+
   if (isValidSwipe) {
     let targetSection = scrollSystem.currentSection;
     const swipeThreshold = 25;
-    
+
     if (verticalDistance > swipeThreshold) {
       targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
       console.log('🖥️ Desktop swipe up - Going to section:', targetSection);
@@ -210,637 +156,33 @@ function handleTouchEnd(e) {
       targetSection = Math.max(scrollSystem.currentSection - 1, 0);
       console.log('🖥️ Desktop swipe down - Going to section:', targetSection);
     }
-    
+
     if (targetSection !== scrollSystem.currentSection) {
       goToSection(targetSection);
     }
   }
-  
+
   // Reset touch tracking
   hasMoved = false;
   touchTarget = null;
 }
 
 // ===============================================
-// MOBILE DEBUG AND FAILSAFE SYSTEM
+// SCROLL ANIMATION HELPERS
 // ===============================================
-function createMobileDebugPanel() {
-  if (!isMobileDevice() || !isHomepage()) return;
-  
-  // Only show debug on mobile with ?debug=mobile in URL
-  if (!window.location.search.includes('debug=mobile')) return;
-  
-  const debugPanel = document.createElement('div');
-  debugPanel.id = 'mobile-debug-panel';
-  debugPanel.style.cssText = `
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 10px;
-    font-family: monospace;
-    font-size: 11px;
-    z-index: 99999;
-    border-radius: 5px;
-    max-width: 200px;
-    max-height: 150px;
-    overflow-y: auto;
-  `;
-  
-  debugPanel.innerHTML = '<div id="mobile-debug-content">Mobile Debug Active...</div>';
-  document.body.appendChild(debugPanel);
-  
-  // Override console.log for mobile debugging
-  const originalLog = console.log;
-  console.log = function(...args) {
-    originalLog.apply(console, args);
-    const debugContent = document.getElementById('mobile-debug-content');
-    if (debugContent && args[0] && args[0].includes('📱')) {
-      debugContent.innerHTML += '<br>' + args.join(' ');
-      debugContent.scrollTop = debugContent.scrollHeight;
-    }
-  };
-  
-  console.log('📱 Mobile debug panel created');
-}
-
-// ===============================================
-// MOBILE TOUCH FAILSAFE SYSTEM - ENHANCED
-// ===============================================
-function addMobileTouchFailsafe() {
-  // DISABLED: Mobile uses natural scrolling (this was interfering)
-  return;
-  
-  if (!isMobileDevice() || !isHomepage()) return;
-  
-  let swipeAttempts = 0;
-  let lastSwipeTime = 0;
-  
-  // Alternative touch detection using pointer events
-  if (window.PointerEvent) {
-    console.log('📱 Adding aggressive pointer event failsafe');
-    
-    let pointerStartY = 0;
-    let pointerStartTime = 0;
-    let pointerMoved = false;
-    
-    document.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'touch' && isHomepage() && scrollSystem.isEnabled) {
-        pointerStartY = e.clientY;
-        pointerStartTime = Date.now();
-        pointerMoved = false;
-        console.log('📱 Pointer down at:', pointerStartY);
-      }
-    });
-    
-    document.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'touch' && pointerStartY > 0) {
-        const deltaY = Math.abs(e.clientY - pointerStartY);
-        if (deltaY > 5) {
-          pointerMoved = true;
-        }
-      }
-    });
-    
-    document.addEventListener('pointerup', (e) => {
-      if (e.pointerType === 'touch' && isHomepage() && scrollSystem.isEnabled && !scrollSystem.inScroll && pointerMoved) {
-        const pointerDistance = pointerStartY - e.clientY;
-        const pointerDuration = Date.now() - pointerStartTime;
-        
-        console.log('📱 Pointer up analysis:', {
-          distance: pointerDistance,
-          duration: pointerDuration,
-          moved: pointerMoved
-        });
-        
-        if (Math.abs(pointerDistance) > 35 && pointerDuration < 1200) {
-          console.log('📱 🔥 Pointer failsafe TRIGGERED:', pointerDistance);
-          swipeAttempts++;
-          
-          if (Date.now() - lastSwipeTime > 500) { // Reasonable debounce
-            let targetSection = scrollSystem.currentSection;
-            
-            if (pointerDistance > 35) {
-              targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-              console.log('📱 🚀 POINTER UP - Next section:', targetSection);
-            } else if (pointerDistance < -35) {
-              targetSection = Math.max(scrollSystem.currentSection - 1, 0);
-              console.log('📱 🚀 POINTER DOWN - Previous section:', targetSection);
-            }
-            
-            if (targetSection !== scrollSystem.currentSection) {
-              console.log('📱 ✅ POINTER FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
-              goToSection(targetSection);
-              lastSwipeTime = Date.now();
-            }
-          }
-        }
-      }
-      // Reset pointer tracking
-      pointerStartY = 0;
-      pointerMoved = false;
-    });
-  }
-  
-  // Wheel event failsafe for devices that support it
-  let wheelTimeout;
-  document.addEventListener('wheel', (e) => {
-    if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
-    
-    // Clear previous timeout
-    clearTimeout(wheelTimeout);
-    
-    // Set timeout to process wheel event
-    wheelTimeout = setTimeout(() => {
-      const deltaY = e.deltaY;
-      
-      if (Math.abs(deltaY) > 50) {
-        console.log('📱 🔥 Wheel failsafe triggered:', deltaY);
-        
-        let targetSection = scrollSystem.currentSection;
-        
-        if (deltaY > 50) {
-          targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-          console.log('📱 🚀 WHEEL DOWN - Next section:', targetSection);
-        } else if (deltaY < -50) {
-          targetSection = Math.max(scrollSystem.currentSection - 1, 0);
-          console.log('📱 🚀 WHEEL UP - Previous section:', targetSection);
-        }
-        
-        if (targetSection !== scrollSystem.currentSection) {
-          console.log('📱 ✅ WHEEL FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
-          console.log('📱 🎯 Wheel failsafe will call goToSection (no premature inScroll setting)');
-          goToSection(targetSection);
-        }
-      }
-    }, 50);
-  }, { passive: true });
-  
-  // Enhanced scroll event monitoring for animation debugging
-  let scrollMonitorTimeout;
-  let lastScrollTime = 0;
-  
-  window.addEventListener('scroll', () => {
-    if (!isHomepage() || !scrollSystem.isEnabled) return;
-    
-    const currentTime = Date.now();
-    const scrollPos = window.pageYOffset;
-    
-    // CRITICAL: Log scroll events during animation
-    if (scrollSystem.inScroll) {
-      console.log('🔄 ⚠️ SCROLL EVENT DURING ANIMATION:', {
-        time: currentTime - (animationStartTime || 0) + 'ms since start',
-        scrollPos: scrollPos,
-        target: animationTarget,
-        diff: animationTarget ? Math.abs(scrollPos - animationTarget) : 'unknown',
-        timeSinceLastScroll: currentTime - lastScrollTime + 'ms'
-      });
-    }
-    
-    lastScrollTime = currentTime;
-    clearTimeout(scrollMonitorTimeout);
-    
-    scrollMonitorTimeout = setTimeout(() => {
-      if (scrollSystem.inScroll) {
-        console.log('📱 ⚠️ Scroll stuck detected - resetting inScroll flag');
-        scrollSystem.inScroll = false;
-        animationStartTime = 0;
-        animationTarget = null;
-      }
-    }, 1000);
-  }, { passive: true });
-  
-  console.log('📱 ✅ Enhanced mobile touch failsafe systems activated');
-  
-  // Add visual indicator for mobile users
-  setTimeout(() => {
-    if (scrollSystem.dotNavigation && isMobileDevice()) {
-      // Brief flash to show swipe is available
-      const originalOpacity = scrollSystem.dotNavigation.style.opacity;
-      scrollSystem.dotNavigation.style.opacity = '1';
-      scrollSystem.dotNavigation.style.transform = 'translateY(-50%) scale(1.1)';
-      
-      setTimeout(() => {
-        if (scrollSystem.dotNavigation) {
-          scrollSystem.dotNavigation.style.opacity = originalOpacity;
-          scrollSystem.dotNavigation.style.transform = 'translateY(-50%) scale(1)';
-        }
-      }, 1500);
-    }
-  }, 2000);
-}
-
-// ===============================================
-// ENHANCED OVERSCROLL PROTECTION AND RECOVERY
-// ===============================================
-function initializeOverscrollProtection() {
-  // DISABLED: Mobile uses natural scrolling (this was blocking scroll)
-  return;
-  
-  if (!isMobileDevice() || !isHomepage()) return;
-  
-  console.log('🛡️ Initializing enhanced overscroll protection...');
-  
-  // Monitor scroll boundaries and detect overscroll
-  let boundaryCheckInterval = setInterval(() => {
-    if (!scrollSystem.isEnabled) return;
-    
-    const currentScroll = window.pageYOffset;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const minScroll = 0;
-    
-    // Check if we're outside valid boundaries
-    if (currentScroll < minScroll - 50 || currentScroll > maxScroll + 50) {
-      if (!overscrollDetected) {
-        console.log('🚨 OVERSCROLL DETECTED:', {
-          currentScroll: currentScroll,
-          minScroll: minScroll,
-          maxScroll: maxScroll,
-          deviation: currentScroll < minScroll ? currentScroll - minScroll : currentScroll - maxScroll
-        });
-        
-        overscrollDetected = true;
-        handleOverscrollRecovery(currentScroll, minScroll, maxScroll);
-      }
-    } else {
-      if (overscrollDetected) {
-        console.log('✅ Scroll returned to valid boundaries');
-        overscrollDetected = false;
-        overscrollRecoveryActive = false;
-      }
-      lastValidScrollPosition = currentScroll;
-    }
-  }, 100);
-  
-  // Enhanced overscroll prevention
-  document.addEventListener('touchmove', function(e) {
-    if (!scrollSystem.isEnabled || scrollSystem.inScroll) return;
-    
-    const currentScroll = window.pageYOffset;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    
-    // Prevent further scrolling at boundaries
-    if ((currentScroll <= 0 && e.touches[0].clientY > initialTouchY) ||
-        (currentScroll >= maxScroll && e.touches[0].clientY < initialTouchY)) {
-      console.log('🛡️ Preventing overscroll at boundary');
-      e.preventDefault();
-    }
-  }, { passive: false });
-  
-  console.log('🛡️ Enhanced overscroll protection active');
-}
-
-function handleOverscrollRecovery(currentScroll, minScroll, maxScroll) {
-  if (overscrollRecoveryActive) return;
-  
-  overscrollRecoveryActive = true;
-  console.log('🔧 Initiating overscroll recovery...');
-  
-  // Determine recovery target
-  let recoveryTarget;
-  if (currentScroll < minScroll) {
-    recoveryTarget = 0; // Snap to top
-  } else if (currentScroll > maxScroll) {
-    recoveryTarget = maxScroll; // Snap to bottom
-  } else {
-    recoveryTarget = lastValidScrollPosition; // Return to last valid position
-  }
-  
-  // Find closest section to recovery target
-  let closestSection = 0;
-  let minDistance = Infinity;
-  scrollSystem.arrSections.forEach((sectionPos, index) => {
-    const distance = Math.abs(recoveryTarget - sectionPos);
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestSection = index;
-    }
-  });
-  
-  console.log('🎯 Overscroll recovery - snapping to section:', closestSection, 'at position:', scrollSystem.arrSections[closestSection]);
-  
-  // Perform recovery scroll
-  setTimeout(() => {
-    if (!scrollSystem.inScroll) {
-      scrollSystem.currentSection = closestSection;
-      goToSection(closestSection);
-    }
-  }, 200); // Small delay to avoid conflicts
-}
-
-// ===============================================
-// MOBILE CONFLICT DETECTION SYSTEM
-// ===============================================
-function addMobileConflictDetection() {
-  // DISABLED: Mobile uses natural scrolling (this was interfering)
-  return;
-  
-  if (!isMobileDevice() || !isHomepage()) return;
-  
-  console.log('🔍 Setting up mobile conflict detection...');
-  
-  // Monitor touch events during animation
-  const touchEventTypes = ['touchstart', 'touchmove', 'touchend', 'touchcancel'];
-  
-  touchEventTypes.forEach(eventType => {
-    document.addEventListener(eventType, (e) => {
-      if (scrollSystem.inScroll) {
-        const touchInfo = {
-          type: eventType,
-          time: Date.now() - animationStartTime,
-          touches: e.touches ? e.touches.length : 0,
-          target: e.target.tagName || 'unknown'
-        };
-        
-        touchEventsDuringAnimation.push(touchInfo);
-        
-        console.log('🚨 TOUCH EVENT DURING ANIMATION:', touchInfo);
-        
-        // Check for problematic touch events
-        if (eventType === 'touchstart' && e.touches && e.touches.length > 1) {
-          console.log('⚠️ MULTI-TOUCH DETECTED during animation - potential conflict!');
-          conflictingEvents.push({
-            type: 'multi-touch',
-            time: touchInfo.time,
-            details: 'Multiple fingers detected during scroll animation'
-          });
-        }
-      }
-    }, { passive: true });
-  });
-  
-  // Monitor CSS conflicts during animation
-  const checkCSSConflicts = () => {
-    if (scrollSystem.inScroll) {
-      const body = document.body;
-      const html = document.documentElement;
-      
-      // Check for CSS conflicts that might interrupt animation
-      const conflicts = [];
-      
-      // Check scroll-behavior
-      const scrollBehavior = window.getComputedStyle(html).scrollBehavior;
-      if (scrollBehavior === 'smooth') {
-        conflicts.push({
-          type: 'css-scroll-behavior',
-          value: scrollBehavior,
-          element: 'html'
-        });
-      }
-      
-      // Removed overscroll-behavior conflict detection to prevent animation issues
-      
-      // Check for CSS touch-action - 'auto' allows all touch gestures to interfere
-      const touchAction = window.getComputedStyle(body).touchAction;
-      if (touchAction === 'auto') {
-        conflicts.push({
-          type: 'css-touch-action',
-          value: touchAction,
-          element: 'body',
-          issue: 'allows all touch gestures to interfere'
-        });
-      }
-      
-      if (conflicts.length > 0) {
-        console.log('🔴 CSS CONFLICTS DETECTED during animation:', conflicts);
-        conflictingEvents.push(...conflicts.map(c => ({
-          ...c,
-          time: Date.now() - animationStartTime
-        })));
-      }
-    }
-  };
-  
-  // Check for CSS conflicts every 100ms during animation
-  setInterval(checkCSSConflicts, 100);
-  
-  // Monitor viewport changes that might affect animation
-  window.addEventListener('resize', () => {
-    if (scrollSystem.inScroll) {
-      console.log('📱 ⚠️ VIEWPORT RESIZE during animation - potential conflict!');
-      conflictingEvents.push({
-        type: 'viewport-resize',
-        time: Date.now() - animationStartTime,
-        details: 'Viewport size changed during scroll animation'
-      });
-    }
-  });
-  
-  // Monitor orientation changes
-  window.addEventListener('orientationchange', () => {
-    if (scrollSystem.inScroll) {
-      console.log('📱 ⚠️ ORIENTATION CHANGE during animation - potential conflict!');
-      conflictingEvents.push({
-        type: 'orientation-change',
-        time: Date.now() - animationStartTime,
-        details: 'Device orientation changed during scroll animation'
-      });
-    }
-  });
-  
-  console.log('✅ Mobile conflict detection system activated');
-}
-
-// ===============================================
-// FORCED RESET MECHANISM FOR STUCK INSCROLL STATE
-// ===============================================
-function startInScrollWatchdog() {
-  // DISABLED: Mobile uses natural scrolling (not needed)
-  return;
-  
-  if (!isMobileDevice()) return;
-  
-  console.log('🛡️ Starting inScroll watchdog for mobile...');
-  
-  let lastInScrollCheck = false;
-  let stuckCount = 0;
-  
-  setInterval(() => {
-    if (scrollSystem.inScroll) {
-      stuckCount++;
-      console.log('🛡️ inScroll watchdog check:', {
-        inScroll: scrollSystem.inScroll,
-        stuckCount: stuckCount,
-        animationStartTime: animationStartTime,
-        timeSinceStart: animationStartTime ? Date.now() - animationStartTime : 0
-      });
-      
-      // If inScroll has been true for more than 5 seconds, force reset
-      if (stuckCount >= 10) { // 10 checks * 500ms = 5 seconds
-        console.log('🚨 WATCHDOG: Forcing inScroll reset - system appears stuck!');
-        scrollSystem.inScroll = false;
-        animationStartTime = 0;
-        animationTarget = null;
-        restoreConflictingListeners();
-        clearTimeout(globalAnimationTimeout);
-        stuckCount = 0;
-      }
-    } else {
-      stuckCount = 0;
-    }
-    
-    lastInScrollCheck = scrollSystem.inScroll;
-  }, 500); // Check every 500ms
-}
-
-// ===============================================
-// MOBILE SCROLL CAPABILITY TEST
-// ===============================================
-function testMobileScrollCapabilities() {
-  // DISABLED: Mobile uses natural scrolling (not needed)
-  return;
-  
-  if (!isMobileDevice()) return;
-  
-  console.log('🧪 Testing mobile scroll capabilities...');
-  
-  const testResults = {
-    smoothScrollSupport: 'scrollBehavior' in document.documentElement.style,
-    currentScroll: window.pageYOffset,
-    documentHeight: document.documentElement.scrollHeight,
-    windowHeight: window.innerHeight,
-    canScroll: document.documentElement.scrollHeight > window.innerHeight
-  };
-  
-  console.log('🧪 Mobile scroll test results:', testResults);
-  
-  // Test if we can scroll at all
-  if (testResults.canScroll && testResults.currentScroll < 100) {
-    console.log('🧪 Testing basic scroll functionality...');
-    const originalPosition = window.pageYOffset;
-    
-    // Try to scroll down a little
-    window.scrollTo(0, originalPosition + 50);
-    
-    setTimeout(() => {
-      const newPosition = window.pageYOffset;
-      const scrollWorked = Math.abs(newPosition - (originalPosition + 50)) < 10;
-      console.log('🧪 Basic scroll test:', {
-        originalPosition: originalPosition,
-        targetPosition: originalPosition + 50,
-        actualPosition: newPosition,
-        scrollWorked: scrollWorked
-      });
-      
-      // Restore original position
-      window.scrollTo(0, originalPosition);
-    }, 200);
-  }
-}
-
-// ===============================================
-// ANIMATION ISOLATION SYSTEM
-// ===============================================
-function disableConflictingListeners() {
-  if (!isMobileDevice()) return;
-  
-  console.log('🔒 Disabling conflicting listeners during animation...');
-  
-  // List of events that might interfere with scroll animation
-  const conflictingEvents = [
-    'wheel',
-    'mousewheel', 
-    'DOMMouseScroll',
-    'keydown',
-    'keyup'
-  ];
-  
-  // Disable these events on document level
-  conflictingEvents.forEach(eventType => {
-    const originalHandler = document[`on${eventType}`];
-    if (originalHandler) {
-      originalListeners[eventType] = originalHandler;
-      document[`on${eventType}`] = null;
-    }
-  });
-  
-  // Temporarily disable CSS conflicts that interfere with animation
-  const html = document.documentElement;
-  const body = document.body;
-  
-  // Store original CSS values
-  originalListeners.htmlScrollBehavior = html.style.scrollBehavior;
-  originalListeners.bodyScrollBehavior = body.style.scrollBehavior;
-  originalListeners.bodyOverscrollBehavior = body.style.overscrollBehavior;
-  originalListeners.bodyTouchAction = body.style.touchAction;
-  
-  // Set optimal CSS values for animation
-  html.style.setProperty('scroll-behavior', 'auto', 'important');
-  body.style.setProperty('scroll-behavior', 'auto', 'important');
-  
-  // CRITICAL: Fix the CSS conflicts detected  
-  body.style.setProperty('touch-action', 'pan-y', 'important'); // Restrict to vertical scrolling only
-  
-  console.log('🔒 CSS conflicts fixed:', {
-    'touch-action': 'pan-y (restricts to vertical scrolling)',
-    'scroll-behavior': 'auto (prevents CSS smooth scrolling conflicts)'
-  });
-  
-  console.log('🔒 Conflicting listeners disabled');
-}
-
-function restoreConflictingListeners() {
-  if (!isMobileDevice()) return;
-  
-  console.log('🔓 Restoring conflicting listeners after animation...');
-  
-  // Restore original event handlers and CSS properties
-  Object.keys(originalListeners).forEach(eventType => {
-    if (eventType.includes('ScrollBehavior')) {
-      // Handle scroll-behavior CSS properties
-      const element = eventType.includes('html') ? document.documentElement : document.body;
-      if (originalListeners[eventType]) {
-        element.style.scrollBehavior = originalListeners[eventType];
-      } else {
-        element.style.removeProperty('scroll-behavior');
-      }
-    } else if (eventType === 'bodyOverscrollBehavior') {
-      // Handle overscroll-behavior CSS property
-      if (originalListeners[eventType]) {
-        document.body.style.overscrollBehavior = originalListeners[eventType];
-      } else {
-        document.body.style.removeProperty('overscroll-behavior');
-      }
-    } else if (eventType === 'bodyTouchAction') {
-      // Handle touch-action CSS property
-      if (originalListeners[eventType]) {
-        document.body.style.touchAction = originalListeners[eventType];
-      } else {
-        document.body.style.removeProperty('touch-action');
-      }
-    } else {
-      // Handle event listeners
-      if (originalListeners[eventType]) {
-        document[`on${eventType}`] = originalListeners[eventType];
-      }
-    }
-  });
-  
-  console.log('🔓 CSS properties restored:', {
-    'touch-action': 'restored to original value',
-    'scroll-behavior': 'restored to original value'
-  });
-  
-  // Clear the stored listeners
-  originalListeners = {};
-  
-  console.log('🔓 Conflicting listeners restored');
-}
-
 function reinitializeScrollAnimations() {
   if (!isHomepage()) return;
-  
+
   console.log('🔧 Reinitializing scroll animations...');
-  
+
   if (typeof initializeScrollAnimationTrigger === 'function') {
     initializeScrollAnimationTrigger();
   }
-  
+
   if (typeof initializeScrollZoomAnimationTrigger === 'function') {
     initializeScrollZoomAnimationTrigger();
   }
-  
+
   const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
   offscreenElements.forEach(element => {
     if (element.getBoundingClientRect().top < window.innerHeight) {
@@ -851,13 +193,13 @@ function reinitializeScrollAnimations() {
 
 function applyUltimateScrollFix() {
   if (!isHomepage()) return;
-  
+
   console.log('🔧 Applying ultimate scroll fix...');
-  
+
   const allTriggers = document.querySelectorAll('.scroll-trigger');
   allTriggers.forEach(function(el) {
     const rect = el.getBoundingClientRect();
-    
+
     if (rect.top < window.innerHeight * 0.25) {
       el.classList.remove('scroll-trigger--offscreen');
       el.style.opacity = '1';
@@ -867,10 +209,10 @@ function applyUltimateScrollFix() {
       el.style.opacity = '0';
       el.style.transform = 'translateY(30px)';
     }
-    
+
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
   });
-  
+
   const scrollHandler = function() {
     const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
     offscreenElements.forEach(function(el) {
@@ -882,7 +224,7 @@ function applyUltimateScrollFix() {
       }
     });
   };
-  
+
   window.addEventListener('scroll', scrollHandler, { passive: true });
 }
 
@@ -895,7 +237,7 @@ function initializeCustomEasing() {
     $.easing.easeInOutCubic = function(x) {
       return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
     };
-    
+
     console.log('✅ Custom easing functions registered:', Object.keys($.easing));
   } else {
     console.log('⚠️ jQuery or jQuery.easing not available for custom easing');
@@ -917,16 +259,7 @@ function waitForJQuery(callback) {
   }
 }
 
-// ===============================================
-// DOT NAVIGATION SYSTEM - FUNCTIONAL ELEGANT RIGHT-SIDE
-// ===============================================
-function createDotNavigation() {
-  // MOBILE REMOVAL: Skip dot navigation on mobile devices
-  if (isMobileDevice()) {
-    console.log('📱 Mobile device detected - skipping dot navigation creation');
-    return;
-  }
-  console.log('🎯 Creating functional elegant dot navigation...');
+  console.log('🎯 Creating dot navigation...');
   
   // Force remove any existing containers first
   const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
@@ -1164,12 +497,7 @@ function updateDotNavigation() {
 }
 
 function goToSection(sectionIndex) {
-  // MOBILE REMOVAL: Block section navigation on mobile devices
-  if (isMobileDevice()) {
-    console.log('📱 Mobile device detected - section navigation disabled');
-    return;
-  }
-  console.log('🔥 NEW GOTOSECTION VERSION 2024-07-10-FIXED CALLED for section:', sectionIndex);
+  console.log('🔥 goToSection CALLED for section:', sectionIndex);
   console.log('🔍 Pre-check: inScroll =', scrollSystem.inScroll, 'should be false to proceed');
 
   // BUGFIX: Add transition lock check to prevent navigation during section visibility changes
@@ -1231,9 +559,6 @@ function goToSection(sectionIndex) {
   touchEventsDuringAnimation = [];
   conflictingEvents = [];
   
-  // Disable conflicting listeners during animation (mobile only)
-  disableConflictingListeners();
-  
   // CRITICAL: Global timeout fallback to prevent inScroll getting stuck
   clearTimeout(globalAnimationTimeout);
   globalAnimationTimeout = setTimeout(() => {
@@ -1245,10 +570,9 @@ function goToSection(sectionIndex) {
     // SECTION LOCKING: Reset swipe progress on timeout too
     isSwipeInProgress = false;
     console.log('🔓 Section unlocked after global timeout');
-    
+
     animationStartTime = 0;
     animationTarget = null;
-    restoreConflictingListeners();
   }, scrollSystem.durationOneScroll + 2000); // 2 second buffer
   
   updateDotNavigation();
@@ -1260,8 +584,8 @@ function goToSection(sectionIndex) {
   const startScroll = window.pageYOffset;
   const targetScroll = scrollSystem.arrSections[sectionIndex];
   
-  // Use the same reliable jQuery animation system for both desktop and mobile
-  console.log('🎯 Using UNIFIED JQUERY animation for', IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP');
+  // Desktop jQuery animation system
+  console.log('🎯 Using jQuery animation for DESKTOP');
   
   // ENHANCED: Safe easing with fallback
   let safeEasing = scrollSystem.easingFunction;
@@ -1277,8 +601,7 @@ function goToSection(sectionIndex) {
     duration: scrollSystem.durationOneScroll,
     easing: safeEasing, // ENHANCED: Safe easing with fallback
     progress: function(animation, progress, remainingMs) {
-      const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
-      console.log(`📈 ${deviceType} Animation progress:`, {
+      console.log(`📈 DESKTOP Animation progress:`, {
         progress: Math.round(progress * 100) + '%',
         currentScroll: window.pageYOffset,
         targetScroll: targetScroll,
@@ -1290,8 +613,7 @@ function goToSection(sectionIndex) {
     complete: function() {
       const endTime = Date.now();
       const finalScroll = window.pageYOffset;
-      const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
-      
+
       console.log('🟢 SETTING inScroll = false in jQuery complete');
       scrollSystem.inScroll = false;
       console.log('🟢 inScroll flag after jQuery completion:', scrollSystem.inScroll);
@@ -1310,7 +632,7 @@ function goToSection(sectionIndex) {
         console.log('✅ User interaction timeout cleared - auto-updates re-enabled');
       }, animationCompletionDelay);
       
-      console.log(`✅ ✅ ${deviceType} Animation COMPLETE:`, {
+      console.log(`✅ ✅ DESKTOP Animation COMPLETE:`, {
         section: sectionIndex,
         duration: endTime - startTime + 'ms',
         startScroll: startScroll,
@@ -1334,13 +656,9 @@ function goToSection(sectionIndex) {
       // Reset animation tracking
       animationStartTime = 0;
       animationTarget = null;
-      
-      // Restore conflicting listeners
-      restoreConflictingListeners();
     },
     fail: function() {
-      const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
-      console.log(`❌ ❌ ${deviceType} Animation FAILED:`, {
+      console.log(`❌ ❌ DESKTOP Animation FAILED:`, {
         section: sectionIndex,
         currentScroll: window.pageYOffset,
         targetScroll: targetScroll,
@@ -1369,9 +687,6 @@ function goToSection(sectionIndex) {
       // Reset animation tracking
       animationStartTime = 0;
       animationTarget = null;
-      
-      // Restore conflicting listeners
-      restoreConflictingListeners();
     }
   });
 }
@@ -1476,78 +791,35 @@ function updateCurrentSectionFromScrollPosition() {
     return;
   }
   
-  // IMPROVED: Use viewport-aware detection for both mobile and desktop
+  // DESKTOP: Use viewport-aware detection
   const viewportHeight = window.innerHeight;
-  
-  if (isMobileDevice()) {
-    // INITIAL LOAD FIX: If we're at the very top (within 50px), always use section 0
-    if (currentScrollPos < 50) {
-      closestSection = 0;
-      console.log('📱 Mobile: At page top, using section 0');
-    } else {
-      const viewportHeight = window.innerHeight;
-      const scrollTop = currentScrollPos;
-      const scrollBottom = currentScrollPos + viewportHeight;
-      
-      // Find section that has the most overlap with the current viewport
-      let bestOverlap = 0;
-      let bestSection = 0;
-      
-      for (let i = 0; i < scrollSystem.arrSections.length; i++) {
-        const sectionStart = scrollSystem.arrSections[i];
-        const sectionEnd = i < scrollSystem.arrSections.length - 1 
-          ? scrollSystem.arrSections[i + 1] 
-          : sectionStart + viewportHeight * 2; // Give last section more space
-        
-        // Calculate overlap between viewport and section
-        const overlapStart = Math.max(scrollTop, sectionStart);
-        const overlapEnd = Math.min(scrollBottom, sectionEnd);
-        const overlap = Math.max(0, overlapEnd - overlapStart);
-        
-        if (overlap > bestOverlap) {
-          bestOverlap = overlap;
-          bestSection = i;
-        }
-      }
-      
-      closestSection = bestSection;
-      console.log('📱 Mobile section detection:', {
-        currentScrollPos,
-        viewportHeight,
-        detectedSection: closestSection,
-        overlap: bestOverlap,
-        sectionTop: scrollSystem.arrSections[closestSection]
-      });
-    }
+
+  if (currentScrollPos < 50) {
+    closestSection = 0;
+    console.log('🖥️ Desktop: At page top, using section 0');
   } else {
-    // DESKTOP: Use improved viewport-aware detection (less bias toward early sections)
-    if (currentScrollPos < 50) {
-      closestSection = 0;
-      console.log('🖥️ Desktop: At page top, using section 0');
-    } else {
-      // Use viewport center point for more accurate detection
-      const viewportCenter = currentScrollPos + (viewportHeight / 2);
-      let bestDistance = Infinity;
-      
-      for (let i = 0; i < scrollSystem.arrSections.length; i++) {
-        const sectionStart = scrollSystem.arrSections[i];
-        // Calculate distance from viewport center to section start
-        const distance = Math.abs(viewportCenter - sectionStart);
-        
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          closestSection = i;
-        }
+    // Use viewport center point for more accurate detection
+    const viewportCenter = currentScrollPos + (viewportHeight / 2);
+    let bestDistance = Infinity;
+
+    for (let i = 0; i < scrollSystem.arrSections.length; i++) {
+      const sectionStart = scrollSystem.arrSections[i];
+      // Calculate distance from viewport center to section start
+      const distance = Math.abs(viewportCenter - sectionStart);
+
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        closestSection = i;
       }
-      
-      console.log('🖥️ Desktop section detection:', {
-        currentScrollPos,
-        viewportCenter,
-        detectedSection: closestSection,
-        distance: bestDistance,
-        sectionTop: scrollSystem.arrSections[closestSection]
-      });
     }
+
+    console.log('🖥️ Desktop section detection:', {
+      currentScrollPos,
+      viewportCenter,
+      detectedSection: closestSection,
+      distance: bestDistance,
+      sectionTop: scrollSystem.arrSections[closestSection]
+    });
   }
   
   const oldSection = scrollSystem.currentSection;
@@ -1582,36 +854,29 @@ function initializeScrollSystem() {
     console.log('❌ Not on homepage - scroll system disabled');
     return;
   }
-  
-  // MOBILE REMOVAL: Completely disable scroll system on mobile
-  if (isMobileDevice()) {
-    console.log('📱 Mobile device detected - scroll system disabled');
-    return;
-  }
-  
-  console.log('🖥️ Desktop device detected - enabling desktop section scrolling');
-  // Desktop optimizations - Allow normal scrolling  
+
+  console.log('🖥️ Desktop - enabling section scrolling');
+  // Desktop optimizations - Allow normal scrolling
   document.body.style.overscrollBehavior = 'auto';
   document.body.style.touchAction = 'auto';
-  
-  console.log('🚀 Initializing scroll system for desktop...');
-  
+
+  console.log('🚀 Initializing scroll system...');
+
   scrollSystem.$sections = $('section');
   console.log('🔍 Found sections:', scrollSystem.$sections.length);
-  
+
   calculateSectionPositions();
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
-  
-  // FIXED: Enable for mobile even with fewer sections, but stricter for desktop
-  const minSectionsRequired = IS_MOBILE_DEVICE ? 2 : 4;
+
+  // Desktop requires minimum 4 sections
+  const minSectionsRequired = 4;
   scrollSystem.isEnabled = scrollSystem.arrSections.length > minSectionsRequired;
   scrollSystem.initialized = true;
-  
+
   console.log('📊 Section analysis:', {
     sectionsFound: scrollSystem.arrSections.length,
     minRequired: minSectionsRequired,
-    isEnabled: scrollSystem.isEnabled,
-    isMobile: IS_MOBILE_DEVICE
+    isEnabled: scrollSystem.isEnabled
   });
   
   if (scrollSystem.isEnabled) {
@@ -1619,36 +884,14 @@ function initializeScrollSystem() {
     createDotNavigation();
     bindScrollEvents();
     updateDotNavigation();
-    
-    // ENHANCED MOBILE TOUCH SUPPORT
-    const isMobile = IS_MOBILE_DEVICE;
-    console.log('📱 Device type:', isMobile ? 'Mobile' : 'Desktop', 'iOS:', isIOS());
-    
-    if (isMobile) {
-      // Mobile: Natural scrolling only, no section forcing
-      console.log('📱 Mobile: Using natural scrolling + dot navigation (no touch event binding)');
-      
-      // Mobile visual feedback for dot navigation
-      setTimeout(() => {
-        if (scrollSystem.dotNavigation) {
-          scrollSystem.dotNavigation.style.opacity = '0.8';
-          setTimeout(() => {
-            if (scrollSystem.dotNavigation) {
-              scrollSystem.dotNavigation.style.opacity = '0.6';
-            }
-          }, 2000);
-        }
-      }, 1000);
-      
-    } else {
-      // Desktop touch support (for touch laptops)
-      const touchOptions = { passive: false, capture: true };
-      document.addEventListener('touchstart', handleTouchStart, touchOptions);
-      document.addEventListener('touchmove', handleTouchMove, touchOptions);
-      document.addEventListener('touchend', handleTouchEnd, touchOptions);
-      
-      console.log('📱 Desktop touch support enabled');
-    }
+
+    // Desktop touch support (for touch-enabled laptops)
+    const touchOptions = { passive: false, capture: true };
+    document.addEventListener('touchstart', handleTouchStart, touchOptions);
+    document.addEventListener('touchmove', handleTouchMove, touchOptions);
+    document.addEventListener('touchend', handleTouchEnd, touchOptions);
+
+    console.log('✅ Desktop touch support enabled');
     
   } else {
     console.log('❌ Scroll system disabled - not enough sections');
@@ -1747,18 +990,15 @@ function resetScrollSystem() {
 // FEATURE INITIALIZATION
 // ===============================================
 function initializeAllFeatures() {
-  console.log('📱 Initializing all features...');
-  
+  console.log('🖥️ Initializing features...');
+
   if (!isHomepage()) {
     console.log('❌ Not on homepage - skipping scroll features');
     return;
   }
-  
+
   setTimeout(initializeScrollSystem, 500);
   setTimeout(applyUltimateScrollFix, 600);
-  setTimeout(addMobileConflictDetection, 700);
-  setTimeout(testMobileScrollCapabilities, 800);
-  setTimeout(startInScrollWatchdog, 900);
   
   $(".changeSection").click(function(){
     // BUGFIX: Prevent navigation during section transitions
@@ -1856,18 +1096,13 @@ function initializeAllFeatures() {
    $(window).on('scroll.dotNavigation', function() {
      if (!scrollSystem.initialized) return;
 
-     // MOBILE REMOVAL: Skip all scroll handling on mobile
-     if (isMobileDevice()) {
-       return;
-     }
-
      // BUGFIX: Block scroll handler during section transitions to prevent race conditions
      if (scrollSystem.isTransitioning) {
        console.log('🚫 Scroll handler blocked - section transition in progress');
        return;
      }
 
-     // DESKTOP ONLY: Keep existing logic with animation checks
+     // Keep existing logic with animation checks
      if (!scrollSystem.inScroll) {
        updateCurrentSectionFromScrollPosition();
      }
@@ -1953,17 +1188,13 @@ window.applyUltimateScrollFix = applyUltimateScrollFix;
 // ===============================================
 waitForJQuery(function() {
   // IMMEDIATE initialization - don't wait for DOM ready
-  console.log('📱 jQuery ready - IMMEDIATE initialization');
-  
+  console.log('🖥️ jQuery ready - IMMEDIATE initialization');
+
   // Initialize scroll system immediately if homepage
   if (isHomepage()) {
     console.log('🏠 Homepage detected - initializing scroll system NOW');
     setTimeout(initializeScrollSystem, 50); // Very short delay
     setTimeout(initializeScrollToTopButton, 100);
-    setTimeout(initializeOverscrollProtection, 120); // ENHANCED: Add overscroll protection
-    setTimeout(addMobileConflictDetection, 150);
-    setTimeout(testMobileScrollCapabilities, 200);
-    setTimeout(startInScrollWatchdog, 250);
   }
   
   $(document).ready(function() {
