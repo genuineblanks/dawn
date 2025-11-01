@@ -1465,7 +1465,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update active filter tab
   function updateActiveFilterTab(slideIndex) {
     const category = categoryMap[slideIndex]?.filter || 'factory';
-    currentFilter = category;
     
     section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(tab => {
       tab.classList.remove('active');
@@ -1526,9 +1525,13 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateSubcategoryFromSlide(slideIndex) {
     const slideData = categoryMap[slideIndex];
     if (slideData) {
+      const newCategory = slideData.filter;
+      console.log('Slide category:', newCategory, 'Current category:', currentFilter);
+      
       // Check if category changed
-      if (slideData.filter !== currentFilter) {
-        currentFilter = slideData.filter;
+      if (newCategory !== currentFilter) {
+        console.log('Category changed from', currentFilter, 'to', newCategory);
+        currentFilter = newCategory;
         updateActiveFilterTab(slideIndex);
         // Rebuild submenu for new category
         buildSubmenu();
@@ -1539,7 +1542,9 @@ document.addEventListener('DOMContentLoaded', function() {
       if (slideSubcategory && slideSubcategory !== 'General') {
         currentSubcategory = slideSubcategory;
       } else {
-        currentSubcategory = 'all';
+        // Use first subcategory if available
+        const subcategories = Array.from(subcategoriesMap[currentFilter] || []);
+        currentSubcategory = subcategories.length > 0 ? subcategories[0] : 'all';
       }
       updateActiveSubmenuTab();
     }
