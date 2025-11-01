@@ -145,33 +145,80 @@
             "video_controls": true
           }
         },
-        "item_6xbdbt": {
+        "item_rGjhm8": {
           "type": "item",
           "settings": {
-            "collection_type": "team",
-            "subcategory": "General",
-            "product_name": "Meet our team",
+            "collection_type": "factory",
+            "subcategory": "Production",
+            "product_name": "Factory Overview",
             "product_description": "",
             "details": "",
+            "image_1": "shopify://shop_images/DSC07384_copiar.jpg",
+            "image_2": "shopify://shop_images/DSC07393_copiar.jpg",
+            "image_3": "shopify://shop_images/FACTORY2.jpg",
+            "image_4": "shopify://shop_images/FACTORY1.jpg",
+            "video_1": "shopify://files/videos/PRINCIPAL V2.mp4",
             "video_autoplay": true,
             "video_muted": true,
             "video_loop": true,
             "video_controls": true
           }
         },
-        "item_rGjhm8": {
+        "item_RhbXRA": {
           "type": "item",
           "settings": {
             "collection_type": "factory",
-            "subcategory": "General",
-            "product_name": "Manufacturing Facility",
+            "subcategory": "Creative & Operations",
+            "product_name": "Factory Overview",
             "product_description": "",
             "details": "",
-            "image_1": "shopify://shop_images/DSC07384_copiar.jpg",
-            "image_2": "shopify://shop_images/DSC07393_copiar.jpg",
+            "image_1": "shopify://shop_images/DSC09644_copiar.jpg",
+            "image_2": "shopify://shop_images/DSC09646_copiar.jpg",
             "image_3": "shopify://shop_images/DSC09640_copiar.jpg",
             "image_4": "shopify://shop_images/DSC09628_copiar.jpg",
             "video_1": "shopify://files/videos/PRINCIPAL V2.mp4",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        "item_6xbdbt": {
+          "type": "item",
+          "settings": {
+            "collection_type": "team",
+            "subcategory": "Embroidery",
+            "product_name": "Design Techniques",
+            "product_description": "",
+            "details": "",
+            "image_1": "shopify://shop_images/BORDADOS_2.jpg",
+            "image_2": "shopify://shop_images/BORDADOS_1.jpg",
+            "image_3": "shopify://shop_images/BORDADOS_3.jpg",
+            "image_4": "shopify://shop_images/BORDADOS_4.jpg",
+            "image_5": "shopify://shop_images/BORDADOS_5.jpg",
+            "image_6": "shopify://shop_images/BORDADOS_6.jpg",
+            "image_7": "shopify://shop_images/BORDADOS_7.jpg",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        "item_zhBEr7": {
+          "type": "item",
+          "settings": {
+            "collection_type": "team",
+            "subcategory": "Screen Print",
+            "product_name": "Design Techniques",
+            "product_description": "",
+            "details": "",
+            "image_1": "shopify://shop_images/SCREENPRINT_1.jpg",
+            "image_2": "shopify://shop_images/SCREENPRINT_0.jpg",
+            "image_3": "shopify://shop_images/SCREENPRINT_2.jpg",
+            "image_4": "shopify://shop_images/SCREENPRINT_3.jpg",
+            "image_5": "shopify://shop_images/SCREENPRINT_4.jpg",
+            "image_6": "shopify://shop_images/SCREENPRINT_5.jpg",
+            "image_7": "shopify://shop_images/SCREENPRINT_6.jpg",
             "video_autoplay": true,
             "video_muted": true,
             "video_loop": true,
@@ -187,8 +234,10 @@
         "item_RxamQt",
         "item_b6GUHY",
         "item_bChPDi",
+        "item_rGjhm8",
+        "item_RhbXRA",
         "item_6xbdbt",
-        "item_rGjhm8"
+        "item_zhBEr7"
       ],
       "settings": {
         "item_title_size": 2.2,
