@@ -57,6 +57,7 @@ function isHomepage() {
 let scrollSystem = {
   $sections: null,
   inScroll: false,
+  isTransitioning: false, // BUGFIX: Prevents navigation during section visibility changes
   durationOneScroll: 800, // ENHANCED: Increased for smoother animation
   currentSection: 0,
   arrSections: [],
@@ -975,20 +976,32 @@ function createDotNavigation() {
   console.log('🎨 Container parent:', dotContainer.parentElement);
   console.log('👁️ Container visible:', dotContainer.offsetWidth > 0 && dotContainer.offsetHeight > 0);
   
-  // Filter out duplicate positions and create clean section array
+  // BUGFIX: Improved deduplication - only remove if positions are within 5px (floating point tolerance)
+  // This prevents legitimate sections at similar but different positions from being merged
   const cleanSections = [];
-  const usedPositions = new Set();
-  
+  const positionTolerance = 5; // pixels
+
   scrollSystem.arrSections.forEach((pos, index) => {
-    if (!usedPositions.has(pos) || cleanSections.length === 0) {
+    // Check if this position is truly duplicate (within tolerance)
+    const isDuplicate = cleanSections.some(existingPos =>
+      Math.abs(existingPos - pos) < positionTolerance
+    );
+
+    if (!isDuplicate || cleanSections.length === 0) {
       cleanSections.push(pos);
-      usedPositions.add(pos);
+      console.log(`✅ Section ${index} at ${pos}px added to navigation`);
+    } else {
+      console.log(`⚠️ Section ${index} at ${pos}px skipped (duplicate within ${positionTolerance}px)`);
     }
   });
-  
-  // Update the clean sections array
-  scrollSystem.arrSections = cleanSections;
-  console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
+
+  // BUGFIX: Only update if we actually found duplicates, otherwise preserve original
+  if (cleanSections.length !== scrollSystem.arrSections.length) {
+    console.log('🎯 Deduplication: Reduced from', scrollSystem.arrSections.length, 'to', cleanSections.length, 'sections');
+    scrollSystem.arrSections = cleanSections;
+  } else {
+    console.log('🎯 No duplicates found - keeping all', scrollSystem.arrSections.length, 'sections');
+  }
   
   // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
@@ -1158,7 +1171,31 @@ function goToSection(sectionIndex) {
   }
   console.log('🔥 NEW GOTOSECTION VERSION 2024-07-10-FIXED CALLED for section:', sectionIndex);
   console.log('🔍 Pre-check: inScroll =', scrollSystem.inScroll, 'should be false to proceed');
-  
+
+  // BUGFIX: Add transition lock check to prevent navigation during section visibility changes
+  if (scrollSystem.isTransitioning) {
+    console.log('🚫 goToSection blocked - section transition in progress');
+    return;
+  }
+
+  // BUGFIX: Enhanced validation - clamp section index to valid range
+  const validSectionIndex = Math.max(0, Math.min(sectionIndex, scrollSystem.arrSections.length - 1));
+  if (validSectionIndex !== sectionIndex) {
+    console.log('⚠️ Section index clamped from', sectionIndex, 'to', validSectionIndex);
+    sectionIndex = validSectionIndex;
+  }
+
+  // BUGFIX: Validate that target section position exists and is valid
+  if (!scrollSystem.arrSections || scrollSystem.arrSections.length === 0) {
+    console.log('🚫 goToSection blocked - no sections available');
+    return;
+  }
+
+  if (typeof scrollSystem.arrSections[sectionIndex] !== 'number' || isNaN(scrollSystem.arrSections[sectionIndex])) {
+    console.log('🚫 goToSection blocked - invalid section position at index', sectionIndex);
+    return;
+  }
+
   if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) {
     console.log('🚫 goToSection blocked:', {
       inScroll: scrollSystem.inScroll,
@@ -1168,7 +1205,7 @@ function goToSection(sectionIndex) {
     });
     return;
   }
-  
+
   console.log('✅ goToSection proceeding - all checks passed');
   
   console.log('🎯 🚀 STARTING goToSection:', {
@@ -1344,23 +1381,26 @@ function goToSection(sectionIndex) {
 // ===============================================
 function calculateSectionPositions() {
   if (!scrollSystem.$sections || scrollSystem.$sections.length === 0 || !isHomepage()) return;
-  
+
   const oldPositions = [...scrollSystem.arrSections];
-  
-  // ENHANCED: Better mobile section position calculation
+
+  // BUGFIX: Use getBoundingClientRect() for more reliable position calculation during DOM changes
   scrollSystem.arrSections = scrollSystem.$sections.map(function(index) {
-    const section = $(this);
-    let sectionTop = section.offset().top;
-    
-    // MOBILE: Use natural section positions (no artificial snapping)
-    console.log(`✅ Section ${index} uses natural position:`, sectionTop);
-    
-    return sectionTop;
+    const section = this;
+    const currentScroll = window.pageYOffset;
+
+    // BUGFIX: getBoundingClientRect() is more reliable during DOM mutations than offset().top
+    const rect = section.getBoundingClientRect();
+    const sectionTop = rect.top + currentScroll;
+
+    console.log(`✅ Section ${index} position (getBoundingClientRect):`, sectionTop);
+
+    return Math.round(sectionTop); // Round to avoid floating point issues
   }).get();
-  
-  console.log('📍 Enhanced section positions (Android optimized):', scrollSystem.arrSections);
+
+  console.log('📍 Enhanced section positions (getBoundingClientRect optimized):', scrollSystem.arrSections);
   updateCurrentSectionFromScrollPosition();
-  
+
   return oldPositions;
 }
 
@@ -1408,13 +1448,19 @@ function updateMobileSectionDetection() {
 
 function updateCurrentSectionFromScrollPosition() {
   if (!isHomepage()) return;
-  
+
+  // BUGFIX: Don't update section during section transitions - prevents race conditions
+  if (scrollSystem.isTransitioning) {
+    console.log('🚫 Section detection skipped during transition - preventing stale data usage');
+    return;
+  }
+
   // CRITICAL FIX: Don't update section during animations on ANY device - prevents interference with dot clicks
   if (scrollSystem.inScroll) {
     console.log('🚫 Section detection skipped during animation - preserving user navigation target');
     return;
   }
-  
+
   // USER INTERACTION PRIORITY: Don't auto-update during user interactions
   if (userInteractionActive) {
     console.log('🚫 Section detection skipped during user interaction - preserving user choice');
@@ -1715,6 +1761,15 @@ function initializeAllFeatures() {
   setTimeout(startInScrollWatchdog, 900);
   
   $(".changeSection").click(function(){
+    // BUGFIX: Prevent navigation during section transitions
+    if (scrollSystem.isTransitioning) {
+      console.log('🚫 Section change blocked - transition in progress');
+      return;
+    }
+
+    console.log('🔄 Section change initiated - setting transition lock');
+    scrollSystem.isTransitioning = true;
+
     var parentSectionClass = $(this).closest("section").attr("class");
     if (parentSectionClass && parentSectionClass.includes('luxury-collection')) {
        $('.high-end-collection').show();
@@ -1723,12 +1778,17 @@ function initializeAllFeatures() {
       $('.high-end-collection').hide();
        $('.luxury-collection').show();
     }
-    
+
+    // BUGFIX: Increased delay from 150ms to 400ms for proper CSS transition completion
     setTimeout(function() {
       calculateSectionPositions();
       createDotNavigation();
       updateDotNavigation();
-    }, 150);
+
+      // BUGFIX: Clear transition lock after recalculation completes
+      scrollSystem.isTransitioning = false;
+      console.log('✅ Section transition complete - lock released');
+    }, 400);
   });
 
   $(".click-to-scroll a").on('click', function(event) {
@@ -1795,12 +1855,18 @@ function initializeAllFeatures() {
    
    $(window).on('scroll.dotNavigation', function() {
      if (!scrollSystem.initialized) return;
-     
+
      // MOBILE REMOVAL: Skip all scroll handling on mobile
      if (isMobileDevice()) {
        return;
      }
-     
+
+     // BUGFIX: Block scroll handler during section transitions to prevent race conditions
+     if (scrollSystem.isTransitioning) {
+       console.log('🚫 Scroll handler blocked - section transition in progress');
+       return;
+     }
+
      // DESKTOP ONLY: Keep existing logic with animation checks
      if (!scrollSystem.inScroll) {
        updateCurrentSectionFromScrollPosition();
