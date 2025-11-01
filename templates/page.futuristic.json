@@ -224,6 +224,23 @@
             "video_loop": true,
             "video_controls": true
           }
+        },
+        "item_argGAd": {
+          "type": "item",
+          "settings": {
+            "collection_type": "team",
+            "subcategory": "Digital Print",
+            "product_name": "Design Techniques",
+            "product_description": "",
+            "details": "",
+            "image_1": "shopify://shop_images/DIGITAL_PRINT_1.jpg",
+            "image_2": "shopify://shop_images/DIGITAL_PRINT_2.jpg",
+            "image_3": "shopify://shop_images/DIGITAL_PRINT_3.jpg",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
         }
       },
       "block_order": [
@@ -237,7 +254,8 @@
         "item_rGjhm8",
         "item_RhbXRA",
         "item_6xbdbt",
-        "item_zhBEr7"
+        "item_zhBEr7",
+        "item_argGAd"
       ],
       "settings": {
         "item_title_size": 2.2,
