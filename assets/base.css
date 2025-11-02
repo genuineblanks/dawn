@@ -9,6 +9,11 @@ html, body {
   box-sizing: border-box;
 }
 
+/* Base font-size for consistent rem calculations (1rem = 10px) */
+html {
+  font-size: 62.5%;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
