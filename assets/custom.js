@@ -5,7 +5,6 @@
 (function() {
   'use strict';
   
-  console.log('🚀 Enhanced Scroll System Loading... VERSION 2024-07-10-FIXED');
 
 // ===============================================
 // MOBILE DETECTION - DESKTOP-ONLY SCROLL SYSTEM
@@ -24,13 +23,6 @@ function isMobileDevice() {
 
   const isMobile = mobileRegex.test(userAgent) || isMobileWidth || isTouchOnly;
 
-  console.log('📱 Mobile detection:', {
-    userAgent: mobileRegex.test(userAgent),
-    width: isMobileWidth,
-    touchOnly: isTouchOnly,
-    result: isMobile
-  });
-
   return isMobile;
 }
 
@@ -43,7 +35,6 @@ const IS_HOMEPAGE = document.body.classList.contains('home-section') ||
 
 const IS_MOBILE = isMobileDevice();
 
-console.log('🖥️ Desktop Scroll System - Homepage:', IS_HOMEPAGE, 'Mobile:', IS_MOBILE);
 
 // ===============================================
 // DESKTOP ONLY - HOMEPAGE DETECTION UTILITY
@@ -60,7 +51,6 @@ function isHomepage() {
                      window.location.pathname.endsWith('/index');
   
   const result = bodyHasHomeClass || templateIsIndex || isRootPath;
-  console.log('🏠 Homepage check:', result);
   return result;
 }
 
@@ -97,6 +87,9 @@ let scrollSnapTimeout = null;
 let lastScrollPosition = 0;
 let isAutoSnapping = false;
 
+// WHEEL HANDLER REFERENCE - Store for proper cleanup
+let wheelHandlerReference = null;
+
 // ===============================================
 // DESKTOP TOUCH SUPPORT (for touch-enabled laptops)
 // ===============================================
@@ -110,7 +103,8 @@ let hasMoved = false;
 let touchTarget = null;
 
 function handleTouchStart(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  // BUGFIX: Only for desktop touchscreens (laptops), not mobile devices
+  if (isMobileDevice() || !isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
 
   const touch = e.touches[0];
   touchStartY = touch.clientY;
@@ -122,7 +116,8 @@ function handleTouchStart(e) {
 }
 
 function handleTouchMove(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  // BUGFIX: Only for desktop touchscreens (laptops), not mobile devices
+  if (isMobileDevice() || !isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
 
   // If touching dot navigation, let it handle everything
   if (touchTarget && (
@@ -142,7 +137,8 @@ function handleTouchMove(e) {
 }
 
 function handleTouchEnd(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  // BUGFIX: Only for desktop touchscreens (laptops), not mobile devices
+  if (isMobileDevice() || !isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
 
   // If touching dot navigation, let it handle everything
   if (touchTarget && (
@@ -178,10 +174,8 @@ function handleTouchEnd(e) {
 
     if (verticalDistance > swipeThreshold) {
       targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-      console.log('🖥️ Desktop swipe up - Going to section:', targetSection);
     } else if (verticalDistance < -swipeThreshold) {
       targetSection = Math.max(scrollSystem.currentSection - 1, 0);
-      console.log('🖥️ Desktop swipe down - Going to section:', targetSection);
     }
 
     if (targetSection !== scrollSystem.currentSection) {
@@ -199,8 +193,6 @@ function handleTouchEnd(e) {
 // ===============================================
 function reinitializeScrollAnimations() {
   if (!isHomepage()) return;
-
-  console.log('🔧 Reinitializing scroll animations...');
 
   if (typeof initializeScrollAnimationTrigger === 'function') {
     initializeScrollAnimationTrigger();
@@ -772,7 +764,9 @@ function bindScrollEvents() {
 
   // RESTORED: Wheel event handler for section-by-section scrolling
   // FIXED: Now determines actual current section from scroll position before incrementing
-  $(document).on('wheel.scrollSystem', function(event) {
+  // BUGFIX: Use native addEventListener with {passive: false} to allow preventDefault()
+  // jQuery's .on() creates passive listeners by default, causing console errors
+  const wheelHandler = function(event) {
     if (isMobileDevice() || !scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
 
     event.preventDefault(); // Prevent default scroll behavior
@@ -830,7 +824,19 @@ function bindScrollEvents() {
         isSwipeInProgress = false;
       }
     });
-  });
+  };
+
+  // Store handler reference for cleanup
+  wheelHandlerReference = wheelHandler;
+
+  // Remove any existing wheel listeners
+  if (wheelHandlerReference) {
+    document.removeEventListener('wheel', wheelHandlerReference);
+  }
+
+  // Add wheel event listener with {passive: false} to allow preventDefault()
+  // This fixes console error: "Unable to preventDefault inside passive event listener"
+  document.addEventListener('wheel', wheelHandler, { passive: false });
 }
 
 // ===============================================
@@ -880,8 +886,14 @@ function resetScrollSystem() {
     scrollSystem.dotNavigation = null;
   }
 
+  // Remove native wheel event listener
+  if (wheelHandlerReference) {
+    document.removeEventListener('wheel', wheelHandlerReference);
+    wheelHandlerReference = null;
+  }
+
   if (typeof $ !== 'undefined') {
-    $(document).off('wheel.scrollSystem');
+    $(document).off('wheel.scrollSystem'); // Backup cleanup for old jQuery listeners
     $(window).off('resize.scrollSystem');
     $(window).off('scroll.dotNavigation');
   }
