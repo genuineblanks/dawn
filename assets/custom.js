@@ -614,15 +614,11 @@ function updateCurrentSectionFromScrollPosition() {
     return;
   }
 
-  // CRITICAL FIX: Don't update section during animations on ANY device - prevents interference with dot clicks
-  if (scrollSystem.inScroll) {
-    return;
-  }
+  // REMOVED: scrollSystem.inScroll check - was preventing accurate section tracking during spam-scroll
+  // Section tracking needs to work continuously for snap system to target correctly
 
-  // USER INTERACTION PRIORITY: Don't auto-update during user interactions
-  if (userInteractionActive) {
-    return;
-  }
+  // REMOVED: userInteractionActive check - was preventing snap from working (timing conflict)
+  // Snap system needs current section data even during/after interactions
   
   const currentScrollPos = window.pageYOffset;
   let closestSection = 0;
@@ -672,8 +668,9 @@ function snapToNearestSection() {
     return;
   }
 
-  // Don't snap if already animating or during user interaction
-  if (scrollSystem.inScroll || isAutoSnapping || userInteractionActive) {
+  // Don't snap if already animating
+  // REMOVED: userInteractionActive check - was blocking snap (500ms delay vs 150ms snap timeout)
+  if (scrollSystem.inScroll || isAutoSnapping) {
     return;
   }
 
@@ -702,9 +699,10 @@ function snapToNearestSection() {
   const targetPosition = scrollSystem.arrSections[closestSection];
   const distanceFromTarget = Math.abs(currentScrollPos - targetPosition);
 
-  // SNAP THRESHOLD: Only snap if we're more than 10% of viewport height away from target
+  // SNAP THRESHOLD: Only snap if we're more than 25% of viewport height away from target
   // This prevents unnecessary snapping when user is already close enough
-  const snapThreshold = viewportHeight * 0.1; // 10% of viewport height
+  // Increased from 10% to 25% for less aggressive/smoother snapping behavior
+  const snapThreshold = viewportHeight * 0.25; // 25% of viewport height
 
   if (distanceFromTarget > snapThreshold) {
     // We're misaligned - snap to the nearest section
@@ -772,35 +770,13 @@ function bindScrollEvents() {
 
   $(document).off('wheel.scrollSystem');
 
-  $(document).on('wheel.scrollSystem', function(event) {
-    if (isMobileDevice() || !scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
-    
-    console.log('🔵 DESKTOP WHEEL setting inScroll = true');
-    scrollSystem.inScroll = true;
-    console.log('🎯 Wheel event - current section:', scrollSystem.currentSection);
-
-    if (event.originalEvent.deltaY > 0) {
-      scrollSystem.currentSection = scrollSystem.currentSection >= scrollSystem.arrSections.length - 1
-        ? scrollSystem.arrSections.length - 1
-        : scrollSystem.currentSection + 1;
-    } else {
-      scrollSystem.currentSection = scrollSystem.currentSection === 0 ? 0 : scrollSystem.currentSection - 1;
-    }
-
-    console.log('📍 Scrolling to section:', scrollSystem.currentSection, 'at position:', scrollSystem.arrSections[scrollSystem.currentSection]);
-
-    updateDotNavigation();
-
-    $('html, body').animate({
-      scrollTop: scrollSystem.arrSections[scrollSystem.currentSection]
-    }, {
-      duration: scrollSystem.durationOneScroll,
-      complete: function() {
-        scrollSystem.inScroll = false;
-        console.log('✅ Scroll complete');
-      }
-    });
-  });
+  // REMOVED: Wheel event handler was causing section skipping during spam-scroll
+  // The wheel handler was:
+  // 1. Incrementing sections incorrectly when page was misaligned (80/20 position)
+  // 2. Blocking native scroll behavior
+  // 3. Creating race conditions with section tracking
+  // 4. Preventing snap system from working
+  // Native scroll + snap system is more reliable
 }
 
 // ===============================================
@@ -808,9 +784,7 @@ function bindScrollEvents() {
 // ===============================================
 function handleWindowResize() {
   if (!isHomepage()) return;
-  
-  console.log('📐 Window resized - recalculating sections...');
-  
+
   if (scrollSystem.resizeTimeout) {
     clearTimeout(scrollSystem.resizeTimeout);
   }
@@ -873,11 +847,9 @@ function initializeAllFeatures() {
   $(".changeSection").click(function(){
     // BUGFIX: Prevent navigation during section transitions
     if (scrollSystem.isTransitioning) {
-      console.log('🚫 Section change blocked - transition in progress');
       return;
     }
 
-    console.log('🔄 Section change initiated - setting transition lock');
     scrollSystem.isTransitioning = true;
 
     var parentSectionClass = $(this).closest("section").attr("class");
