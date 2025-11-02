@@ -8,14 +8,42 @@
   console.log('🚀 Enhanced Scroll System Loading... VERSION 2024-07-10-FIXED');
 
 // ===============================================
+// MOBILE DETECTION - DESKTOP-ONLY SCROLL SYSTEM
+// ===============================================
+function isMobileDevice() {
+  // Check user agent for mobile devices
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+
+  // Check screen width (mobile typically < 768px)
+  const isMobileWidth = window.innerWidth < 768;
+
+  // Check if it's a touch-only device (no mouse)
+  const isTouchOnly = ('ontouchstart' in window || navigator.maxTouchPoints > 0) &&
+                      !window.matchMedia('(pointer: fine)').matches;
+
+  const isMobile = mobileRegex.test(userAgent) || isMobileWidth || isTouchOnly;
+
+  console.log('📱 Mobile detection:', {
+    userAgent: mobileRegex.test(userAgent),
+    width: isMobileWidth,
+    touchOnly: isTouchOnly,
+    result: isMobile
+  });
+
+  return isMobile;
+}
+
+// ===============================================
 // DESKTOP-ONLY SCROLL SYSTEM
 // ===============================================
-// Mobile devices removed - this system is desktop-only
 const IS_HOMEPAGE = document.body.classList.contains('home-section') ||
                     document.body.classList.contains('template-index') ||
                     window.location.pathname === '/';
 
-console.log('🖥️ Desktop Scroll System - Homepage:', IS_HOMEPAGE);
+const IS_MOBILE = isMobileDevice();
+
+console.log('🖥️ Desktop Scroll System - Homepage:', IS_HOMEPAGE, 'Mobile:', IS_MOBILE);
 
 // ===============================================
 // DESKTOP ONLY - HOMEPAGE DETECTION UTILITY
@@ -80,7 +108,7 @@ let hasMoved = false;
 let touchTarget = null;
 
 function handleTouchStart(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  if (isMobileDevice() || !isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
 
   const touch = e.touches[0];
   touchStartY = touch.clientY;
@@ -94,7 +122,7 @@ function handleTouchStart(e) {
 }
 
 function handleTouchMove(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  if (isMobileDevice() || !isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
 
   // If touching dot navigation, let it handle everything
   if (touchTarget && (
@@ -114,7 +142,7 @@ function handleTouchMove(e) {
 }
 
 function handleTouchEnd(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  if (isMobileDevice() || !isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
 
   // If touching dot navigation, let it handle everything
   if (touchTarget && (
@@ -263,8 +291,13 @@ function waitForJQuery(callback) {
 // DOT NAVIGATION SYSTEM - DESKTOP ONLY
 // ===============================================
 function createDotNavigation() {
+  if (isMobileDevice()) {
+    console.log('📱 Mobile device - skipping dot navigation creation');
+    return;
+  }
+
   console.log('🎯 Creating dot navigation...');
-  
+
   // Force remove any existing containers first
   const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
   existingContainers.forEach(container => container.remove());
@@ -528,8 +561,9 @@ function goToSection(sectionIndex) {
     return;
   }
 
-  if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) {
+  if (isMobileDevice() || scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) {
     console.log('🚫 goToSection blocked:', {
+      isMobile: isMobileDevice(),
       inScroll: scrollSystem.inScroll,
       sectionIndex: sectionIndex,
       arrLength: scrollSystem.arrSections.length,
@@ -766,7 +800,7 @@ function updateMobileSectionDetection() {
 }
 
 function updateCurrentSectionFromScrollPosition() {
-  if (!isHomepage()) return;
+  if (isMobileDevice() || !isHomepage()) return;
 
   // BUGFIX: Don't update section during section transitions - prevents race conditions
   if (scrollSystem.isTransitioning) {
@@ -853,7 +887,13 @@ function updateCurrentSectionFromScrollPosition() {
 // ===============================================
 function initializeScrollSystem() {
   if (scrollSystem.initialized) return;
-  
+
+  // CRITICAL: Disable on mobile devices - desktop only
+  if (isMobileDevice()) {
+    console.log('📱 Mobile device detected - scroll system disabled');
+    return;
+  }
+
   if (!isHomepage()) {
     console.log('❌ Not on homepage - scroll system disabled');
     return;
@@ -906,12 +946,12 @@ function initializeScrollSystem() {
 // EVENT BINDING
 // ===============================================
 function bindScrollEvents() {
-  if (!isHomepage()) return;
-  
+  if (isMobileDevice() || !isHomepage()) return;
+
   $(document).off('wheel.scrollSystem');
-  
+
   $(document).on('wheel.scrollSystem', function(event) {
-    if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
+    if (isMobileDevice() || !scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
     
     console.log('🔵 DESKTOP WHEEL setting inScroll = true');
     scrollSystem.inScroll = true;
