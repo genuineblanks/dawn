@@ -211,9 +211,8 @@ body .header__submenu .header__menu-item:hover {
   color: #000000 !important;
 }
 
-/* Fix dropdown display on hover/focus */
-body header-menu details[open] .header__submenu,
-body header-menu details:hover .header__submenu {
+/* Fix dropdown display - only when [open] attribute exists */
+body header-menu details[open] .header__submenu {
   display: block !important;
 }
 
