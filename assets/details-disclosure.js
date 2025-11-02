@@ -62,6 +62,9 @@ class HeaderMenu extends DetailsDisclosure {
   }
 
   onToggle() {
+    // BUGFIX: Call parent's onToggle to enable click-outside functionality
+    super.onToggle();
+
     if (!this.header) return;
     this.header.preventHide = this.mainDetailsToggle.open;
 
