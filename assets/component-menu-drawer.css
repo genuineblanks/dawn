@@ -156,9 +156,9 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .menu-drawer__menu-item {
-  padding: 1.1rem 2rem;
+  padding: 1rem 2rem;
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   transition: all 0.25s ease;
   color: #2c2c2c;
   font-weight: 500;
@@ -383,9 +383,9 @@ details[open].menu-opening > .menu-drawer__submenu {
 
   /* Section Heading */
   .menu-drawer__section-heading {
-    padding: 0.8rem 2rem;
-    margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
+    padding: 0.7rem 2rem;
+    margin: 0 0 0.3rem 0;
+    font-size: 1.1rem;
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -410,9 +410,9 @@ details[open].menu-opening > .menu-drawer__submenu {
   /* Learn More Items - Refined styling */
   .menu-drawer__learn-more-item {
     display: block;
-    padding: 1rem 2rem;
+    padding: 0.9rem 2rem;
     text-decoration: none;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     transition: all 0.25s ease;
     color: #4a4a4a;
     font-weight: 400;
