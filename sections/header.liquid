@@ -583,55 +583,6 @@
   }
 
   customElements.define('sticky-header', StickyHeader);
-
-  // Header Menu - Click Outside to Close Dropdown
-  class HeaderMenu extends HTMLElement {
-    constructor() {
-      super();
-      this.details = this.querySelector('details');
-      this.summary = this.details?.querySelector('summary');
-
-      // Bind handler once and store it
-      this.boundClickOutside = this.handleClickOutside.bind(this);
-
-      if (this.details && this.summary) {
-        this.details.addEventListener('toggle', this.onToggle.bind(this));
-      }
-    }
-
-    onToggle() {
-      if (this.details.hasAttribute('open')) {
-        // Dropdown opened - add click-outside listener after delay
-        setTimeout(() => {
-          document.addEventListener('click', this.boundClickOutside, false);
-        }, 300);
-      } else {
-        // Dropdown closed - remove listener
-        document.removeEventListener('click', this.boundClickOutside, false);
-      }
-    }
-
-    handleClickOutside(event) {
-      // Ignore clicks on the summary button itself
-      if (this.summary && this.summary.contains(event.target)) {
-        return;
-      }
-
-      // Close if click is outside this element
-      if (!this.contains(event.target) && this.details.hasAttribute('open')) {
-        this.close();
-      }
-    }
-
-    close() {
-      this.details.removeAttribute('open');
-      if (this.summary) {
-        this.summary.setAttribute('aria-expanded', 'false');
-      }
-    }
-  }
-
-  customElements.define('header-menu', HeaderMenu);
 {% endjavascript %}
 
 <script type="application/ld+json">
