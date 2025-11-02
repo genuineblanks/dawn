@@ -41,13 +41,13 @@ class DetailsDisclosure extends HTMLElement {
       // BUGFIX: Add click-outside listener when dropdown opens
       // Delay increased to 300ms to ensure opening click completes before listener activates
       setTimeout(() => {
-        document.addEventListener('click', this.boundClickOutside, true);
+        document.addEventListener('click', this.boundClickOutside, false);
       }, 300);
     } else {
       this.animations.forEach((animation) => animation.cancel());
 
       // BUGFIX: Remove click-outside listener when dropdown closes
-      document.removeEventListener('click', this.boundClickOutside, true);
+      document.removeEventListener('click', this.boundClickOutside, false);
     }
   }
 
