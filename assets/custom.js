@@ -750,17 +750,12 @@ function initializeScrollSystem() {
   const isMobile = isMobileDevice();
 
   if (isMobile) {
-    // MOBILE: Normal scroll with dot navigation (no section snapping)
+    // MOBILE: Just normal scroll - no dots, no section snapping
     scrollSystem.isEnabled = false; // Disable section-by-section scrolling
     scrollSystem.initialized = true;
 
-    // Create dots (user wants them visible and clickable on mobile)
-    createDotNavigation();
-
-    // Bind scroll event for dot updates (no wheel/touch handlers)
-    bindMobileScrollEvents();
-
-    updateDotNavigation();
+    // Mobile exits here - clean and simple like normal websites
+    return;
   } else {
     // DESKTOP: Full section-by-section scroll system
     scrollSystem.isEnabled = true;
@@ -862,33 +857,6 @@ function bindScrollEvents() {
   // Add wheel event listener with {passive: false} to allow preventDefault()
   // This fixes console error: "Unable to preventDefault inside passive event listener"
   document.addEventListener('wheel', wheelHandler, { passive: false });
-}
-
-// ===============================================
-// MOBILE SCROLL EVENT BINDING
-// ===============================================
-function bindMobileScrollEvents() {
-  if (!isHomepage()) return;
-
-  // MOBILE: Only bind scroll event for dot navigation updates
-  // No wheel handler, no touch handlers, no snap system
-
-  $(window).on('scroll.dotNavigation', function() {
-    if (!scrollSystem.initialized) return;
-
-    // Don't update during section transitions
-    if (scrollSystem.isTransitioning) {
-      return;
-    }
-
-    // Update dots based on current scroll position
-    updateCurrentSectionFromScrollPosition();
-
-    // NO SNAP SYSTEM on mobile - user wants normal scroll
-  });
-
-  // Bind resize handler for recalculating positions
-  $(window).on('resize.scrollSystem', handleWindowResize);
 }
 
 // ===============================================

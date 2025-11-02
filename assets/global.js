@@ -392,9 +392,7 @@ class MenuDrawer extends HTMLElement {
       if (isOpen) event.preventDefault();
       isOpen ? this.closeMenuDrawer(event, summaryElement) : this.openMenuDrawer(summaryElement);
 
-      if (window.matchMedia('(max-width: 990px)')) {
-        document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
-      }
+      // REMOVED: iOS viewport height workaround - now using standard 100dvh
     } else {
       setTimeout(() => {
         detailsElement.classList.add('menu-opening');
@@ -543,7 +541,7 @@ class HeaderDrawer extends MenuDrawer {
     } catch (error) {
       console.error('Error during header resize calculation:', error);
     }
-    document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
+    // REMOVED: iOS viewport height workaround - now using standard 100dvh
   };
 }
 

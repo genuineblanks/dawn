@@ -29,7 +29,7 @@ html {
   --real-viewport-height: 100vh;
 }
 
-/* FIXED: Dynamic viewport height for mobile browsers with better support */
+/* Modern dynamic viewport height (works on all browsers) */
 @supports (height: 100dvh) {
   :root {
     --viewport-height: 100dvh;
@@ -37,23 +37,8 @@ html {
   }
 }
 
-/* FIXED: Enhanced fallback for mobile devices */
-@supports not (height: 100dvh) {
-  @media screen and (max-width: 749px) {
-    :root {
-      --viewport-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-      --real-viewport-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-    }
-    
-    /* iOS specific viewport fixes */
-    @supports (-webkit-touch-callout: none) {
-      :root {
-        --viewport-height: -webkit-fill-available;
-        --real-viewport-height: -webkit-fill-available;
-      }
-    }
-  }
-}
+/* REMOVED: iOS-specific workarounds with -webkit-fill-available
+   Modern browsers handle viewport properly with 100dvh standard */
 
 /* FIXED: Mobile sections with proper touch scrolling support */
 @media screen and (max-width: 749px) {
@@ -3738,18 +3723,8 @@ details-disclosure > details {
   }
 }
 
-/* iOS specific fixes */
-@supports (-webkit-touch-callout: none) {
-  @media screen and (max-width: 749px) {
-    html {
-      height: -webkit-fill-available !important;
-    }
-    
-    body {
-      min-height: -webkit-fill-available !important;
-    }
-  }
-}
+/* REMOVED: iOS-specific -webkit-fill-available fixes
+   Modern browsers handle viewport height properly with 100dvh */
 
 /* ===== GLOBAL FOCUS OUTLINE ELIMINATION ===== */
 /* Nuclear option: Remove all blue focus outlines site-wide */
