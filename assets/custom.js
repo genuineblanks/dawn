@@ -92,6 +92,11 @@ let userInteractionActive = false;
 let userInteractionTimeout = null;
 let animationCompletionDelay = 500;
 
+// SCROLL SNAP SYSTEM - Auto-align to sections when scrolling stops
+let scrollSnapTimeout = null;
+let lastScrollPosition = 0;
+let isAutoSnapping = false;
+
 // ===============================================
 // DESKTOP TOUCH SUPPORT (for touch-enabled laptops)
 // ===============================================
@@ -396,6 +401,10 @@ function createDotNavigation() {
       userInteractionActive = true;
       clearTimeout(userInteractionTimeout);
 
+      // Clear any pending snap operation
+      clearTimeout(scrollSnapTimeout);
+      isAutoSnapping = false;
+
       goToSection(index);
     };
     
@@ -410,6 +419,10 @@ function createDotNavigation() {
       // USER INTERACTION PRIORITY: Set flag to prevent auto-updates
       userInteractionActive = true;
       clearTimeout(userInteractionTimeout);
+
+      // Clear any pending snap operation
+      clearTimeout(scrollSnapTimeout);
+      isAutoSnapping = false;
 
       goToSection(index);
     };
@@ -503,6 +516,10 @@ function goToSection(sectionIndex) {
   if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) {
     return;
   }
+
+  // Clear any pending snap operation
+  clearTimeout(scrollSnapTimeout);
+  isAutoSnapping = false;
 
   scrollSystem.inScroll = true;
   
@@ -647,6 +664,73 @@ function updateCurrentSectionFromScrollPosition() {
 }
 
 // ===============================================
+// SCROLL SNAP - Auto-align to nearest section when scrolling stops
+// ===============================================
+function snapToNearestSection() {
+  // Don't snap if not on homepage or system not initialized
+  if (!isHomepage() || !scrollSystem.initialized || !scrollSystem.isEnabled) {
+    return;
+  }
+
+  // Don't snap if already animating or during user interaction
+  if (scrollSystem.inScroll || isAutoSnapping || userInteractionActive) {
+    return;
+  }
+
+  // Don't snap if no sections
+  if (!scrollSystem.arrSections || scrollSystem.arrSections.length === 0) {
+    return;
+  }
+
+  const currentScrollPos = window.pageYOffset;
+  const viewportHeight = window.innerHeight;
+
+  // Find the closest section
+  let closestSection = 0;
+  let minDistance = Infinity;
+
+  for (let i = 0; i < scrollSystem.arrSections.length; i++) {
+    const sectionPos = scrollSystem.arrSections[i];
+    const distance = Math.abs(currentScrollPos - sectionPos);
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestSection = i;
+    }
+  }
+
+  const targetPosition = scrollSystem.arrSections[closestSection];
+  const distanceFromTarget = Math.abs(currentScrollPos - targetPosition);
+
+  // SNAP THRESHOLD: Only snap if we're more than 10% of viewport height away from target
+  // This prevents unnecessary snapping when user is already close enough
+  const snapThreshold = viewportHeight * 0.1; // 10% of viewport height
+
+  if (distanceFromTarget > snapThreshold) {
+    // We're misaligned - snap to the nearest section
+    isAutoSnapping = true;
+
+    // Update current section
+    scrollSystem.currentSection = closestSection;
+    updateDotNavigation();
+
+    // Smoothly animate to the correct position
+    $('html, body').animate({
+      scrollTop: targetPosition
+    }, {
+      duration: 400, // Faster snap animation
+      easing: 'easeInOutCubic',
+      complete: function() {
+        isAutoSnapping = false;
+      },
+      fail: function() {
+        isAutoSnapping = false;
+      }
+    });
+  }
+}
+
+// ===============================================
 // SCROLL SYSTEM INITIALIZATION
 // ===============================================
 function initializeScrollSystem() {
@@ -746,21 +830,28 @@ function handleWindowResize() {
 // SYSTEM RESET
 // ===============================================
 function resetScrollSystem() {
-  console.log('🔄 Resetting scroll system...');
   scrollSystem.initialized = false;
   scrollSystem.currentSection = 0;
   scrollSystem.inScroll = false;
-  
+
+  // Clear snap system
+  if (scrollSnapTimeout) {
+    clearTimeout(scrollSnapTimeout);
+    scrollSnapTimeout = null;
+  }
+  isAutoSnapping = false;
+  lastScrollPosition = 0;
+
   if (scrollSystem.resizeTimeout) {
     clearTimeout(scrollSystem.resizeTimeout);
     scrollSystem.resizeTimeout = null;
   }
-  
+
   if (scrollSystem.dotNavigation) {
     scrollSystem.dotNavigation.remove();
     scrollSystem.dotNavigation = null;
   }
-  
+
   if (typeof $ !== 'undefined') {
     $(document).off('wheel.scrollSystem');
     $(window).off('resize.scrollSystem');
@@ -772,10 +863,7 @@ function resetScrollSystem() {
 // FEATURE INITIALIZATION
 // ===============================================
 function initializeAllFeatures() {
-  console.log('🖥️ Initializing features...');
-
   if (!isHomepage()) {
-    console.log('❌ Not on homepage - skipping scroll features');
     return;
   }
 
@@ -809,7 +897,6 @@ function initializeAllFeatures() {
 
       // BUGFIX: Clear transition lock after recalculation completes
       scrollSystem.isTransitioning = false;
-      console.log('✅ Section transition complete - lock released');
     }, 400);
   });
 
@@ -818,17 +905,15 @@ function initializeAllFeatures() {
       event.preventDefault();
       var hash = this.hash;
       var target = $(hash);
-      
+
       // If the target doesn't exist, find the next section to scroll to
       if (target.length === 0) {
-        console.log('Target element not found:', hash, 'Finding next section...');
-        
         // Find the current banner section
         var currentBanner = $(this).closest('.banner, section');
-        
+
         // Look for the next section on the page
         var nextSection = currentBanner.next('section, .shopify-section, [class*="section"]');
-        
+
         // If still not found, look for any section that comes after the current one
         if (nextSection.length === 0) {
           var allSections = $('section, .shopify-section, [class*="section"]');
@@ -837,12 +922,10 @@ function initializeAllFeatures() {
             nextSection = allSections.eq(currentIndex + 1);
           }
         }
-        
+
         if (nextSection.length > 0) {
           target = nextSection;
-          console.log('Found next section to scroll to:', nextSection[0]);
         } else {
-          console.log('No next section found, scrolling down by viewport height');
           // Fallback: scroll down by one viewport height
           var scrollTarget = $(window).scrollTop() + $(window).height();
           $('html, body').animate({
@@ -862,8 +945,6 @@ function initializeAllFeatures() {
              window.location.hash = hash;
            }
          });
-      } else {
-        console.error('Target element found but has no offset:', target);
       }
      }
    });
@@ -880,7 +961,6 @@ function initializeAllFeatures() {
 
      // BUGFIX: Block scroll handler during section transitions to prevent race conditions
      if (scrollSystem.isTransitioning) {
-       console.log('🚫 Scroll handler blocked - section transition in progress');
        return;
      }
 
@@ -888,6 +968,23 @@ function initializeAllFeatures() {
      if (!scrollSystem.inScroll) {
        updateCurrentSectionFromScrollPosition();
      }
+
+     // SCROLL SNAP: Detect when user stops scrolling and auto-align to nearest section
+     // Clear any existing snap timeout
+     clearTimeout(scrollSnapTimeout);
+
+     // Set new timeout - if user stops scrolling for 150ms, snap to nearest section
+     scrollSnapTimeout = setTimeout(function() {
+       // Only snap if user has actually stopped scrolling (position hasn't changed)
+       const currentPos = window.pageYOffset;
+       if (Math.abs(currentPos - lastScrollPosition) < 5) {
+         snapToNearestSection();
+       }
+       lastScrollPosition = currentPos;
+     }, 150); // Wait 150ms after scroll stops
+
+     // Update last scroll position
+     lastScrollPosition = window.pageYOffset;
    });
 }
 
@@ -895,11 +992,8 @@ function initializeAllFeatures() {
 // SCROLL TO TOP BUTTON FUNCTIONALITY
 // ===============================================
 function initializeScrollToTopButton() {
-  console.log('🔝 Initializing scroll to top button...');
-  
   const scrollButton = document.querySelector('.scroll-to-top');
   if (!scrollButton) {
-    console.log('❌ Scroll button not found');
     return;
   }
   
@@ -925,14 +1019,12 @@ function initializeScrollToTopButton() {
   // Smooth scroll to top
   function scrollToTop(e) {
     e.preventDefault();
-    
+
     // If on homepage with scroll system, go to first section
     if (isHomepage() && scrollSystem.initialized && scrollSystem.arrSections.length > 0) {
-      console.log('🏠 Homepage detected - using scroll system');
       goToSection(0);
     } else {
       // Regular scroll to top for other pages
-      console.log('📄 Regular page - scrolling to top');
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -969,23 +1061,24 @@ window.applyUltimateScrollFix = applyUltimateScrollFix;
 // INITIALIZATION SEQUENCE - FASTER LOADING
 // ===============================================
 waitForJQuery(function() {
-  // IMMEDIATE initialization - don't wait for DOM ready
-  console.log('🖥️ jQuery ready - IMMEDIATE initialization');
+  // BUGFIX: Disable browser scroll restoration on homepage to prevent conflicts
+  // Always start from the top for consistent navigation experience
+  if (isHomepage() && 'scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
 
-  // Initialize scroll system immediately if homepage
+  // BUGFIX: Force scroll to top on homepage load/back navigation
   if (isHomepage()) {
-    console.log('🏠 Homepage detected - initializing scroll system NOW');
+    window.scrollTo(0, 0);
     setTimeout(initializeScrollSystem, 50); // Very short delay
     setTimeout(initializeScrollToTopButton, 100);
   }
   
   $(document).ready(function() {
-    console.log('📱 DOM Ready - secondary initialization');
     initializeAllFeatures();
-    
+
     // Re-initialize if not already done
     if (isHomepage() && !scrollSystem.initialized) {
-      console.log('🔄 Backup initialization');
       setTimeout(initializeScrollSystem, 100);
     }
   });
@@ -995,7 +1088,6 @@ waitForJQuery(function() {
   });
 
   $(window).on('load', function() {
-    console.log('🌐 Window loaded - checking scroll system');
     if (!scrollSystem.initialized && isHomepage()) {
       setTimeout(initializeScrollSystem, 100);
     } else if (isHomepage()) {
@@ -1026,16 +1118,36 @@ waitForJQuery(function() {
       }, 100);
     }
   });
-});
 
-console.log('📜 Enhanced Custom.js script loaded - waiting for jQuery...');
+  // BUGFIX: Handle back button navigation - always reset to top
+  window.addEventListener('pageshow', function(event) {
+    if (isHomepage()) {
+      // If page is loaded from cache (bfcache), reset scroll position
+      if (event.persisted) {
+        window.scrollTo(0, 0);
+        scrollSystem.currentSection = 0;
+        updateDotNavigation();
+      }
+    }
+  });
+
+  // BUGFIX: Handle browser back/forward navigation
+  window.addEventListener('popstate', function() {
+    if (isHomepage()) {
+      window.scrollTo(0, 0);
+      scrollSystem.currentSection = 0;
+      if (scrollSystem.initialized) {
+        updateDotNavigation();
+      }
+    }
+  });
+});
 
 // Fallback initialization
 setTimeout(function() {
   if (isHomepage()) {
     const container = document.getElementById('section-dots');
     if (container && container.children.length === 0) {
-      console.log('🔄 Fallback: Creating dots manually...');
       if (typeof scrollSystem !== 'undefined' && scrollSystem.arrSections && scrollSystem.arrSections.length > 0) {
         createDotNavigation();
       }
