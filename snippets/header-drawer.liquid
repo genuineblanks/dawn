@@ -380,14 +380,17 @@
     </div>
   </details>
 
-  <script>
-    // BUGFIX: Mobile Learn More - Click outside to close
-    (function() {
+</header-drawer>
+
+<script>
+  // BUGFIX: Mobile Learn More - Click outside to close
+  if (typeof window.mobileLearnMoreInitialized === 'undefined') {
+    window.mobileLearnMoreInitialized = true;
+
+    function initMobileLearnMore() {
       const mobileLearnMore = document.getElementById('Details-mobile-learn-more');
 
       if (mobileLearnMore) {
-        let clickOutsideHandler = null;
-
         function handleClickOutside(event) {
           // If click is outside the Learn More element and it's open, close it
           if (!mobileLearnMore.contains(event.target) && mobileLearnMore.hasAttribute('open')) {
@@ -407,6 +410,13 @@
           }
         });
       }
-    })();
-  </script>
-</header-drawer>
+    }
+
+    // Initialize immediately if DOM is ready, otherwise wait
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMobileLearnMore);
+    } else {
+      initMobileLearnMore();
+    }
+  }
+</script>
