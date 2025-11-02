@@ -156,20 +156,21 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .menu-drawer__menu-item {
-  padding: 1.5rem 3rem;
+  padding: 1.1rem 2rem;
   text-decoration: none;
-  font-size: 2.2rem;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  color: #121212;
+  font-size: 1.5rem;
+  transition: all 0.25s ease;
+  color: #2c2c2c;
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.03em;
   position: relative;
-  border-radius: 0 16px 16px 0;
-  margin: 0.5rem 0;
+  border-radius: 0;
+  margin: 0;
   border-left: 3px solid transparent;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: transparent;
+  display: block;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .no-js .menu-drawer__menu-item {
@@ -198,24 +199,19 @@ details[open].menu-opening > .menu-drawer__submenu {
 .menu-drawer__menu-item:hover,
 .menu-drawer__close-button:hover {
   color: #000000;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   border-left-color: #000000;
-  transform: translateX(8px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .menu-drawer__menu-item--active {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0%, rgba(255, 255, 255, 0.2) 100%);
+  background: rgba(0, 0, 0, 0.05);
   border-left-color: #000000;
   color: #000000;
   font-weight: 600;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .menu-drawer__menu-item--active:hover {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.25) 100%);
-  transform: translateX(12px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .js .menu-drawer__menu-item .icon-caret,
@@ -379,21 +375,21 @@ details[open].menu-opening > .menu-drawer__submenu {
 
   /* Learn More Section - Always Visible on Mobile */
   .menu-drawer__learn-more-section {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(0, 0, 0, 0.08);
     width: 100%;
   }
 
   /* Section Heading */
   .menu-drawer__section-heading {
-    padding: 1rem 3rem;
-    margin: 0 0 1rem 0;
-    font-size: 1.4rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
+    padding: 0.8rem 2rem;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(18, 18, 18, 0.5);
+    color: rgba(44, 44, 44, 0.6);
   }
 
   /* Learn More List - Force vertical stacking */
@@ -411,31 +407,37 @@ details[open].menu-opening > .menu-drawer__submenu {
     width: 100%;
   }
 
-  /* Learn More Items - Match Main Menu Styling */
+  /* Learn More Items - Refined styling */
   .menu-drawer__learn-more-item {
     display: block;
-    padding: 1.5rem 3rem;
+    padding: 1rem 2rem;
     text-decoration: none;
-    font-size: 2.2rem;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    color: #121212;
-    font-weight: 500;
-    letter-spacing: 0.01em;
+    font-size: 1.4rem;
+    transition: all 0.25s ease;
+    color: #4a4a4a;
+    font-weight: 400;
+    letter-spacing: 0.02em;
     position: relative;
-    border-radius: 0 16px 16px 0;
-    margin: 0.5rem 0;
+    border-radius: 0;
+    margin: 0;
     border-left: 3px solid transparent;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: transparent;
+    text-transform: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   }
 
   .menu-drawer__learn-more-item:hover,
   .menu-drawer__learn-more-item:focus {
     color: #000000;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.02);
     border-left-color: #000000;
-    transform: translateX(8px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Active state for Learn More items */
+  .menu-drawer__learn-more-item--active {
+    color: #000000;
+    background: rgba(0, 0, 0, 0.04);
+    border-left-color: #000000;
+    font-weight: 500;
   }
 }

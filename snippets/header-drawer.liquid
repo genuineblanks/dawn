@@ -139,37 +139,51 @@
               <h3 class="menu-drawer__section-heading">LEARN MORE</h3>
               <ul class="menu-drawer__learn-more-list" role="list">
                 <li>
-                  <a href="/pages/futuristic" class="menu-drawer__learn-more-item">
+                  <a href="/pages/futuristic"
+                     class="menu-drawer__learn-more-item{% if request.path == '/pages/futuristic' %} menu-drawer__learn-more-item--active{% endif %}"
+                     {% if request.path == '/pages/futuristic' %}aria-current="page"{% endif %}>
                     Company Overview
                   </a>
                 </li>
                 <li>
-                  <a href="/pages/how-does-it-work" class="menu-drawer__learn-more-item">
+                  <a href="/pages/how-does-it-work"
+                     class="menu-drawer__learn-more-item{% if request.path == '/pages/how-does-it-work' %} menu-drawer__learn-more-item--active{% endif %}"
+                     {% if request.path == '/pages/how-does-it-work' %}aria-current="page"{% endif %}>
                     Get Started FAQ's
                   </a>
                 </li>
                 <li>
-                  <a href="/collections/accessories" class="menu-drawer__learn-more-item">
+                  <a href="/collections/accessories"
+                     class="menu-drawer__learn-more-item{% if request.path == '/collections/accessories' %} menu-drawer__learn-more-item--active{% endif %}"
+                     {% if request.path == '/collections/accessories' %}aria-current="page"{% endif %}>
                     Branding Solutions
                   </a>
                 </li>
                 <li>
-                  <a href="/pages/design-services" class="menu-drawer__learn-more-item">
+                  <a href="/pages/design-services"
+                     class="menu-drawer__learn-more-item{% if request.path == '/pages/design-services' %} menu-drawer__learn-more-item--active{% endif %}"
+                     {% if request.path == '/pages/design-services' %}aria-current="page"{% endif %}>
                     Design Services
                   </a>
                 </li>
                 <li>
-                  <a href="/pages/about-us" class="menu-drawer__learn-more-item">
+                  <a href="/pages/about-us"
+                     class="menu-drawer__learn-more-item{% if request.path == '/pages/about-us' %} menu-drawer__learn-more-item--active{% endif %}"
+                     {% if request.path == '/pages/about-us' %}aria-current="page"{% endif %}>
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="/pages/luxury-lookbook" class="menu-drawer__learn-more-item">
+                  <a href="/pages/luxury-lookbook"
+                     class="menu-drawer__learn-more-item{% if request.path == '/pages/luxury-lookbook' %} menu-drawer__learn-more-item--active{% endif %}"
+                     {% if request.path == '/pages/luxury-lookbook' %}aria-current="page"{% endif %}>
                     Lookbook
                   </a>
                 </li>
                 <li>
-                  <a href="/pages/help-center" class="menu-drawer__learn-more-item">
+                  <a href="/pages/help-center"
+                     class="menu-drawer__learn-more-item{% if request.path == '/pages/help-center' %} menu-drawer__learn-more-item--active{% endif %}"
+                     {% if request.path == '/pages/help-center' %}aria-current="page"{% endif %}>
                     Help Center
                   </a>
                 </li>
