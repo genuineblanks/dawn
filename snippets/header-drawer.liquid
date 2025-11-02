@@ -379,4 +379,34 @@
       </div>
     </div>
   </details>
+
+  <script>
+    // BUGFIX: Mobile Learn More - Click outside to close
+    (function() {
+      const mobileLearnMore = document.getElementById('Details-mobile-learn-more');
+
+      if (mobileLearnMore) {
+        let clickOutsideHandler = null;
+
+        function handleClickOutside(event) {
+          // If click is outside the Learn More element and it's open, close it
+          if (!mobileLearnMore.contains(event.target) && mobileLearnMore.hasAttribute('open')) {
+            mobileLearnMore.removeAttribute('open');
+          }
+        }
+
+        // Listen for toggle events to add/remove the click-outside handler
+        mobileLearnMore.addEventListener('toggle', function() {
+          if (this.hasAttribute('open')) {
+            // Small delay prevents the opening click from immediately closing it
+            setTimeout(function() {
+              document.addEventListener('click', handleClickOutside);
+            }, 10);
+          } else {
+            document.removeEventListener('click', handleClickOutside);
+          }
+        });
+      }
+    })();
+  </script>
 </header-drawer>

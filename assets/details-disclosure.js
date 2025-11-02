@@ -7,6 +7,9 @@ class DetailsDisclosure extends HTMLElement {
 
     this.mainDetailsToggle.addEventListener('focusout', this.onFocusOut.bind(this));
     this.mainDetailsToggle.addEventListener('toggle', this.onToggle.bind(this));
+
+    // BUGFIX: Bind click-outside handler for closing dropdown when clicking outside
+    this.boundClickOutside = this.handleClickOutside.bind(this);
   }
 
   onFocusOut() {
@@ -15,13 +18,30 @@ class DetailsDisclosure extends HTMLElement {
     });
   }
 
+  // BUGFIX: Handle clicks outside the dropdown to close it
+  handleClickOutside(event) {
+    // If click is outside this element and dropdown is open, close it
+    if (!this.contains(event.target) && this.mainDetailsToggle.hasAttribute('open')) {
+      this.close();
+    }
+  }
+
   onToggle() {
     if (!this.animations) this.animations = this.content.getAnimations();
 
     if (this.mainDetailsToggle.hasAttribute('open')) {
       this.animations.forEach((animation) => animation.play());
+
+      // BUGFIX: Add click-outside listener when dropdown opens
+      // Small delay prevents the opening click from immediately closing it
+      setTimeout(() => {
+        document.addEventListener('click', this.boundClickOutside);
+      }, 10);
     } else {
       this.animations.forEach((animation) => animation.cancel());
+
+      // BUGFIX: Remove click-outside listener when dropdown closes
+      document.removeEventListener('click', this.boundClickOutside);
     }
   }
 
