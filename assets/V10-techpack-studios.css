@@ -4818,7 +4818,7 @@ html.onboarding-active {
   border-radius: 8px;
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  z-index: 9999 !important;
+  z-index: 1300 !important;
   display: block !important;
   visibility: visible !important;
   
@@ -4851,7 +4851,7 @@ html.onboarding-active {
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;
-  z-index: 10001;
+  z-index: 1400;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -4929,7 +4929,7 @@ html.onboarding-active {
   transform: translateX(-50%);
   display: flex;
   gap: 12px;
-  z-index: 10002;
+  z-index: 1400;
 }
 
 /* 📱 MOBILE TOUR CONTROLS: Optimized positioning for mobile viewport */
@@ -4962,7 +4962,7 @@ html.onboarding-active {
   /* Ensure tour controls stay above mobile keyboard */
   .onboarding-controls {
     position: fixed !important;
-    z-index: 10002 !important;
+    z-index: 1400 !important;
   }
 }
 

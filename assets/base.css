@@ -374,7 +374,7 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
 }
 
 .skip-to-content-link:focus {
-  z-index: 9999;
+  z-index: 1500;
   position: inherit;
   overflow: auto;
   width: auto;

@@ -28,7 +28,6 @@ class DetailsDisclosure extends HTMLElement {
 
     // If click is outside this element and dropdown is open, close it
     if (!this.contains(event.target) && this.mainDetailsToggle.hasAttribute('open')) {
-      event.stopPropagation();
       this.close();
     }
   }
@@ -40,7 +39,7 @@ class DetailsDisclosure extends HTMLElement {
       this.animations.forEach((animation) => animation.play());
 
       // BUGFIX: Add click-outside listener when dropdown opens
-      // Delay increased to 200ms to ensure opening click completes before listener activates
+      // Delay increased to 300ms to ensure opening click completes before listener activates
       setTimeout(() => {
         document.addEventListener('click', this.boundClickOutside, true);
       }, 300);
