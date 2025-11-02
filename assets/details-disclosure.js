@@ -43,7 +43,7 @@ class DetailsDisclosure extends HTMLElement {
       // Delay increased to 200ms to ensure opening click completes before listener activates
       setTimeout(() => {
         document.addEventListener('click', this.boundClickOutside, true);
-      }, 200);
+      }, 300);
     } else {
       this.animations.forEach((animation) => animation.cancel());
 
