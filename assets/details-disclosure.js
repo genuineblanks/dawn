@@ -33,10 +33,10 @@ class DetailsDisclosure extends HTMLElement {
       this.animations.forEach((animation) => animation.play());
 
       // BUGFIX: Add click-outside listener when dropdown opens
-      // Small delay prevents the opening click from immediately closing it
+      // Delay increased to 100ms to ensure click doesn't immediately close it
       setTimeout(() => {
         document.addEventListener('click', this.boundClickOutside);
-      }, 10);
+      }, 100);
     } else {
       this.animations.forEach((animation) => animation.cancel());
 
@@ -62,17 +62,22 @@ class HeaderMenu extends DetailsDisclosure {
   }
 
   onToggle() {
-    // BUGFIX: Call parent's onToggle to enable click-outside functionality
-    super.onToggle();
-
     if (!this.header) return;
     this.header.preventHide = this.mainDetailsToggle.open;
 
-    if (document.documentElement.style.getPropertyValue('--header-bottom-position-desktop') !== '') return;
+    if (document.documentElement.style.getPropertyValue('--header-bottom-position-desktop') !== '') {
+      // BUGFIX: Call parent's onToggle to enable click-outside functionality
+      super.onToggle();
+      return;
+    }
+
     document.documentElement.style.setProperty(
       '--header-bottom-position-desktop',
       `${Math.floor(this.header.getBoundingClientRect().bottom)}px`
     );
+
+    // BUGFIX: Call parent's onToggle to enable click-outside functionality
+    super.onToggle();
   }
 }
 

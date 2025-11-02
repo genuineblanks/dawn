@@ -368,9 +368,31 @@ details[open].menu-opening > .menu-drawer__submenu {
   outline: none;
 }
 
+/* CRITICAL: Force vertical layout for mobile menu (accidentally deleted) */
+.menu-drawer__menu {
+  display: block;
+  padding: 1rem 0;
+  list-style: none;
+  margin: 0;
+}
+
+.menu-drawer__menu li {
+  display: block;
+  width: 100%;
+  margin: 0;
+  position: relative;
+}
+
+  /* Learn More Container */
+  .menu-drawer__learn-more-container {
+    position: relative;
+    z-index: 5;
+  }
+
   /* Learn More Details Element */
   .menu-drawer__learn-more-details {
     width: 100%;
+    position: relative;
   }
   
   /* Learn More Button as Summary */
@@ -380,6 +402,9 @@ details[open].menu-opening > .menu-drawer__submenu {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    pointer-events: auto; /* Ensure button is always clickable */
+    position: relative;
+    z-index: 10; /* Ensure it's above other elements */
   }
   
   .menu-drawer__learn-more-details summary::-webkit-details-marker {
