@@ -872,10 +872,14 @@ function handleWindowResize() {
   scrollSystem.resizeTimeout = setTimeout(function() {
     if (scrollSystem.initialized) {
       const oldPositions = calculateSectionPositions();
-      createDotNavigation();
-      updateDotNavigation();
+
+      // Only recreate dots on desktop (mobile has no dots)
+      if (!isMobileDevice()) {
+        createDotNavigation();
+        updateDotNavigation();
+      }
     }
-    
+
     scrollSystem.resizeTimeout = null;
   }, 250);
 }
@@ -950,8 +954,12 @@ function initializeAllFeatures() {
     // BUGFIX: Increased delay from 150ms to 400ms for proper CSS transition completion
     setTimeout(function() {
       calculateSectionPositions();
-      createDotNavigation();
-      updateDotNavigation();
+
+      // Only recreate dots on desktop (mobile has no dots)
+      if (!isMobileDevice()) {
+        createDotNavigation();
+        updateDotNavigation();
+      }
 
       // BUGFIX: Clear transition lock after recalculation completes
       scrollSystem.isTransitioning = false;
@@ -1149,7 +1157,8 @@ waitForJQuery(function() {
   $(window).on('load', function() {
     if (!scrollSystem.initialized && isHomepage()) {
       setTimeout(initializeScrollSystem, 100);
-    } else if (isHomepage()) {
+    } else if (isHomepage() && !isMobileDevice()) {
+      // Only recreate dots on desktop
       setTimeout(function() {
         calculateSectionPositions();
         createDotNavigation();
@@ -1202,9 +1211,9 @@ waitForJQuery(function() {
   });
 });
 
-// Fallback initialization
+// Fallback initialization (desktop only)
 setTimeout(function() {
-  if (isHomepage()) {
+  if (isHomepage() && !isMobileDevice()) {
     const container = document.getElementById('section-dots');
     if (container && container.children.length === 0) {
       if (typeof scrollSystem !== 'undefined' && scrollSystem.arrSections && scrollSystem.arrSections.length > 0) {
