@@ -496,41 +496,20 @@ class HeaderDrawer extends MenuDrawer {
   }
 
   openMenuDrawer(summaryElement) {
-    // Try multiple selectors to find the header element
-    this.header = this.header || 
-      document.querySelector('.section-header') || 
-      document.querySelector('.shopify-section-header') || 
-      document.querySelector('.header') ||
-      document.querySelector('header') ||
-      this.closest('.header-wrapper, .shopify-section');
-    
+    // OPTIMIZED: Use single, reliable selector for header
+    this.header = this.header || document.querySelector('.header-wrapper');
+
     this.borderOffset =
-      this.borderOffset || this.closest('.header-wrapper').classList.contains('header-wrapper--border-bottom') ? 1 : 0;
-    
-    // Add null check and error handling for header element
-    try {
-      if (this.header) {
-        const headerBottom = this.header.getBoundingClientRect().bottom - this.borderOffset;
-        document.documentElement.style.setProperty(
-          '--header-bottom-position',
-          `${parseInt(headerBottom)}px`
-        );
-        this.header.classList.add('menu-open');
-      } else {
-        // Fallback: use viewport height if header not found
-        console.warn('Header element not found for mobile menu. Using fallback positioning.');
-        document.documentElement.style.setProperty(
-          '--header-bottom-position',
-          '60px' // Default header height fallback
-        );
-      }
-    } catch (error) {
-      console.error('Error calculating header position for mobile menu:', error);
-      // Fallback positioning
+      this.borderOffset || (this.header && this.header.classList.contains('header-wrapper--border-bottom')) ? 1 : 0;
+
+    // Calculate header bottom position for menu positioning
+    if (this.header) {
+      const headerBottom = this.header.getBoundingClientRect().bottom - this.borderOffset;
       document.documentElement.style.setProperty(
         '--header-bottom-position',
-        '60px'
+        `${parseInt(headerBottom)}px`
       );
+      this.header.classList.add('menu-open');
     }
 
     setTimeout(() => {
@@ -570,32 +549,7 @@ class HeaderDrawer extends MenuDrawer {
 
 customElements.define('header-drawer', HeaderDrawer);
 
-// Mobile menu fallback: ensure mobile menu works even if HeaderDrawer fails
-document.addEventListener('DOMContentLoaded', function() {
-  // Add a safety check for mobile menu functionality
-  const headerDrawers = document.querySelectorAll('header-drawer');
-  headerDrawers.forEach(headerDrawer => {
-    const summaryButton = headerDrawer.querySelector('summary');
-    if (summaryButton && !summaryButton.hasAttribute('data-mobile-fallback-added')) {
-      summaryButton.setAttribute('data-mobile-fallback-added', 'true');
-      
-      // Add fallback click handler in case custom element fails
-      summaryButton.addEventListener('click', function(e) {
-        const details = this.closest('details');
-        if (details && !details.hasAttribute('open')) {
-          // Ensure mobile menu opens with basic functionality
-          setTimeout(() => {
-            if (!details.hasAttribute('open')) {
-              console.warn('Mobile menu failed to open via custom element, using fallback');
-              details.setAttribute('open', '');
-              document.body.classList.add('overflow-hidden-tablet');
-            }
-          }, 100);
-        }
-      });
-    }
-  });
-});
+// REMOVED: Mobile menu fallback code (no longer needed after HeaderDrawer optimization)
 
 class ModalDialog extends HTMLElement {
   constructor() {
