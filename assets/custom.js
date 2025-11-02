@@ -819,7 +819,8 @@ function bindScrollEvents() {
 
     // Determine target section based on scroll direction
     let targetSection;
-    if (event.originalEvent.deltaY > 0) {
+    // BUGFIX: Using native addEventListener, so event.deltaY not event.originalEvent.deltaY
+    if (event.deltaY > 0) {
       // Scrolling DOWN
       targetSection = actualCurrentSection >= scrollSystem.arrSections.length - 1
         ? scrollSystem.arrSections.length - 1
