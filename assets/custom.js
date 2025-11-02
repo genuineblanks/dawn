@@ -777,7 +777,12 @@ function bindScrollEvents() {
 
     event.preventDefault(); // Prevent default scroll behavior
 
+    // BUGFIX: Set inScroll flag IMMEDIATELY to prevent race conditions during spam-scroll
+    // Multiple wheel events can arrive within 50-100ms - this blocks them before calculations
     scrollSystem.inScroll = true;
+
+    // BUGFIX: Stop any existing animations to prevent stuttering/conflicting animations
+    $('html, body').stop(true, false);
 
     // BUGFIX: Get ACTUAL current section from scroll position (not cached value)
     // This prevents section skipping when starting from misaligned position
