@@ -161,8 +161,9 @@ details[open].menu-opening > .menu-drawer__submenu {
   font-size: 1.4rem;
   transition: all 0.25s ease;
   color: #2c2c2c;
+  font-family: var(--font-heading-family);
   font-weight: 500;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.1em;
   position: relative;
   border-radius: 0;
   margin: 0;
@@ -386,6 +387,7 @@ details[open].menu-opening > .menu-drawer__submenu {
     padding: 0.7rem 2rem;
     margin: 0 0 0.3rem 0;
     font-size: 1.1rem;
+    font-family: var(--font-heading-family);
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -415,8 +417,9 @@ details[open].menu-opening > .menu-drawer__submenu {
     font-size: 1.3rem;
     transition: all 0.25s ease;
     color: #4a4a4a;
+    font-family: var(--font-heading-family);
     font-weight: 400;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.08em;
     position: relative;
     border-radius: 0;
     margin: 0;
