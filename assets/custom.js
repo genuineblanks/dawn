@@ -259,6 +259,10 @@ function waitForJQuery(callback) {
   }
 }
 
+// ===============================================
+// DOT NAVIGATION SYSTEM - DESKTOP ONLY
+// ===============================================
+function createDotNavigation() {
   console.log('🎯 Creating dot navigation...');
   
   // Force remove any existing containers first
