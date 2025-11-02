@@ -396,11 +396,19 @@ details[open].menu-opening > .menu-drawer__submenu {
     color: rgba(18, 18, 18, 0.5);
   }
 
-  /* Learn More List */
+  /* Learn More List - Force vertical stacking */
   .menu-drawer__learn-more-list {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Learn More List Items - Force block display */
+  .menu-drawer__learn-more-list li {
+    display: block;
+    width: 100%;
   }
 
   /* Learn More Items - Match Main Menu Styling */

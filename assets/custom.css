@@ -155,8 +155,9 @@ nav ul {
     gap: 2rem;
 }
 
-/* Professional Navigation Items */
-nav ul li a.header__menu-item, nav ul li .list-menu__item {
+/* Professional Navigation Items - DESKTOP HEADER ONLY */
+.header__inline-menu ul li a.header__menu-item,
+.header__inline-menu ul li .list-menu__item {
     font-weight: 500;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     letter-spacing: 0.5px;
@@ -166,19 +167,20 @@ nav ul li a.header__menu-item, nav ul li .list-menu__item {
     text-transform: uppercase;
 }
 
-/* Homepage Navigation Colors - Dark Grey Text */
-body .template-index nav ul li a.header__menu-item, 
-body .template-index nav ul li .list-menu__item {
+/* Homepage Navigation Colors - Dark Grey Text - DESKTOP ONLY */
+body .template-index .header__inline-menu ul li a.header__menu-item,
+body .template-index .header__inline-menu ul li .list-menu__item {
     color: #4a4a4a !important;
 }
 
-/* Global Navigation Colors - Dark Text on Light Grey */
-body nav ul li a.header__menu-item, body nav ul li .list-menu__item {
+/* Global Navigation Colors - Dark Text on Light Grey - DESKTOP ONLY */
+body .header__inline-menu ul li a.header__menu-item,
+body .header__inline-menu ul li .list-menu__item {
     color: #333333 !important;
 }
 
-/* Visual Separator for Services */
-body nav ul li:nth-child(5)::after {
+/* Visual Separator for Services - DESKTOP ONLY */
+body .header__inline-menu ul li:nth-child(5)::after {
     content: '';
     width: 1px;
     height: 20px;
@@ -189,8 +191,8 @@ body nav ul li:nth-child(5)::after {
     transform: translateY(-50%);
 }
 
-/* Homepage separator */
-body .template-index nav ul li:nth-child(5)::after {
+/* Homepage separator - DESKTOP ONLY */
+body .template-index .header__inline-menu ul li:nth-child(5)::after {
     background: rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -257,18 +259,19 @@ nav ul li a.header__menu-item.list-menu__item--active {
     transform: scale(1.02);
 }
 
-/* Mobile Optimization */
+/* Mobile Optimization - DESKTOP HEADER ONLY (when visible on tablet) */
 @media screen and (max-width: 749px) {
-    nav ul {
+    .header__inline-menu ul {
         gap: 1rem;
     }
-    
-    nav ul li a.header__menu-item, nav ul li .list-menu__item {
+
+    .header__inline-menu ul li a.header__menu-item,
+    .header__inline-menu ul li .list-menu__item {
         padding: 0.6rem 0.8rem;
         font-size: 0.9rem;
     }
-    
-    nav ul li:nth-child(5)::after {
+
+    .header__inline-menu ul li:nth-child(5)::after {
         display: none;
     }
     

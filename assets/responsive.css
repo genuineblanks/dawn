@@ -5,7 +5,9 @@
 @media screen and (max-width: 1390px) {
   .banner ul.banner__box li.item-banner a {display: flex;}
 
-nav ul li a.header__menu-item, nav ul li .list-menu__item {
+/* DESKTOP HEADER ONLY */
+.header__inline-menu ul li a.header__menu-item,
+.header__inline-menu ul li .list-menu__item {
   font-size: 1.1rem;
   font-weight: 500;
   letter-spacing: 0.3px;
@@ -55,8 +57,9 @@ header.header {
     margin-left: -1rem;
 }
 
-/* Mobile Header Professional Styling */
-nav ul li a.header__menu-item, nav ul li .list-menu__item {
+/* Mobile Header Professional Styling - DESKTOP HEADER ONLY */
+.header__inline-menu ul li a.header__menu-item,
+.header__inline-menu ul li .list-menu__item {
     font-size: 0.9rem;
     padding: 0.6rem 0.8rem;
     letter-spacing: 0.2px;
@@ -251,7 +254,4 @@ footer .footer__content-top {
 }
 .video-bottom-text p {
     color: #000;
-}
-  
-  
 }
