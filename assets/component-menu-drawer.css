@@ -192,18 +192,6 @@ details[open].menu-opening > .menu-drawer__submenu {
   right: 3rem;
 }
 
-.menu-drawer__menu-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
-  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border-radius: 0 16px 16px 0;
-}
-
 .menu-drawer__menu-item--active,
 .menu-drawer__menu-item:focus,
 .menu-drawer__close-button:focus,
@@ -214,10 +202,6 @@ details[open].menu-opening > .menu-drawer__submenu {
   border-left-color: #000000;
   transform: translateX(8px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.menu-drawer__menu-item:hover::before {
-  width: 100%;
 }
 
 .menu-drawer__menu-item--active {

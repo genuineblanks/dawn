@@ -85,36 +85,17 @@
   }
   
   /* Luxury Link Background Sweep Animation */
-  .header__menu-item.list-menu__item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -8px;
-    width: 0;
-    height: 100%;
-    background: linear-gradient(90deg, transparent 0%, rgba(51, 51, 51, 0.08) 50%, transparent 100%);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 0;
-    transform: translateX(-100%);
-  }
-  
   /* Luxury Link Arrow Animation - DISABLED for desktop menu */
   .header__menu-item.list-menu__item::after {
     display: none;
   }
-  
+
   /* Luxury Hover Effects */
   .header__menu-item.list-menu__item:hover,
   .header__menu-item.list-menu__item:focus {
     color: #000000 !important;
     transform: translateY(-1px) !important;
     border-bottom: 1px solid #333333 !important;
-  }
-  
-  .header__menu-item.list-menu__item:hover::before,
-  .header__menu-item.list-menu__item:focus::before {
-    width: calc(100% + 24px);
-    transform: translateX(0);
   }
   
   /* Arrow hover effects disabled */

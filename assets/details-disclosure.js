@@ -20,8 +20,15 @@ class DetailsDisclosure extends HTMLElement {
 
   // BUGFIX: Handle clicks outside the dropdown to close it
   handleClickOutside(event) {
+    // Ignore clicks on the summary element (the button that opens the dropdown)
+    const summary = this.mainDetailsToggle.querySelector('summary');
+    if (summary && summary.contains(event.target)) {
+      return;
+    }
+
     // If click is outside this element and dropdown is open, close it
     if (!this.contains(event.target) && this.mainDetailsToggle.hasAttribute('open')) {
+      event.stopPropagation();
       this.close();
     }
   }
@@ -33,15 +40,15 @@ class DetailsDisclosure extends HTMLElement {
       this.animations.forEach((animation) => animation.play());
 
       // BUGFIX: Add click-outside listener when dropdown opens
-      // Delay increased to 100ms to ensure click doesn't immediately close it
+      // Delay increased to 200ms to ensure opening click completes before listener activates
       setTimeout(() => {
-        document.addEventListener('click', this.boundClickOutside);
-      }, 100);
+        document.addEventListener('click', this.boundClickOutside, true);
+      }, 200);
     } else {
       this.animations.forEach((animation) => animation.cancel());
 
       // BUGFIX: Remove click-outside listener when dropdown closes
-      document.removeEventListener('click', this.boundClickOutside);
+      document.removeEventListener('click', this.boundClickOutside, true);
     }
   }
 
