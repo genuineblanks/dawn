@@ -614,11 +614,11 @@ function updateCurrentSectionFromScrollPosition() {
     return;
   }
 
-  // REMOVED: scrollSystem.inScroll check - was preventing accurate section tracking during spam-scroll
-  // Section tracking needs to work continuously for snap system to target correctly
-
-  // REMOVED: userInteractionActive check - was preventing snap from working (timing conflict)
-  // Snap system needs current section data even during/after interactions
+  // Don't update dots during wheel animations - wheel handler controls section updates
+  // This is called from scroll handler which already checks inScroll, but double-check here
+  if (scrollSystem.inScroll) {
+    return;
+  }
   
   const currentScrollPos = window.pageYOffset;
   let closestSection = 0;
@@ -699,10 +699,10 @@ function snapToNearestSection() {
   const targetPosition = scrollSystem.arrSections[closestSection];
   const distanceFromTarget = Math.abs(currentScrollPos - targetPosition);
 
-  // SNAP THRESHOLD: Only snap if we're more than 25% of viewport height away from target
-  // This prevents unnecessary snapping when user is already close enough
-  // Increased from 10% to 25% for less aggressive/smoother snapping behavior
-  const snapThreshold = viewportHeight * 0.25; // 25% of viewport height
+  // SNAP THRESHOLD: Only snap if we're more than 15% of viewport height away from target
+  // Snap acts as a "safety net" for wheel handler, fixing manual scroll misalignments
+  // 15% provides good balance - corrects misalignment without being too aggressive
+  const snapThreshold = viewportHeight * 0.15; // 15% of viewport height
 
   if (distanceFromTarget > snapThreshold) {
     // We're misaligned - snap to the nearest section
@@ -770,13 +770,62 @@ function bindScrollEvents() {
 
   $(document).off('wheel.scrollSystem');
 
-  // REMOVED: Wheel event handler was causing section skipping during spam-scroll
-  // The wheel handler was:
-  // 1. Incrementing sections incorrectly when page was misaligned (80/20 position)
-  // 2. Blocking native scroll behavior
-  // 3. Creating race conditions with section tracking
-  // 4. Preventing snap system from working
-  // Native scroll + snap system is more reliable
+  // RESTORED: Wheel event handler for section-by-section scrolling
+  // FIXED: Now determines actual current section from scroll position before incrementing
+  $(document).on('wheel.scrollSystem', function(event) {
+    if (isMobileDevice() || !scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
+
+    event.preventDefault(); // Prevent default scroll behavior
+
+    scrollSystem.inScroll = true;
+
+    // BUGFIX: Get ACTUAL current section from scroll position (not cached value)
+    // This prevents section skipping when starting from misaligned position
+    const currentScrollPos = window.pageYOffset;
+    let actualCurrentSection = 0;
+    let minDistance = Infinity;
+
+    // Find which section we're actually closest to right now
+    for (let i = 0; i < scrollSystem.arrSections.length; i++) {
+      const distance = Math.abs(currentScrollPos - scrollSystem.arrSections[i]);
+      if (distance < minDistance) {
+        minDistance = distance;
+        actualCurrentSection = i;
+      }
+    }
+
+    // Determine target section based on scroll direction
+    let targetSection;
+    if (event.originalEvent.deltaY > 0) {
+      // Scrolling DOWN
+      targetSection = actualCurrentSection >= scrollSystem.arrSections.length - 1
+        ? scrollSystem.arrSections.length - 1
+        : actualCurrentSection + 1;
+    } else {
+      // Scrolling UP
+      targetSection = actualCurrentSection === 0 ? 0 : actualCurrentSection - 1;
+    }
+
+    // Update current section
+    scrollSystem.currentSection = targetSection;
+    updateDotNavigation();
+
+    // Animate to target section
+    $('html, body').animate({
+      scrollTop: scrollSystem.arrSections[targetSection]
+    }, {
+      duration: scrollSystem.durationOneScroll,
+      easing: scrollSystem.easingFunction,
+      complete: function() {
+        scrollSystem.inScroll = false;
+        isSwipeInProgress = false;
+      },
+      fail: function() {
+        scrollSystem.inScroll = false;
+        isSwipeInProgress = false;
+      }
+    });
+  });
 }
 
 // ===============================================
@@ -945,7 +994,8 @@ function initializeAllFeatures() {
      // Clear any existing snap timeout
      clearTimeout(scrollSnapTimeout);
 
-     // Set new timeout - if user stops scrolling for 150ms, snap to nearest section
+     // Set new timeout - if user stops scrolling for 200ms, snap to nearest section
+     // 200ms gives wheel animations (600ms) time to complete before snap checks alignment
      scrollSnapTimeout = setTimeout(function() {
        // Only snap if user has actually stopped scrolling (position hasn't changed)
        const currentPos = window.pageYOffset;
@@ -953,7 +1003,7 @@ function initializeAllFeatures() {
          snapToNearestSection();
        }
        lastScrollPosition = currentPos;
-     }, 150); // Wait 150ms after scroll stops
+     }, 200); // Wait 200ms after scroll stops
 
      // Update last scroll position
      lastScrollPosition = window.pageYOffset;
