@@ -41,9 +41,19 @@
 
     {%- comment -%} SECTION 2: ABOUT US / MANUFACTURING EXCELLENCE {%- endcomment -%}
     <section class="why-v2-section why-v2-about" id="why-v2-section-2" data-section-index="2">
+      {% if section.settings.about_image != blank %}
+        <div class="why-v2-section-background">
+          <img src="{{ section.settings.about_image | image_url: width: 2000 }}"
+               alt="{{ section.settings.about_title }}"
+               loading="lazy"
+               class="why-v2-bg-image">
+          <div class="why-v2-section-overlay"></div>
+        </div>
+      {% endif %}
+
       <div class="why-v2-section-inner">
-        <div class="why-v2-content-grid">
-          <div class="why-v2-content-text">
+        <div class="why-v2-content-centered-text">
+          <div class="why-v2-content-box">
             {% if section.settings.about_badge != blank %}
               <span class="why-v2-badge">{{ section.settings.about_badge }}</span>
             {% endif %}
@@ -94,37 +104,25 @@
               {% endif %}
             </ul>
           </div>
-
-          {% if section.settings.about_image != blank %}
-            <div class="why-v2-content-visual">
-              <div class="why-v2-visual-card">
-                <img src="{{ section.settings.about_image | image_url: width: 800 }}"
-                     alt="{{ section.settings.about_title }}"
-                     loading="lazy"
-                     class="why-v2-visual-image">
-              </div>
-            </div>
-          {% endif %}
         </div>
       </div>
     </section>
 
     {%- comment -%} SECTION 3: TECHPACK STUDIO ADVANTAGE {%- endcomment -%}
     <section class="why-v2-section why-v2-techpack" id="why-v2-section-3" data-section-index="3">
-      <div class="why-v2-section-inner">
-        <div class="why-v2-content-grid why-v2-content-grid-reverse">
-          {% if section.settings.techpack_image != blank %}
-            <div class="why-v2-content-visual">
-              <div class="why-v2-visual-card why-v2-visual-card-glow">
-                <img src="{{ section.settings.techpack_image | image_url: width: 800 }}"
-                     alt="{{ section.settings.techpack_title }}"
-                     loading="lazy"
-                     class="why-v2-visual-image">
-              </div>
-            </div>
-          {% endif %}
+      {% if section.settings.techpack_image != blank %}
+        <div class="why-v2-section-background">
+          <img src="{{ section.settings.techpack_image | image_url: width: 2000 }}"
+               alt="{{ section.settings.techpack_title }}"
+               loading="lazy"
+               class="why-v2-bg-image">
+          <div class="why-v2-section-overlay"></div>
+        </div>
+      {% endif %}
 
-          <div class="why-v2-content-text">
+      <div class="why-v2-section-inner">
+        <div class="why-v2-content-centered-text">
+          <div class="why-v2-content-box">
             {% if section.settings.techpack_badge != blank %}
               <span class="why-v2-badge why-v2-badge-accent">{{ section.settings.techpack_badge }}</span>
             {% endif %}
@@ -301,9 +299,19 @@
 
     {%- comment -%} SECTION 6: SUSTAINABILITY & QUALITY COMMITMENT {%- endcomment -%}
     <section class="why-v2-section why-v2-sustainability" id="why-v2-section-6" data-section-index="6">
+      {% if section.settings.sustainability_image != blank %}
+        <div class="why-v2-section-background">
+          <img src="{{ section.settings.sustainability_image | image_url: width: 2000 }}"
+               alt="{{ section.settings.sustainability_title }}"
+               loading="lazy"
+               class="why-v2-bg-image">
+          <div class="why-v2-section-overlay"></div>
+        </div>
+      {% endif %}
+
       <div class="why-v2-section-inner">
-        <div class="why-v2-content-grid">
-          <div class="why-v2-content-text">
+        <div class="why-v2-content-centered-text">
+          <div class="why-v2-content-box">
             {% if section.settings.sustainability_badge != blank %}
               <span class="why-v2-badge why-v2-badge-success">{{ section.settings.sustainability_badge }}</span>
             {% endif %}
@@ -369,17 +377,6 @@
               </a>
             {% endif %}
           </div>
-
-          {% if section.settings.sustainability_image != blank %}
-            <div class="why-v2-content-visual">
-              <div class="why-v2-visual-card">
-                <img src="{{ section.settings.sustainability_image | image_url: width: 800 }}"
-                     alt="{{ section.settings.sustainability_title }}"
-                     loading="lazy"
-                     class="why-v2-visual-image">
-              </div>
-            </div>
-          {% endif %}
         </div>
       </div>
     </section>
