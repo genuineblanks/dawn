@@ -5,6 +5,16 @@
 
     {%- comment -%} SECTION 1: HERO / INTRODUCTION {%- endcomment -%}
     <section class="why-v2-section why-v2-hero" id="why-v2-section-1" data-section-index="1">
+      {% if section.settings.hero_image != blank %}
+        <div class="why-v2-hero-background">
+          <img src="{{ section.settings.hero_image | image_url: width: 2000 }}"
+               alt="{{ section.settings.hero_title }}"
+               loading="eager"
+               class="why-v2-hero-bg-image">
+          <div class="why-v2-hero-overlay"></div>
+        </div>
+      {% endif %}
+
       <div class="why-v2-section-inner">
         <div class="why-v2-hero-content">
           {% if section.settings.hero_subtitle != blank %}
@@ -26,16 +36,6 @@
             </svg>
           </div>
         </div>
-
-        {% if section.settings.hero_image != blank %}
-          <div class="why-v2-hero-background">
-            <img src="{{ section.settings.hero_image | image_url: width: 2000 }}"
-                 alt="{{ section.settings.hero_title }}"
-                 loading="eager"
-                 class="why-v2-hero-bg-image">
-            <div class="why-v2-hero-overlay"></div>
-          </div>
-        {% endif %}
       </div>
     </section>
 
