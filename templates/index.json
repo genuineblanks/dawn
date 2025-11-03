@@ -64,7 +64,7 @@
       ],
       "settings": {
         "image": "shopify://shop_images/Front_Page_3_Image.jpg",
-        "banner_heading": "FOR AMBITIOUS BRANDS WITH VISION.",
+        "banner_heading": "for startups and scaling brands.",
         "banner_paragraph": "Custom Product development.  Sampling. Production.",
         "banner_subtext1": "OVERSIZED COLLECTION",
         "banner_link_url1": "",
@@ -720,11 +720,65 @@
     },
     "text_grid_itwK3a": {
       "type": "text-grid",
+      "blocks": {
+        "add_text_grid_1_showroom": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "SHOWROOM, FACTORY & TEAM LOOKBOOK",
+            "rich": "",
+            "link": "shopify://pages/futuristic"
+          }
+        },
+        "add_text_grid_2_get_started": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "WHAT DO YOU NEED TO GET STARTED & FAQ'S",
+            "rich": "",
+            "link": "shopify://pages/how-does-it-work"
+          }
+        },
+        "add_text_grid_3_about_us": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "ABOUT US - WHY WE'RE DIFFERENT",
+            "rich": "",
+            "link": "shopify://pages/why-different"
+          }
+        },
+        "add_text_grid_4_techpack": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "TECHPACK STUDIO - GARMENT SPECIFICATIONS",
+            "rich": "",
+            "link": "shopify://pages/tech-pack-submission"
+          }
+        },
+        "image_footer": {
+          "type": "image",
+          "settings": {
+            "title": "GENUINEBLANKS",
+            "richtext": "",
+            "image_width": 100,
+            "alignment": ""
+          }
+        }
+      },
+      "block_order": [
+        "add_text_grid_1_showroom",
+        "add_text_grid_2_get_started",
+        "add_text_grid_3_about_us",
+        "add_text_grid_4_techpack",
+        "image_footer"
+      ],
       "settings": {
-        "enable_footer": false,
+        "enable_footer": true,
         "color_scheme": "scheme-1",
         "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
+        "newsletter_heading": "",
         "newsletter_paragraph": "",
         "enable_follow_on_shop": true,
         "show_social": true,
@@ -732,7 +786,7 @@
         "enable_language_selector": true,
         "payment_enable": true,
         "show_policy": false,
-        "show_policy_menu": "",
+        "show_policy_menu": "privacy-menu",
         "copyright_text": "",
         "margin_top": 0,
         "padding_top": 36,
