@@ -1,0 +1,312 @@
+{% comment %}
+  TechPack V11 - Quotation Step 1: Client Information
+  Purpose: Collect company info, email, and estimated quantity
+  For: New clients (no login required) and registered clients
+{% endcomment %}
+
+<div class="techpack-v11 techpack-flow" data-section-id="{{ section.id }}" data-flow-type="quotation" data-current-step="1">
+
+  {%- comment -%} TEST MODE BANNER {%- endcomment -%}
+  <div class="test-mode-banner" id="testModeBanner" style="display: none;">
+    <div class="test-mode-banner__content">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <strong>TEST MODE ACTIVE</strong>
+        <p>Login bypass, pre-filled data, simulated uploads. Remove before production.</p>
+      </div>
+      <button type="button" class="test-mode-banner__toggle" data-action="toggle-test-mode">
+        Disable TEST Mode
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} Progress Header {%- endcomment -%}
+  <div class="techpack-progress">
+    <div class="techpack-progress__container">
+
+      {%- comment -%} Back Button {%- endcomment -%}
+      <a href="/pages/techpack-studio" class="techpack-progress__back">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Back</span>
+      </a>
+
+      {%- comment -%} Progress Steps {%- endcomment -%}
+      <div class="techpack-progress__steps">
+        <div class="progress-step progress-step--active" data-step="1">
+          <div class="progress-step__circle">1</div>
+          <div class="progress-step__label">Client Info</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="2">
+          <div class="progress-step__circle">2</div>
+          <div class="progress-step__label">Files</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="3">
+          <div class="progress-step__circle">3</div>
+          <div class="progress-step__label">Garments</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="4">
+          <div class="progress-step__circle">4</div>
+          <div class="progress-step__label">Review</div>
+        </div>
+      </div>
+
+      {%- comment -%} Save Status {%- endcomment -%}
+      <div class="techpack-progress__save">
+        <div class="save-indicator" id="saveIndicator">
+          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="save-indicator__text">All saved</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {%- comment -%} Main Content {%- endcomment -%}
+  <div class="techpack-content">
+    <div class="techpack-content__container">
+
+      {%- comment -%} Step Header {%- endcomment -%}
+      <header class="step-header">
+        <div class="step-header__badge">Step 1 of 4</div>
+        <h1 class="step-header__title">Client Information</h1>
+        <p class="step-header__description">
+          Tell us about your company and project so we can provide accurate pricing.
+        </p>
+      </header>
+
+      {%- comment -%} Form Content {%- endcomment -%}
+      <form class="step-form" id="quotationStep1Form" data-step="1" data-flow="quotation">
+
+        {%- comment -%} Company Name {%- endcomment -%}
+        <div class="form-section">
+          <div class="form-field" data-field="company_name">
+            <label for="companyName" class="form-field__label">
+              Company Name
+              <span class="form-field__required">*</span>
+            </label>
+            <input
+              type="text"
+              id="companyName"
+              name="company_name"
+              class="form-field__input"
+              placeholder="e.g., Acme Fashion Co."
+              required
+              data-validation="required"
+              data-test-value="Test Fashion Brand Ltd."
+            >
+            <div class="form-field__status" id="companyNameStatus"></div>
+            <p class="form-field__help">
+              Your registered business name or brand name
+            </p>
+          </div>
+        </div>
+
+        {%- comment -%} Email Address {%- endcomment -%}
+        <div class="form-section">
+          <div class="form-field" data-field="email">
+            <label for="emailAddress" class="form-field__label">
+              Email Address
+              <span class="form-field__required">*</span>
+            </label>
+            <input
+              type="email"
+              id="emailAddress"
+              name="email"
+              class="form-field__input"
+              placeholder="contact@yourcompany.com"
+              required
+              data-validation="email"
+              data-test-value="test@example.com"
+            >
+            <div class="form-field__status" id="emailStatus"></div>
+            <p class="form-field__help">
+              We'll send your quotation and updates to this email
+            </p>
+          </div>
+        </div>
+
+        {%- comment -%} Estimated Quantity Slider {%- endcomment -%}
+        <div class="form-section">
+          <div class="form-field" data-field="estimated_quantity">
+            <label for="estimatedQuantity" class="form-field__label">
+              Estimated Total Quantity
+              <span class="form-field__required">*</span>
+            </label>
+
+            <div class="quantity-slider">
+              <div class="quantity-slider__header">
+                <div class="quantity-slider__value">
+                  <span id="quantityValue">75</span>
+                  <span class="quantity-slider__units">pieces</span>
+                </div>
+                <div class="quantity-slider__moq">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M8 11V8M8 5H8.007" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <span>MOQ: 75 pieces</span>
+                </div>
+              </div>
+
+              <input
+                type="range"
+                id="estimatedQuantity"
+                name="estimated_quantity"
+                class="quantity-slider__input"
+                min="75"
+                max="5000"
+                step="25"
+                value="75"
+                required
+                data-test-value="500"
+              >
+
+              <div class="quantity-slider__labels">
+                <span class="quantity-slider__label">75</span>
+                <span class="quantity-slider__label">1,000</span>
+                <span class="quantity-slider__label">2,500</span>
+                <span class="quantity-slider__label">5,000+</span>
+              </div>
+            </div>
+
+            <div class="form-field__status" id="quantityStatus"></div>
+            <p class="form-field__help">
+              This helps us estimate production costs and timelines. Minimum order quantity is 75 pieces per design.
+            </p>
+          </div>
+        </div>
+
+        {%- comment -%} Optional: Project Description {%- endcomment -%}
+        <div class="form-section">
+          <div class="form-field" data-field="project_description">
+            <label for="projectDescription" class="form-field__label">
+              Project Description
+              <span class="form-field__optional">(Optional)</span>
+            </label>
+            <textarea
+              id="projectDescription"
+              name="project_description"
+              class="form-field__textarea"
+              placeholder="Tell us about your project, target market, or any specific requirements..."
+              rows="4"
+              data-test-value="Looking to create a sustainable streetwear collection for Spring 2025. Need high-quality cotton basics with custom colors."
+            ></textarea>
+            <div class="form-field__status" id="projectDescriptionStatus"></div>
+            <p class="form-field__help">
+              Any additional context helps us provide better recommendations
+            </p>
+          </div>
+        </div>
+
+        {%- comment -%} Info Card: What Happens Next {%- endcomment -%}
+        <div class="info-card info-card--primary">
+          <div class="info-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="info-card__content">
+            <h4 class="info-card__title">What happens next?</h4>
+            <p class="info-card__text">
+              After completing all steps, we'll review your request and send a detailed quotation within 24-48 hours.
+              No commitment required at this stage.
+            </p>
+          </div>
+        </div>
+
+        {%- comment -%} Form Navigation {%- endcomment -%}
+        <div class="form-navigation">
+          <button
+            type="button"
+            class="button-secondary"
+            data-action="save-draft"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.833 17.5H4.167c-.92 0-1.667-.746-1.667-1.667V4.167c0-.92.746-1.667 1.667-1.667h8.333L15.833 5.833v10c0 .92-.746 1.667-1.666 1.667z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.333 17.5v-6.667H6.667V17.5M6.667 2.5V5.833h5.833" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Save Draft
+          </button>
+
+          <button
+            type="submit"
+            class="button-primary"
+            data-action="next-step"
+          >
+            Continue to Files
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  {%- comment -%} Customer Data Injection (for auto-fill if logged in) {%- endcomment -%}
+  <script>
+    window.TECHPACK_V11_STEP_DATA = {
+      step: 1,
+      flow: 'quotation',
+      customer: window.TECHPACK_V11_CUSTOMER || {},
+      savedData: null // Will be populated from localStorage
+    };
+  </script>
+
+</div>
+
+{% schema %}
+{
+  "name": "TP V11 Quote Step 1",
+  "class": "section-techpack-v11-step",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Step Configuration"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_test_mode",
+      "label": "Enable TEST Mode",
+      "default": false,
+      "info": "Bypass validation, pre-fill data, simulate uploads. DISABLE in production!"
+    },
+    {
+      "type": "range",
+      "id": "moq_minimum",
+      "label": "Minimum Order Quantity (MOQ)",
+      "min": 50,
+      "max": 200,
+      "step": 25,
+      "default": 75,
+      "unit": "pcs"
+    },
+    {
+      "type": "range",
+      "id": "quantity_max",
+      "label": "Maximum Quantity Slider",
+      "min": 1000,
+      "max": 9000,
+      "step": 1000,
+      "default": 5000,
+      "unit": "pcs"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack V11 - Quotation Step 1"
+    }
+  ]
+}
+{% endschema %}
