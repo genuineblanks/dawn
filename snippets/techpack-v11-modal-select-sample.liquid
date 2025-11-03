@@ -1,0 +1,159 @@
+{% comment %}
+  TechPack V11 - Select Sample Modal
+  Purpose: Choose which approved sample(s) to produce in bulk order
+  Triggered: When registered client clicks "Place Bulk Order"
+{% endcomment %}
+
+<div
+  class="techpack-modal"
+  id="modalSelectSample"
+  data-modal-id="modalSelectSample"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalSelectSample-title"
+  aria-hidden="true"
+  style="display: none;"
+>
+  {%- comment -%} Backdrop {%- endcomment -%}
+  <div class="techpack-modal__backdrop" data-modal-close="modalSelectSample"></div>
+
+  {%- comment -%} Modal Container {%- endcomment -%}
+  <div class="techpack-modal__container techpack-modal__container--xl">
+
+    {%- comment -%} Modal Header {%- endcomment -%}
+    <div class="techpack-modal__header">
+      <h3 class="techpack-modal__title" id="modalSelectSample-title">
+        Select Approved Samples
+      </h3>
+
+      <button
+        type="button"
+        class="techpack-modal__close"
+        data-modal-close="modalSelectSample"
+        aria-label="Close modal"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {%- comment -%} Modal Body {%- endcomment -%}
+    <div class="techpack-modal__body">
+      <p class="techpack-modal__description">
+        Choose one or more approved samples to include in your bulk order. You can combine multiple designs into a single production run.
+      </p>
+
+      {%- comment -%} Selection Mode Toggle {%- endcomment -%}
+      <div class="selection-mode-toggle">
+        <button
+          type="button"
+          class="selection-mode-btn selection-mode-btn--active"
+          data-mode="single"
+          aria-pressed="true"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span>Single Sample</span>
+        </button>
+        <button
+          type="button"
+          class="selection-mode-btn"
+          data-mode="multiple"
+          aria-pressed="false"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span>Combine Multiple</span>
+        </button>
+      </div>
+
+      {%- comment -%} Samples List (Populated by JS) {%- endcomment -%}
+      <div class="samples-grid" id="samplesGrid">
+        {%- comment -%}
+          This will be populated dynamically with sample cards
+          Each card structure (for reference):
+          <div class="sample-card" data-sample-id="123">
+            <input type="checkbox" id="sample-123" name="samples[]" value="123">
+            <label for="sample-123">
+              <div class="sample-card__image">
+                <img src="..." alt="...">
+              </div>
+              <div class="sample-card__content">
+                <h5>Garment Name - Color</h5>
+                <p>Fabric, Size</p>
+                <span class="badge badge--success">Approved</span>
+              </div>
+            </label>
+          </div>
+        {%- endcomment -%}
+
+        {%- comment -%} Empty State {%- endcomment -%}
+        <div class="empty-state" id="samplesEmptyState">
+          <div class="empty-state__icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32 16V48M16 32H48" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="32" cy="32" r="24" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+            </svg>
+          </div>
+          <h4 class="empty-state__title">No Approved Samples Found</h4>
+          <p class="empty-state__description">
+            You need to have at least one approved sample before placing a bulk order.
+            Order samples first to validate your designs.
+          </p>
+          <a href="#" class="button-primary" data-action="go-to-samples">
+            Order Samples
+          </a>
+        </div>
+
+        {%- comment -%} Loading State {%- endcomment -%}
+        <div class="loading-state" id="samplesLoadingState" style="display: none;">
+          <div class="loading-spinner"></div>
+          <p>Loading your approved samples...</p>
+        </div>
+      </div>
+
+      {%- comment -%} Selected Summary {%- endcomment -%}
+      <div class="selected-summary" id="selectedSummary" style="display: none;">
+        <div class="selected-summary__content">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span id="selectedCount">0 samples selected</span>
+        </div>
+        <button type="button" class="button-link" data-action="clear-selection">
+          Clear selection
+        </button>
+      </div>
+
+      {%- comment -%} Modal Footer Actions {%- endcomment -%}
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="button-secondary"
+          data-modal-close="modalSelectSample"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="button-primary"
+          data-action="confirm-sample-selection"
+          disabled
+        >
+          Continue with Selected Samples
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

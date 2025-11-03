@@ -1,0 +1,65 @@
+{% comment %}
+  TechPack V11 - Base Modal Structure
+  Purpose: Reusable modal wrapper component
+  Usage: {% render 'techpack-v11-modal-base', modal_id: 'unique-id', modal_title: 'Title', modal_size: 'md' %}
+  Sizes: sm (400px), md (600px), lg (800px), xl (1000px), full (90vw)
+{% endcomment %}
+
+{% liquid
+  assign modal_id = modal_id | default: 'modal'
+  assign modal_title = modal_title | default: 'Modal'
+  assign modal_size = modal_size | default: 'md'
+  assign modal_closeable = modal_closeable | default: true
+%}
+
+<div
+  class="techpack-modal"
+  id="{{ modal_id }}"
+  data-modal-id="{{ modal_id }}"
+  data-modal-size="{{ modal_size }}"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="{{ modal_id }}-title"
+  aria-hidden="true"
+  style="display: none;"
+>
+  {%- comment -%} Backdrop {%- endcomment -%}
+  <div class="techpack-modal__backdrop" data-modal-close="{{ modal_id }}"></div>
+
+  {%- comment -%} Modal Container {%- endcomment -%}
+  <div class="techpack-modal__container techpack-modal__container--{{ modal_size }}">
+
+    {%- comment -%} Modal Header {%- endcomment -%}
+    <div class="techpack-modal__header">
+      <h3 class="techpack-modal__title" id="{{ modal_id }}-title">
+        {{ modal_title }}
+      </h3>
+
+      {% if modal_closeable %}
+        <button
+          type="button"
+          class="techpack-modal__close"
+          data-modal-close="{{ modal_id }}"
+          aria-label="Close modal"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+
+    {%- comment -%} Modal Body {%- endcomment -%}
+    <div class="techpack-modal__body">
+      {{ modal_content }}
+    </div>
+
+    {%- comment -%} Modal Footer (optional, added via slot) {%- endcomment -%}
+    {% if modal_footer != blank %}
+      <div class="techpack-modal__footer">
+        {{ modal_footer }}
+      </div>
+    {% endif %}
+
+  </div>
+</div>

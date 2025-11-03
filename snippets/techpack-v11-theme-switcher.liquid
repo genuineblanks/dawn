@@ -1,0 +1,172 @@
+{% comment %}
+  TechPack V11 - Theme Switcher Script
+  Purpose: Initialize theme toggle and handle light/dark mode switching
+  Usage: Include in theme.liquid or section files using {% render 'techpack-v11-theme-switcher' %}
+{% endcomment %}
+
+<script>
+(function() {
+  'use strict';
+
+  /**
+   * TechPack V11 Theme Switcher
+   * Handles light/dark theme toggle with localStorage persistence
+   */
+  const ThemeSwitcher = {
+    STORAGE_KEY: 'techpack_v11_theme',
+    THEME_LIGHT: 'light',
+    THEME_DARK: 'dark',
+
+    /**
+     * Initialize theme switcher
+     */
+    init: function() {
+      // Get saved theme or default to light
+      const savedTheme = this.getSavedTheme();
+      this.applyTheme(savedTheme);
+
+      // Setup toggle button listeners
+      this.setupEventListeners();
+
+      // Listen for system theme changes (optional)
+      this.watchSystemTheme();
+    },
+
+    /**
+     * Get theme from localStorage
+     */
+    getSavedTheme: function() {
+      try {
+        const saved = localStorage.getItem(this.STORAGE_KEY);
+        if (saved === this.THEME_LIGHT || saved === this.THEME_DARK) {
+          return saved;
+        }
+      } catch (e) {
+        console.warn('LocalStorage not available:', e);
+      }
+
+      // Default to light theme
+      return this.THEME_LIGHT;
+    },
+
+    /**
+     * Save theme to localStorage
+     */
+    saveTheme: function(theme) {
+      try {
+        localStorage.setItem(this.STORAGE_KEY, theme);
+      } catch (e) {
+        console.warn('Could not save theme:', e);
+      }
+    },
+
+    /**
+     * Apply theme to document
+     */
+    applyTheme: function(theme) {
+      const root = document.documentElement;
+      const techpackContainer = document.querySelector('.techpack-v11');
+
+      // Update data attribute on root
+      root.setAttribute('data-theme', theme);
+
+      // Update data attribute on techpack container if exists
+      if (techpackContainer) {
+        techpackContainer.setAttribute('data-theme', theme);
+      }
+
+      // Update toggle button state
+      const toggleButton = document.getElementById('themeToggle');
+      if (toggleButton) {
+        toggleButton.setAttribute('data-theme', theme);
+        toggleButton.setAttribute('aria-label',
+          theme === this.THEME_LIGHT ? 'Switch to dark mode' : 'Switch to light mode'
+        );
+      }
+
+      // Save to localStorage
+      this.saveTheme(theme);
+
+      // Dispatch custom event
+      this.dispatchThemeChange(theme);
+    },
+
+    /**
+     * Toggle between light and dark
+     */
+    toggleTheme: function() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === this.THEME_LIGHT ? this.THEME_DARK : this.THEME_LIGHT;
+      this.applyTheme(newTheme);
+    },
+
+    /**
+     * Setup event listeners for toggle buttons
+     */
+    setupEventListeners: function() {
+      const self = this;
+
+      // Listen for clicks on theme toggle button
+      document.addEventListener('click', function(e) {
+        const toggleButton = e.target.closest('#themeToggle, .theme-toggle-btn');
+        if (toggleButton) {
+          e.preventDefault();
+          self.toggleTheme();
+        }
+      });
+
+      // Listen for keyboard (Enter/Space on toggle button)
+      document.addEventListener('keydown', function(e) {
+        const toggleButton = e.target.closest('#themeToggle, .theme-toggle-btn');
+        if (toggleButton && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          self.toggleTheme();
+        }
+      });
+    },
+
+    /**
+     * Watch for system theme changes (prefers-color-scheme)
+     */
+    watchSystemTheme: function() {
+      if (!window.matchMedia) return;
+
+      const self = this;
+      const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+      // Only auto-switch if user hasn't manually set a preference
+      darkModeQuery.addEventListener('change', function(e) {
+        // Check if user has manually set a theme
+        const hasManualPreference = localStorage.getItem(self.STORAGE_KEY);
+
+        if (!hasManualPreference) {
+          const systemTheme = e.matches ? self.THEME_DARK : self.THEME_LIGHT;
+          self.applyTheme(systemTheme);
+        }
+      });
+    },
+
+    /**
+     * Dispatch custom event when theme changes
+     */
+    dispatchThemeChange: function(theme) {
+      const event = new CustomEvent('techpack:themechange', {
+        detail: { theme: theme },
+        bubbles: true
+      });
+      document.dispatchEvent(event);
+    }
+  };
+
+  /**
+   * Initialize immediately to prevent flash of wrong theme
+   */
+  ThemeSwitcher.init();
+
+  /**
+   * Expose to global scope for external use if needed
+   */
+  window.TechPackThemeSwitcher = ThemeSwitcher;
+
+})();
+</script>

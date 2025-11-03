@@ -1,0 +1,123 @@
+{% comment %}
+  TechPack V11 - Submission Type Modal
+  Purpose: For registered clients to choose between new submission or continuing saved one
+  Triggered: When registered client clicks Quotation/Sample/Bulk and has saved data
+{% endcomment %}
+
+<div
+  class="techpack-modal"
+  id="modalSubmissionType"
+  data-modal-id="modalSubmissionType"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalSubmissionType-title"
+  aria-hidden="true"
+  style="display: none;"
+>
+  {%- comment -%} Backdrop {%- endcomment -%}
+  <div class="techpack-modal__backdrop" data-modal-close="modalSubmissionType"></div>
+
+  {%- comment -%} Modal Container {%- endcomment -%}
+  <div class="techpack-modal__container techpack-modal__container--md">
+
+    {%- comment -%} Modal Header {%- endcomment -%}
+    <div class="techpack-modal__header">
+      <h3 class="techpack-modal__title" id="modalSubmissionType-title">
+        Continue or Start New?
+      </h3>
+
+      <button
+        type="button"
+        class="techpack-modal__close"
+        data-modal-close="modalSubmissionType"
+        aria-label="Close modal"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {%- comment -%} Modal Body {%- endcomment -%}
+    <div class="techpack-modal__body">
+      <p class="techpack-modal__description">
+        We found a saved request. Would you like to continue where you left off or start a new submission?
+      </p>
+
+      {%- comment -%} Saved Request Info Card {%- endcomment -%}
+      <div class="saved-request-card" id="savedRequestInfo">
+        <div class="saved-request-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="saved-request-card__content">
+          <h4 class="saved-request-card__title" id="savedRequestTitle">
+            <!-- Populated by JS: e.g., "Quotation Request" -->
+          </h4>
+          <p class="saved-request-card__meta" id="savedRequestMeta">
+            <!-- Populated by JS: e.g., "Last saved: 2 hours ago" -->
+          </p>
+        </div>
+
+        <div class="saved-request-card__badge" id="savedRequestBadge">
+          <!-- Populated by JS: e.g., "Step 2 of 4" -->
+        </div>
+      </div>
+
+      {%- comment -%} Action Options {%- endcomment -%}
+      <div class="modal-action-grid">
+
+        {%- comment -%} Continue Saved {%- endcomment -%}
+        <button
+          type="button"
+          class="modal-action-card"
+          data-action="continue-saved"
+        >
+          <div class="modal-action-card__icon modal-action-card__icon--primary">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="modal-action-card__content">
+            <h5 class="modal-action-card__title">Continue Saved Request</h5>
+            <p class="modal-action-card__description">
+              Resume where you left off with all your data intact
+            </p>
+          </div>
+        </button>
+
+        {%- comment -%} Start New {%- endcomment -%}
+        <button
+          type="button"
+          class="modal-action-card"
+          data-action="start-new"
+        >
+          <div class="modal-action-card__icon modal-action-card__icon--secondary">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="modal-action-card__content">
+            <h5 class="modal-action-card__title">Start New Request</h5>
+            <p class="modal-action-card__description">
+              Begin fresh submission (saved data will be kept)
+            </p>
+          </div>
+        </button>
+
+      </div>
+
+      {%- comment -%} Warning About Starting New {%- endcomment -%}
+      <div class="alert alert--info">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M10 14V10M10 6H10.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p>Your saved request will not be deleted. You can access it anytime from your dashboard.</p>
+      </div>
+    </div>
+
+  </div>
+</div>

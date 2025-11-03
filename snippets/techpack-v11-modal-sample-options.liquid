@@ -1,0 +1,190 @@
+{% comment %}
+  TechPack V11 - Sample Options Modal
+  Purpose: Choose between Stock Sample or Custom Sample
+  Triggered: When registered client clicks "Order Sample"
+{% endcomment %}
+
+<div
+  class="techpack-modal"
+  id="modalSampleOptions"
+  data-modal-id="modalSampleOptions"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalSampleOptions-title"
+  aria-hidden="true"
+  style="display: none;"
+>
+  {%- comment -%} Backdrop {%- endcomment -%}
+  <div class="techpack-modal__backdrop" data-modal-close="modalSampleOptions"></div>
+
+  {%- comment -%} Modal Container {%- endcomment -%}
+  <div class="techpack-modal__container techpack-modal__container--lg">
+
+    {%- comment -%} Modal Header {%- endcomment -%}
+    <div class="techpack-modal__header">
+      <h3 class="techpack-modal__title" id="modalSampleOptions-title">
+        Choose Sample Type
+      </h3>
+
+      <button
+        type="button"
+        class="techpack-modal__close"
+        data-modal-close="modalSampleOptions"
+        aria-label="Close modal"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {%- comment -%} Modal Body {%- endcomment -%}
+    <div class="techpack-modal__body">
+      <p class="techpack-modal__description">
+        Select the type of sample you need. Stock samples are ready-made designs, while custom samples are built to your specifications.
+      </p>
+
+      {%- comment -%} Sample Type Options {%- endcomment -%}
+      <div class="sample-type-grid">
+
+        {%- comment -%} Stock Sample Option {%- endcomment -%}
+        <button
+          type="button"
+          class="sample-type-card"
+          data-action="select-sample-type"
+          data-sample-type="stock"
+        >
+          <div class="sample-type-card__header">
+            <div class="sample-type-card__icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8" y="12" width="32" height="28" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 20h32M16 12V8M32 12V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="16" cy="28" r="2" fill="currentColor"/>
+                <circle cx="24" cy="28" r="2" fill="currentColor"/>
+                <circle cx="32" cy="28" r="2" fill="currentColor"/>
+              </svg>
+            </div>
+            <h4 class="sample-type-card__title">Stock Sample</h4>
+          </div>
+
+          <div class="sample-type-card__content">
+            <p class="sample-type-card__description">
+              Order samples from our existing catalog of ready-made designs. Perfect for testing quality and fit before customization.
+            </p>
+
+            <ul class="sample-type-card__features">
+              <li class="sample-type-card__feature">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Faster delivery (ready to ship)</span>
+              </li>
+              <li class="sample-type-card__feature">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Lower cost per unit</span>
+              </li>
+              <li class="sample-type-card__feature">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Pre-designed garments only</span>
+              </li>
+              <li class="sample-type-card__feature">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Standard colors available</span>
+              </li>
+            </ul>
+
+            <div class="sample-type-card__badge sample-type-card__badge--success">
+              Recommended for first orders
+            </div>
+          </div>
+
+          <div class="sample-type-card__action">
+            <span class="button-text">Select Stock Sample</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </button>
+
+        {%- comment -%} Custom Sample Option {%- endcomment -%}
+        <button
+          type="button"
+          class="sample-type-card"
+          data-action="select-sample-type"
+          data-sample-type="custom"
+        >
+          <div class="sample-type-card__header">
+            <div class="sample-type-card__icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 28L24 12L40 28M24 12V44" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="24" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h4 class="sample-type-card__title">Custom Sample</h4>
+          </div>
+
+          <div class="sample-type-card__content">
+            <p class="sample-type-card__description">
+              Create samples from your own designs with custom colors, fabrics, and specifications. Full production prototype.
+            </p>
+
+            <ul class="sample-type-card__features">
+              <li class="sample-type-card__feature">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Your own designs & specs</span>
+              </li>
+              <li class="sample-type-card__feature">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Custom Pantone colors</span>
+              </li>
+              <li class="sample-type-card__feature">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Multiple fabric options</span>
+              </li>
+              <li class="sample-type-card__feature">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Longer production time</span>
+              </li>
+            </ul>
+
+            <div class="sample-type-card__badge sample-type-card__badge--info">
+              Perfect for bulk production prep
+            </div>
+          </div>
+
+          <div class="sample-type-card__action">
+            <span class="button-text">Select Custom Sample</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </button>
+
+      </div>
+
+      {%- comment -%} Help Text {%- endcomment -%}
+      <div class="alert alert--info">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M10 14V10M10 6H10.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p><strong>Need help choosing?</strong> Start with stock samples to test quality, then order custom samples for your final designs.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
