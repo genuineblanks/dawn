@@ -24,7 +24,7 @@
         "about_feature_2": "6-36hour quotations through our Garment Studio",
         "about_feature_3": "3-4 weeks for basics, 5-6 for complex pieces",
         "about_feature_4": "Complete in-house: pattern makers, cutting, sewing, embroidery, printing* Showroom visits welcome - see your production, meet your team",
-        "about_image": "shopify://shop_images/DSC09632_copiar.jpg",
+        "about_image": "shopify://shop_images/6__Garment_Mockup_Creation_1dc4fced-7f70-444a-bf01-47853f00b1bf.png",
         "about_bg_image": "shopify://shop_images/who_are_we.jpg",
         "techpack_badge": "Innovation",
         "techpack_title": "The TechPack Studio Advantage",
@@ -73,8 +73,10 @@
         "sustainability_feature_3": "Pre-testing protocol: washing, measuring, dye stability, fit validation",
         "sustainability_feature_4": "European manufacturing standards with Portuguese craftsmanship",
         "sustainability_feature_5": "Dedicated team consistency: your account manager & seamstress",
-        "sustainability_button_text": "Begin Your Custom Project",
-        "sustainability_button_url": "shopify://pages/tech-pack-submission"
+        "sustainability_button_text": "",
+        "sustainability_button_url": "shopify://pages/tech-pack-submission",
+        "sustainability_image": "shopify://shop_images/5__Packaging_Design_3ebb164a-1f6a-437a-bcdb-585cb2f31c37.jpg",
+        "sustainability_bg_image": "shopify://shop_images/ABOUT_US_5.jpg"
       }
     }
   },
