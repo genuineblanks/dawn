@@ -746,7 +746,8 @@
             "title": "",
             "subtitle": "ABOUT US - WHY WE'RE DIFFERENT",
             "rich": "",
-            "link": "shopify://pages/why-different"
+            "link": "shopify://pages/about-us",
+            "background_image": "shopify://shop_images/ABOUT_US_4_1.jpg"
           }
         },
         "add_text_grid_4_techpack": {
