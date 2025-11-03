@@ -1,0 +1,795 @@
+{{ 'why-different-v2.css' | asset_url | stylesheet_tag }}
+
+<div class="why-v2-page-wrapper" data-theme="{{ section.settings.color_scheme }}">
+  <div class="why-v2-scroll-container">
+
+    {%- comment -%} SECTION 1: HERO / INTRODUCTION {%- endcomment -%}
+    <section class="why-v2-section why-v2-hero" id="why-v2-section-1" data-section-index="1">
+      <div class="why-v2-section-inner">
+        <div class="why-v2-hero-content">
+          {% if section.settings.hero_subtitle != blank %}
+            <p class="why-v2-hero-subtitle">{{ section.settings.hero_subtitle }}</p>
+          {% endif %}
+
+          {% if section.settings.hero_title != blank %}
+            <h1 class="why-v2-hero-title">{{ section.settings.hero_title }}</h1>
+          {% endif %}
+
+          {% if section.settings.hero_description != blank %}
+            <p class="why-v2-hero-description">{{ section.settings.hero_description }}</p>
+          {% endif %}
+
+          <div class="why-v2-scroll-indicator">
+            <span class="why-v2-scroll-text">Scroll to explore</span>
+            <svg class="why-v2-scroll-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 5V19M12 19L19 12M12 19L5 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        {% if section.settings.hero_image != blank %}
+          <div class="why-v2-hero-background">
+            <img src="{{ section.settings.hero_image | image_url: width: 2000 }}"
+                 alt="{{ section.settings.hero_title }}"
+                 loading="eager"
+                 class="why-v2-hero-bg-image">
+            <div class="why-v2-hero-overlay"></div>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    {%- comment -%} SECTION 2: ABOUT US / MANUFACTURING EXCELLENCE {%- endcomment -%}
+    <section class="why-v2-section why-v2-about" id="why-v2-section-2" data-section-index="2">
+      <div class="why-v2-section-inner">
+        <div class="why-v2-content-grid">
+          <div class="why-v2-content-text">
+            {% if section.settings.about_badge != blank %}
+              <span class="why-v2-badge">{{ section.settings.about_badge }}</span>
+            {% endif %}
+
+            {% if section.settings.about_title != blank %}
+              <h2 class="why-v2-section-title">{{ section.settings.about_title }}</h2>
+            {% endif %}
+
+            {% if section.settings.about_description != blank %}
+              <div class="why-v2-section-description">{{ section.settings.about_description }}</div>
+            {% endif %}
+
+            <ul class="why-v2-features-list">
+              {% if section.settings.about_feature_1 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.about_feature_1 }}</span>
+                </li>
+              {% endif %}
+
+              {% if section.settings.about_feature_2 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.about_feature_2 }}</span>
+                </li>
+              {% endif %}
+
+              {% if section.settings.about_feature_3 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.about_feature_3 }}</span>
+                </li>
+              {% endif %}
+
+              {% if section.settings.about_feature_4 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.about_feature_4 }}</span>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+
+          {% if section.settings.about_image != blank %}
+            <div class="why-v2-content-visual">
+              <div class="why-v2-visual-card">
+                <img src="{{ section.settings.about_image | image_url: width: 800 }}"
+                     alt="{{ section.settings.about_title }}"
+                     loading="lazy"
+                     class="why-v2-visual-image">
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    {%- comment -%} SECTION 3: TECHPACK STUDIO ADVANTAGE {%- endcomment -%}
+    <section class="why-v2-section why-v2-techpack" id="why-v2-section-3" data-section-index="3">
+      <div class="why-v2-section-inner">
+        <div class="why-v2-content-grid why-v2-content-grid-reverse">
+          {% if section.settings.techpack_image != blank %}
+            <div class="why-v2-content-visual">
+              <div class="why-v2-visual-card why-v2-visual-card-glow">
+                <img src="{{ section.settings.techpack_image | image_url: width: 800 }}"
+                     alt="{{ section.settings.techpack_title }}"
+                     loading="lazy"
+                     class="why-v2-visual-image">
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="why-v2-content-text">
+            {% if section.settings.techpack_badge != blank %}
+              <span class="why-v2-badge why-v2-badge-accent">{{ section.settings.techpack_badge }}</span>
+            {% endif %}
+
+            {% if section.settings.techpack_title != blank %}
+              <h2 class="why-v2-section-title">{{ section.settings.techpack_title }}</h2>
+            {% endif %}
+
+            {% if section.settings.techpack_description != blank %}
+              <div class="why-v2-section-description">{{ section.settings.techpack_description }}</div>
+            {% endif %}
+
+            <div class="why-v2-steps-grid">
+              {% if section.settings.techpack_step_1 != blank %}
+                <div class="why-v2-step-card">
+                  <span class="why-v2-step-number">01</span>
+                  <p class="why-v2-step-text">{{ section.settings.techpack_step_1 }}</p>
+                </div>
+              {% endif %}
+
+              {% if section.settings.techpack_step_2 != blank %}
+                <div class="why-v2-step-card">
+                  <span class="why-v2-step-number">02</span>
+                  <p class="why-v2-step-text">{{ section.settings.techpack_step_2 }}</p>
+                </div>
+              {% endif %}
+
+              {% if section.settings.techpack_step_3 != blank %}
+                <div class="why-v2-step-card">
+                  <span class="why-v2-step-number">03</span>
+                  <p class="why-v2-step-text">{{ section.settings.techpack_step_3 }}</p>
+                </div>
+              {% endif %}
+
+              {% if section.settings.techpack_step_4 != blank %}
+                <div class="why-v2-step-card">
+                  <span class="why-v2-step-number">04</span>
+                  <p class="why-v2-step-text">{{ section.settings.techpack_step_4 }}</p>
+                </div>
+              {% endif %}
+            </div>
+
+            {% if section.settings.techpack_button_text != blank and section.settings.techpack_button_url != blank %}
+              <a href="{{ section.settings.techpack_button_url }}" class="why-v2-btn why-v2-btn-primary">
+                {{ section.settings.techpack_button_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {%- comment -%} SECTION 4: MOQs, PRICING & FLEXIBILITY {%- endcomment -%}
+    <section class="why-v2-section why-v2-pricing" id="why-v2-section-4" data-section-index="4">
+      <div class="why-v2-section-inner">
+        <div class="why-v2-content-centered">
+          {% if section.settings.pricing_badge != blank %}
+            <span class="why-v2-badge">{{ section.settings.pricing_badge }}</span>
+          {% endif %}
+
+          {% if section.settings.pricing_title != blank %}
+            <h2 class="why-v2-section-title">{{ section.settings.pricing_title }}</h2>
+          {% endif %}
+
+          {% if section.settings.pricing_description != blank %}
+            <div class="why-v2-section-description">{{ section.settings.pricing_description }}</div>
+          {% endif %}
+
+          <div class="why-v2-pricing-cards">
+            {% if section.settings.pricing_card_1_title != blank %}
+              <div class="why-v2-pricing-card">
+                <h3 class="why-v2-pricing-card-title">{{ section.settings.pricing_card_1_title }}</h3>
+                <p class="why-v2-pricing-card-text">{{ section.settings.pricing_card_1_text }}</p>
+              </div>
+            {% endif %}
+
+            {% if section.settings.pricing_card_2_title != blank %}
+              <div class="why-v2-pricing-card">
+                <h3 class="why-v2-pricing-card-title">{{ section.settings.pricing_card_2_title }}</h3>
+                <p class="why-v2-pricing-card-text">{{ section.settings.pricing_card_2_text }}</p>
+              </div>
+            {% endif %}
+
+            {% if section.settings.pricing_card_3_title != blank %}
+              <div class="why-v2-pricing-card">
+                <h3 class="why-v2-pricing-card-title">{{ section.settings.pricing_card_3_title }}</h3>
+                <p class="why-v2-pricing-card-text">{{ section.settings.pricing_card_3_text }}</p>
+              </div>
+            {% endif %}
+
+            {% if section.settings.pricing_card_4_title != blank %}
+              <div class="why-v2-pricing-card">
+                <h3 class="why-v2-pricing-card-title">{{ section.settings.pricing_card_4_title }}</h3>
+                <p class="why-v2-pricing-card-text">{{ section.settings.pricing_card_4_text }}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {%- comment -%} SECTION 5: TIMELINES & DELIVERY {%- endcomment -%}
+    <section class="why-v2-section why-v2-timeline" id="why-v2-section-5" data-section-index="5">
+      <div class="why-v2-section-inner">
+        <div class="why-v2-content-centered">
+          {% if section.settings.timeline_badge != blank %}
+            <span class="why-v2-badge">{{ section.settings.timeline_badge }}</span>
+          {% endif %}
+
+          {% if section.settings.timeline_title != blank %}
+            <h2 class="why-v2-section-title">{{ section.settings.timeline_title }}</h2>
+          {% endif %}
+
+          {% if section.settings.timeline_description != blank %}
+            <div class="why-v2-section-description">{{ section.settings.timeline_description }}</div>
+          {% endif %}
+
+          <div class="why-v2-timeline-flow">
+            {% if section.settings.timeline_step_1_title != blank %}
+              <div class="why-v2-timeline-item">
+                <div class="why-v2-timeline-marker">
+                  <span class="why-v2-timeline-dot"></span>
+                </div>
+                <div class="why-v2-timeline-content">
+                  <h3 class="why-v2-timeline-title">{{ section.settings.timeline_step_1_title }}</h3>
+                  <p class="why-v2-timeline-duration">{{ section.settings.timeline_step_1_duration }}</p>
+                  <p class="why-v2-timeline-text">{{ section.settings.timeline_step_1_text }}</p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if section.settings.timeline_step_2_title != blank %}
+              <div class="why-v2-timeline-item">
+                <div class="why-v2-timeline-marker">
+                  <span class="why-v2-timeline-dot"></span>
+                </div>
+                <div class="why-v2-timeline-content">
+                  <h3 class="why-v2-timeline-title">{{ section.settings.timeline_step_2_title }}</h3>
+                  <p class="why-v2-timeline-duration">{{ section.settings.timeline_step_2_duration }}</p>
+                  <p class="why-v2-timeline-text">{{ section.settings.timeline_step_2_text }}</p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if section.settings.timeline_step_3_title != blank %}
+              <div class="why-v2-timeline-item">
+                <div class="why-v2-timeline-marker">
+                  <span class="why-v2-timeline-dot"></span>
+                </div>
+                <div class="why-v2-timeline-content">
+                  <h3 class="why-v2-timeline-title">{{ section.settings.timeline_step_3_title }}</h3>
+                  <p class="why-v2-timeline-duration">{{ section.settings.timeline_step_3_duration }}</p>
+                  <p class="why-v2-timeline-text">{{ section.settings.timeline_step_3_text }}</p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if section.settings.timeline_step_4_title != blank %}
+              <div class="why-v2-timeline-item">
+                <div class="why-v2-timeline-marker">
+                  <span class="why-v2-timeline-dot"></span>
+                </div>
+                <div class="why-v2-timeline-content">
+                  <h3 class="why-v2-timeline-title">{{ section.settings.timeline_step_4_title }}</h3>
+                  <p class="why-v2-timeline-duration">{{ section.settings.timeline_step_4_duration }}</p>
+                  <p class="why-v2-timeline-text">{{ section.settings.timeline_step_4_text }}</p>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {%- comment -%} SECTION 6: SUSTAINABILITY & QUALITY COMMITMENT {%- endcomment -%}
+    <section class="why-v2-section why-v2-sustainability" id="why-v2-section-6" data-section-index="6">
+      <div class="why-v2-section-inner">
+        <div class="why-v2-content-grid">
+          <div class="why-v2-content-text">
+            {% if section.settings.sustainability_badge != blank %}
+              <span class="why-v2-badge why-v2-badge-success">{{ section.settings.sustainability_badge }}</span>
+            {% endif %}
+
+            {% if section.settings.sustainability_title != blank %}
+              <h2 class="why-v2-section-title">{{ section.settings.sustainability_title }}</h2>
+            {% endif %}
+
+            {% if section.settings.sustainability_description != blank %}
+              <div class="why-v2-section-description">{{ section.settings.sustainability_description }}</div>
+            {% endif %}
+
+            <ul class="why-v2-features-list">
+              {% if section.settings.sustainability_feature_1 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.sustainability_feature_1 }}</span>
+                </li>
+              {% endif %}
+
+              {% if section.settings.sustainability_feature_2 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.sustainability_feature_2 }}</span>
+                </li>
+              {% endif %}
+
+              {% if section.settings.sustainability_feature_3 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.sustainability_feature_3 }}</span>
+                </li>
+              {% endif %}
+
+              {% if section.settings.sustainability_feature_4 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.sustainability_feature_4 }}</span>
+                </li>
+              {% endif %}
+
+              {% if section.settings.sustainability_feature_5 != blank %}
+                <li class="why-v2-feature-item">
+                  <svg class="why-v2-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6666 5L7.49998 14.1667L3.33331 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.sustainability_feature_5 }}</span>
+                </li>
+              {% endif %}
+            </ul>
+
+            {% if section.settings.sustainability_button_text != blank and section.settings.sustainability_button_url != blank %}
+              <a href="{{ section.settings.sustainability_button_url }}" class="why-v2-btn why-v2-btn-primary">
+                {{ section.settings.sustainability_button_text }}
+              </a>
+            {% endif %}
+          </div>
+
+          {% if section.settings.sustainability_image != blank %}
+            <div class="why-v2-content-visual">
+              <div class="why-v2-visual-card">
+                <img src="{{ section.settings.sustainability_image | image_url: width: 800 }}"
+                     alt="{{ section.settings.sustainability_title }}"
+                     loading="lazy"
+                     class="why-v2-visual-image">
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="{{ 'why-different-v2.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Why Different V2",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Color Scheme"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Theme",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "header",
+      "content": "Section 1: Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Subtitle",
+      "default": "Manufacturing Excellence"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Title",
+      "default": "Luxury Manufacturing. Refined."
+    },
+    {
+      "type": "textarea",
+      "id": "hero_description",
+      "label": "Description",
+      "default": "20+ years of Portuguese craftsmanship meets modern precision"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Section 2: About Us / Manufacturing"
+    },
+    {
+      "type": "text",
+      "id": "about_badge",
+      "label": "Badge",
+      "default": "Who We Are"
+    },
+    {
+      "type": "text",
+      "id": "about_title",
+      "label": "Title",
+      "default": "Portuguese Excellence, Globally Trusted"
+    },
+    {
+      "type": "richtext",
+      "id": "about_description",
+      "label": "Description",
+      "default": "<p>Based in Barcelos, Portugal, we bring over 20 years of luxury streetwear manufacturing expertise to every project. Our state-of-the-art facility offers complete transparency—visit us, film the process, see quality in action.</p>"
+    },
+    {
+      "type": "text",
+      "id": "about_feature_1",
+      "label": "Feature 1",
+      "default": "Barcelos, Portugal facility with open-door transparency"
+    },
+    {
+      "type": "text",
+      "id": "about_feature_2",
+      "label": "Feature 2",
+      "default": "20+ years of luxury streetwear manufacturing"
+    },
+    {
+      "type": "text",
+      "id": "about_feature_3",
+      "label": "Feature 3",
+      "default": "Complete in-house capabilities: cut & sew, embroidery, screen printing"
+    },
+    {
+      "type": "text",
+      "id": "about_feature_4",
+      "label": "Feature 4",
+      "default": "Multi-stage quality assurance at every production phase"
+    },
+    {
+      "type": "image_picker",
+      "id": "about_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Section 3: TechPack Studio"
+    },
+    {
+      "type": "text",
+      "id": "techpack_badge",
+      "label": "Badge",
+      "default": "Innovation"
+    },
+    {
+      "type": "text",
+      "id": "techpack_title",
+      "label": "Title",
+      "default": "The TechPack Studio Advantage"
+    },
+    {
+      "type": "richtext",
+      "id": "techpack_description",
+      "label": "Description",
+      "default": "<p>Our proprietary TechPack Studio transforms complex garment specifications into a seamless, guided experience. Professional-grade submissions made simple.</p>"
+    },
+    {
+      "type": "text",
+      "id": "techpack_step_1",
+      "label": "Step 1",
+      "default": "Client verification and profile setup"
+    },
+    {
+      "type": "text",
+      "id": "techpack_step_2",
+      "label": "Step 2",
+      "default": "Upload tech packs, inspiration images, measurements"
+    },
+    {
+      "type": "text",
+      "id": "techpack_step_3",
+      "label": "Step 3",
+      "default": "Define garment specs: type, fabric, colors, sizing"
+    },
+    {
+      "type": "text",
+      "id": "techpack_step_4",
+      "label": "Step 4",
+      "default": "Review and submit your custom project"
+    },
+    {
+      "type": "text",
+      "id": "techpack_button_text",
+      "label": "Button Text",
+      "default": "Access TechPack Studio"
+    },
+    {
+      "type": "url",
+      "id": "techpack_button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "techpack_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Section 4: MOQs & Pricing"
+    },
+    {
+      "type": "text",
+      "id": "pricing_badge",
+      "label": "Badge",
+      "default": "Flexible & Transparent"
+    },
+    {
+      "type": "text",
+      "id": "pricing_title",
+      "label": "Title",
+      "default": "Pricing That Scales With Your Vision"
+    },
+    {
+      "type": "richtext",
+      "id": "pricing_description",
+      "label": "Description",
+      "default": "<p>Whether you're launching your first collection or scaling globally, our flexible approach ensures premium quality at every order size.</p>"
+    },
+    {
+      "type": "text",
+      "id": "pricing_card_1_title",
+      "label": "Card 1 Title",
+      "default": "Flexible MOQs"
+    },
+    {
+      "type": "textarea",
+      "id": "pricing_card_1_text",
+      "label": "Card 1 Text",
+      "default": "Minimum order quantities tailored to brands at every stage—from emerging labels to established names."
+    },
+    {
+      "type": "text",
+      "id": "pricing_card_2_title",
+      "label": "Card 2 Title",
+      "default": "Fast Quotes"
+    },
+    {
+      "type": "textarea",
+      "id": "pricing_card_2_text",
+      "label": "Card 2 Text",
+      "default": "Receive detailed custom quotes within 2-5 business days. No guesswork, no surprises."
+    },
+    {
+      "type": "text",
+      "id": "pricing_card_3_title",
+      "label": "Card 3 Title",
+      "default": "Transparent Pricing"
+    },
+    {
+      "type": "textarea",
+      "id": "pricing_card_3_text",
+      "label": "Card 3 Text",
+      "default": "Clear, itemized pricing with no hidden fees. Volume discounts available for larger orders."
+    },
+    {
+      "type": "text",
+      "id": "pricing_card_4_title",
+      "label": "Card 4 Title",
+      "default": "Value Engineering"
+    },
+    {
+      "type": "textarea",
+      "id": "pricing_card_4_text",
+      "label": "Card 4 Text",
+      "default": "We optimize your designs for cost-efficiency without compromising quality or vision."
+    },
+    {
+      "type": "header",
+      "content": "Section 5: Timelines & Delivery"
+    },
+    {
+      "type": "text",
+      "id": "timeline_badge",
+      "label": "Badge",
+      "default": "Production Timeline"
+    },
+    {
+      "type": "text",
+      "id": "timeline_title",
+      "label": "Title",
+      "default": "Predictable Timelines, Exceptional Results"
+    },
+    {
+      "type": "richtext",
+      "id": "timeline_description",
+      "label": "Description",
+      "default": "<p>From initial quote to final delivery, we maintain complete transparency throughout your project lifecycle.</p>"
+    },
+    {
+      "type": "text",
+      "id": "timeline_step_1_title",
+      "label": "Step 1 Title",
+      "default": "Quote & Planning"
+    },
+    {
+      "type": "text",
+      "id": "timeline_step_1_duration",
+      "label": "Step 1 Duration",
+      "default": "2-5 business days"
+    },
+    {
+      "type": "textarea",
+      "id": "timeline_step_1_text",
+      "label": "Step 1 Text",
+      "default": "Detailed quote with specifications, materials, and production timeline."
+    },
+    {
+      "type": "text",
+      "id": "timeline_step_2_title",
+      "label": "Step 2 Title",
+      "default": "Sample Development"
+    },
+    {
+      "type": "text",
+      "id": "timeline_step_2_duration",
+      "label": "Step 2 Duration",
+      "default": "5-7 weeks"
+    },
+    {
+      "type": "textarea",
+      "id": "timeline_step_2_text",
+      "label": "Step 2 Text",
+      "default": "Complete sample creation with pre-washing, fit testing, and quality validation."
+    },
+    {
+      "type": "text",
+      "id": "timeline_step_3_title",
+      "label": "Step 3 Title",
+      "default": "Bulk Production"
+    },
+    {
+      "type": "text",
+      "id": "timeline_step_3_duration",
+      "label": "Step 3 Duration",
+      "default": "3-4 weeks"
+    },
+    {
+      "type": "textarea",
+      "id": "timeline_step_3_text",
+      "label": "Step 3 Text",
+      "default": "Full production run with continuous quality checks at every stage."
+    },
+    {
+      "type": "text",
+      "id": "timeline_step_4_title",
+      "label": "Step 4 Title",
+      "default": "Quality Control & Shipping"
+    },
+    {
+      "type": "text",
+      "id": "timeline_step_4_duration",
+      "label": "Step 4 Duration",
+      "default": "3-5 days"
+    },
+    {
+      "type": "textarea",
+      "id": "timeline_step_4_text",
+      "label": "Step 4 Text",
+      "default": "Final inspection, packaging, and worldwide shipping coordination."
+    },
+    {
+      "type": "header",
+      "content": "Section 6: Sustainability & Quality"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_badge",
+      "label": "Badge",
+      "default": "Commitment"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_title",
+      "label": "Title",
+      "default": "Craftsmanship Meets Responsibility"
+    },
+    {
+      "type": "richtext",
+      "id": "sustainability_description",
+      "label": "Description",
+      "default": "<p>Quality garments shouldn't cost the earth. Our certified sustainable practices and ethical Portuguese manufacturing ensure your brand reflects excellence inside and out.</p>"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_feature_1",
+      "label": "Feature 1",
+      "default": "Certified sustainable manufacturing practices"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_feature_2",
+      "label": "Feature 2",
+      "default": "Custom fabric creation: spun, dyed, finished to your specifications"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_feature_3",
+      "label": "Feature 3",
+      "default": "Pre-testing protocol: washing, measuring, dye stability, fit validation"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_feature_4",
+      "label": "Feature 4",
+      "default": "European manufacturing standards with Portuguese craftsmanship"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_feature_5",
+      "label": "Feature 5",
+      "default": "Dedicated team consistency: your account manager & seamstress"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_button_text",
+      "label": "Button Text",
+      "default": "Begin Your Custom Project"
+    },
+    {
+      "type": "url",
+      "id": "sustainability_button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "sustainability_image",
+      "label": "Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Different V2"
+    }
+  ]
+}
+{% endschema %}
