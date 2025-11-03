@@ -1,20 +1,18 @@
 /* Text Grid - Original Structure with Premium Effects */
 
-/* SOLUTION: Match button backgrounds to theme's gray so no visual change occurs */
-
-/* Container - Match theme gray background */
+/* Container - Remove all spacing */
 .textGrid {
   width: 100%;
   margin: 0;
   padding: 0;
-  background: #f3f3f3 !important;
+  background: transparent;
   display: block;
 }
 
 /* Home section layout */
 .home-section .textGrid {
   display: grid;
-  background: #f3f3f3 !important;
+  background: transparent !important;
   align-items: center;
   height: calc(100% - 152px);
 }
@@ -29,17 +27,17 @@
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: none;
   outline: none;
   
-  /* Embedded button design - sunken into background */
-  background: #f3f3f3 !important;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  /* Modern Card Design - No gaps */
+  background: #ffffff !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0;
-  /* Inset shadows to create embedded appearance */
-  box-shadow:
-    inset 2px 2px 4px rgba(0, 0, 0, 0.1),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   min-height: 120px;
   display: flex;
   align-items: center;
@@ -51,23 +49,42 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* Clear hover effect - lift button and lighten background */
+/* Captivating hover effects - Works with or without background images */
 .textGrid a:hover {
-  background: #f8f8f8 !important;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  /* Transform from inset to elevated */
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 1px 3px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
+  transform: translateY(-4px);
+  border: 1px solid #000000;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  z-index: 2;
 }
 
-/* Keep text exactly the same on hover - no changes */
+/* For buttons without background images */
+.textGrid a:not([style*="background-image"]):hover {
+  background: #f0f0f0 !important;
+}
+
 .textGrid a:hover .grid__item h3 {
   color: #000000 !important;
+  transform: translateY(-1px);
+  letter-spacing: 3px;
 }
 
-/* Removed accent line for cleaner design */
+/* Add subtle accent line */
+.textGrid a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #000000 0%, #333333 100%);
+  z-index: 2;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  opacity: 0;
+}
+
+.textGrid a:hover::before {
+  opacity: 1;
+}
 
 /* Background image overlay for high opacity (almost white) effect */
 .textGrid a .background-overlay {
@@ -79,7 +96,7 @@
   background: rgba(255, 255, 255, 0.9); /* High opacity white overlay */
   z-index: 1;
   pointer-events: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Reduce overlay opacity on hover to show more background */
@@ -130,13 +147,13 @@
   font-size: 1.1rem;
   line-height: 1.3;
   margin: 0;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   word-wrap: break-word;
   hyphens: auto;
   color: #000000 !important;
   text-shadow: none;
-  transition: none;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   font-variant: normal;
   text-align: center;
@@ -155,12 +172,12 @@
 
 /* CAPTIVATING COLOR SCHEME */
 
-/* Match theme gray for all buttons */
+/* Clean white base for all buttons */
 body .home-section section.text-grid .textGrid a[href],
 body .home-section .textGrid a[href],
 body section.text-grid .textGrid a[href],
 body .textGrid a[href] {
-  background: #f3f3f3 !important;
+  background: #ffffff !important;
 }
 
 /* Keep all buttons the same color - no alternating pattern */
@@ -168,25 +185,24 @@ body .home-section section.text-grid .textGrid a[href]:nth-child(odd),
 body .home-section .textGrid a[href]:nth-child(odd),
 body section.text-grid .textGrid a[href]:nth-child(odd),
 body .textGrid a[href]:nth-child(odd) {
-  background: #f3f3f3 !important;
+  background: #ffffff !important;
 }
 
 body .home-section section.text-grid .textGrid a[href]:nth-child(even),
 body .home-section .textGrid a[href]:nth-child(even),
 body section.text-grid .textGrid a[href]:nth-child(even),
 body .textGrid a[href]:nth-child(even) {
-  background: #f3f3f3 !important;
+  background: #ffffff !important;
 }
 
 /* Mobile responsiveness - No gaps */
 @media screen and (max-width: 768px) {
   .textGrid a {
     min-height: 100px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    /* Mobile embedded appearance */
-    box-shadow:
-      inset 2px 2px 3px rgba(0, 0, 0, 0.08),
-      inset -1px -1px 2px rgba(255, 255, 255, 0.5);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
   }
   
   .textGrid a:last-child {
@@ -194,13 +210,13 @@ body .textGrid a[href]:nth-child(even) {
   }
   
   .textGrid a:hover {
-    background: #f8f8f8 !important;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    /* Mobile hover effect - slightly less dramatic */
-    box-shadow:
-      0 1px 6px rgba(0, 0, 0, 0.12),
-      0 1px 2px rgba(0, 0, 0, 0.08);
-    transform: translateY(-0.5px);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border: 1px solid #000000;
+  }
+  
+  .textGrid a:not([style*="background-image"]):hover {
+    background: #f0f0f0 !important;
   }
   
   .textGrid .grid {
@@ -209,7 +225,7 @@ body .textGrid a[href]:nth-child(even) {
   
   .textGrid .grid__item h3 {
     font-size: 1rem;
-    letter-spacing: 0.8px;
+    letter-spacing: 1.5px;
     margin: 0;
     line-height: 1.3;
   }
@@ -226,26 +242,22 @@ body .textGrid a[href]:nth-child(even) {
   
   .textGrid .grid__item h3 {
     font-size: 0.95rem;
-    letter-spacing: 0.6px;
+    letter-spacing: 1.2px;
   }
 }
 
-/* Clean override - ensure gray backgrounds match theme */
+/* Force override any conflicting styles - KEEP ORIGINAL OVERRIDES */
 .home-section .textGrid a,
 .home-section .textGrid a:nth-child(2n+1),
+.home-section .textGrid a:hover,
 .home-section .textGrid a:nth-child(odd),
 .home-section .textGrid a:nth-child(even),
 section.text-grid .textGrid a,
 section.text-grid .textGrid a:nth-child(2n+1),
+section.text-grid .textGrid a:hover,
 section.text-grid .textGrid a:nth-child(odd),
 section.text-grid .textGrid a:nth-child(even) {
-  background: #f3f3f3 !important;
-}
-
-/* Simplified: Ensure text-grid container matches theme gray */
-.home-section,
-section.text-grid {
-  background: #f3f3f3 !important;
+  background: inherit !important;
 }
 
 /* Bold text for better visibility */
@@ -260,17 +272,11 @@ section.text-grid .textGrid a * {
   color: #000000 !important;
 }
 
-/* Clean accessibility - Enhanced for embedded design */
+/* Clean accessibility - Match Website Style */
 .textGrid a:focus {
-  outline: 2px solid rgba(44, 44, 44, 0.4);
+  outline: 2px solid rgba(44, 44, 44, 0.3);
   outline-offset: 4px;
   border-radius: 2px;
-  /* Also lift on focus for keyboard users */
-  background: #f8f8f8 !important;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 1px 3px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
 }
 
 /* Reduced motion */
