@@ -6,6 +6,7 @@
 
 {{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
 {{ 'techpack-v11-entrance.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-modals.css' | asset_url | stylesheet_tag }}
 
 <div class="techpack-v11" data-section-id="{{ section.id }}" data-section-type="techpack-entrance">
 
@@ -240,6 +241,9 @@
     </footer>
 
   </div>
+
+  {%- comment -%} Modals {%- endcomment -%}
+  {% render 'techpack-v11-modal-access' %}
 
   {%- comment -%} Customer Data for JavaScript {%- endcomment -%}
   <script>
