@@ -1,0 +1,314 @@
+{% comment %}
+  TechPack V11 - Entrance Page
+  Purpose: Landing page for TechPack Studio with request type selection
+  Features: Light/Dark theme toggle, clean fullscreen layout
+{% endcomment %}
+
+<div class="techpack-v11" data-section-id="{{ section.id }}" data-section-type="techpack-entrance">
+
+  {%- comment -%} Theme Toggle - Top Right {%- endcomment -%}
+  <div class="techpack-v11__theme-toggle">
+    <button
+      type="button"
+      class="theme-toggle-btn"
+      id="themeToggle"
+      aria-label="Toggle theme"
+      data-theme="light"
+    >
+      <svg class="theme-icon theme-icon--light" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 2V4M10 16V18M18 10H16M4 10H2M15.657 4.343L14.243 5.757M5.757 14.243L4.343 15.657M15.657 15.657L14.243 14.243M5.757 5.757L4.343 4.343" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <svg class="theme-icon theme-icon--dark" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="theme-toggle-label">
+        <span class="theme-label--light">Light</span>
+        <span class="theme-label--dark">Dark</span>
+      </span>
+    </button>
+  </div>
+
+  {%- comment -%} Main Content Container {%- endcomment -%}
+  <div class="techpack-v11__container">
+
+    {%- comment -%} Header Section {%- endcomment -%}
+    <header class="techpack-v11__header">
+      <div class="techpack-v11__logo">
+        {% if section.settings.logo_image != blank %}
+          <img
+            src="{{ section.settings.logo_image | image_url: width: 200 }}"
+            alt="{{ shop.name }}"
+            width="200"
+            height="auto"
+            loading="eager"
+          >
+        {% else %}
+          <h1 class="techpack-v11__logo-text">{{ shop.name }}</h1>
+        {% endif %}
+      </div>
+
+      <div class="techpack-v11__headline">
+        <h2 class="techpack-v11__title">
+          {{ section.settings.headline | default: "TechPack Studio" }}
+        </h2>
+        <p class="techpack-v11__subtitle">
+          {{ section.settings.subheadline | default: "Professional garment production requests in minutes" }}
+        </p>
+      </div>
+    </header>
+
+    {%- comment -%} Request Type Selection Cards {%- endcomment -%}
+    <div class="techpack-v11__cards">
+
+      {%- comment -%} Quotation Card {%- endcomment -%}
+      <article class="techpack-card" data-request-type="quotation">
+        <div class="techpack-card__icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="12" width="32" height="28" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M14 20H34M14 26H28M14 32H24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8 12L12 8L16 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="techpack-card__content">
+          <h3 class="techpack-card__title">Request Quotation</h3>
+          <p class="techpack-card__description">
+            Get detailed pricing for your custom garment designs. Perfect for exploring production costs and planning budgets.
+          </p>
+
+          <ul class="techpack-card__features">
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Fast pricing estimates</span>
+            </li>
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>No account required</span>
+            </li>
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>MOQ: 75+ pieces per design</span>
+            </li>
+          </ul>
+        </div>
+
+        <button
+          type="button"
+          class="techpack-card__button button-primary"
+          data-action="start-quotation"
+        >
+          Start Quotation
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </article>
+
+      {%- comment -%} Sample Card {%- endcomment -%}
+      <article class="techpack-card" data-request-type="sample">
+        <div class="techpack-card__icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 8L24 4L32 8M16 8L24 12M16 8V20L24 24M32 8L24 12M32 8V20L24 24M24 12V24M24 24L16 28V40L24 44M24 24L32 28V40L24 44" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="techpack-card__content">
+          <h3 class="techpack-card__title">Order Sample</h3>
+          <p class="techpack-card__description">
+            Request physical prototypes to validate fit, fabric, and construction before bulk production.
+          </p>
+
+          <ul class="techpack-card__features">
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Stock or custom samples</span>
+            </li>
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Custom colors & fabrics</span>
+            </li>
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Account required</span>
+            </li>
+          </ul>
+        </div>
+
+        <button
+          type="button"
+          class="techpack-card__button button-primary"
+          data-action="start-sample"
+          data-requires-login="true"
+        >
+          Order Sample
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </article>
+
+      {%- comment -%} Bulk Order Card {%- endcomment -%}
+      <article class="techpack-card" data-request-type="bulk">
+        <div class="techpack-card__icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="10" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="26" y="10" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="6" y="30" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="26" y="30" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+
+        <div class="techpack-card__content">
+          <h3 class="techpack-card__title">Place Bulk Order</h3>
+          <p class="techpack-card__description">
+            Start production on approved samples. Full size runs with detailed quantity breakdowns for each design.
+          </p>
+
+          <ul class="techpack-card__features">
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Approved samples required</span>
+            </li>
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Complete size breakdowns</span>
+            </li>
+            <li class="techpack-card__feature">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Account required</span>
+            </li>
+          </ul>
+        </div>
+
+        <button
+          type="button"
+          class="techpack-card__button button-primary"
+          data-action="start-bulk"
+          data-requires-login="true"
+        >
+          Place Bulk Order
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </article>
+
+    </div>
+
+    {%- comment -%} Footer Information {%- endcomment -%}
+    <footer class="techpack-v11__footer">
+      <div class="techpack-v11__footer-content">
+        <div class="techpack-info-badge">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 14V10M10 6H10.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>All requests auto-saved. Resume anytime.</span>
+        </div>
+
+        {% if section.settings.show_support_link %}
+          <a href="{{ section.settings.support_link | default: '/pages/contact' }}" class="techpack-v11__support-link">
+            Need help? Contact support
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+    </footer>
+
+  </div>
+
+  {%- comment -%} Customer Data for JavaScript {%- endcomment -%}
+  <script>
+    window.TECHPACK_V11_CUSTOMER = {
+      isLoggedIn: {{ customer | json }} !== null,
+      {% if customer %}
+      id: {{ customer.id | json }},
+      email: {{ customer.email | json }},
+      name: {{ customer.name | json }},
+      companyName: {{ customer.metafields.custom.company_name | json }},
+      accessCode: {{ customer.metafields.custom.access_code | json }},
+      tags: {{ customer.tags | json }}
+      {% else %}
+      id: null,
+      email: null,
+      name: null,
+      companyName: null,
+      accessCode: null,
+      tags: []
+      {% endif %}
+    };
+  </script>
+
+</div>
+
+{% schema %}
+{
+  "name": "TP V11 Entrance",
+  "class": "section-techpack-v11-entrance",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Branding"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo Image"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "TechPack Studio"
+    },
+    {
+      "type": "textarea",
+      "id": "subheadline",
+      "label": "Subheadline",
+      "default": "Professional garment production requests in minutes"
+    },
+    {
+      "type": "header",
+      "content": "Footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_support_link",
+      "label": "Show support link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "support_link",
+      "label": "Support page link",
+      "default": "/pages/contact"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack V11 - Entrance"
+    }
+  ]
+}
+{% endschema %}
