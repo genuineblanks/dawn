@@ -691,10 +691,11 @@ function snapToNearestSection() {
   const targetPosition = scrollSystem.arrSections[closestSection];
   const distanceFromTarget = Math.abs(currentScrollPos - targetPosition);
 
-  // SNAP THRESHOLD: Only snap if we're more than 15% of viewport height away from target
+  // SNAP THRESHOLD: Only snap if we're more than threshold away from target
   // Snap acts as a "safety net" for wheel handler, fixing manual scroll misalignments
-  // 15% provides good balance - corrects misalignment without being too aggressive
-  const snapThreshold = viewportHeight * 0.15; // 15% of viewport height
+  // 10% with min/max caps provides good balance - corrects misalignment without being too aggressive
+  const snapThresholdPercent = viewportHeight * 0.10; // 10% of viewport height
+  const snapThreshold = Math.min(Math.max(snapThresholdPercent, 50), 150); // Capped between 50px and 150px
 
   if (distanceFromTarget > snapThreshold) {
     // We're misaligned - snap to the nearest section
@@ -881,7 +882,7 @@ function handleWindowResize() {
     }
 
     scrollSystem.resizeTimeout = null;
-  }, 250);
+  }, 500);
 }
 
 // ===============================================
