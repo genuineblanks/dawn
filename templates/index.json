@@ -585,6 +585,7 @@
     },
     "accessories_design_split_GRCNtp": {
       "type": "accessories-design-split",
+      "disabled": true,
       "name": "Accessories & Design Services",
       "settings": {
         "dynamic_class": "",
