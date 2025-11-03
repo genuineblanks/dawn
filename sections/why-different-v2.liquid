@@ -41,9 +41,9 @@
 
     {%- comment -%} SECTION 2: ABOUT US / MANUFACTURING EXCELLENCE {%- endcomment -%}
     <section class="why-v2-section why-v2-about" id="why-v2-section-2" data-section-index="2">
-      {% if section.settings.about_image != blank %}
+      {% if section.settings.about_bg_image != blank %}
         <div class="why-v2-section-background">
-          <img src="{{ section.settings.about_image | image_url: width: 2000 }}"
+          <img src="{{ section.settings.about_bg_image | image_url: width: 2000 }}"
                alt="{{ section.settings.about_title }}"
                loading="lazy"
                class="why-v2-bg-image">
@@ -52,8 +52,8 @@
       {% endif %}
 
       <div class="why-v2-section-inner">
-        <div class="why-v2-content-centered-text">
-          <div class="why-v2-content-box">
+        <div class="why-v2-content-grid">
+          <div class="why-v2-content-text">
             {% if section.settings.about_badge != blank %}
               <span class="why-v2-badge">{{ section.settings.about_badge }}</span>
             {% endif %}
@@ -104,15 +104,26 @@
               {% endif %}
             </ul>
           </div>
+
+          {% if section.settings.about_image != blank %}
+            <div class="why-v2-content-visual">
+              <div class="why-v2-visual-card">
+                <img src="{{ section.settings.about_image | image_url: width: 800 }}"
+                     alt="{{ section.settings.about_title }}"
+                     loading="lazy"
+                     class="why-v2-visual-image">
+              </div>
+            </div>
+          {% endif %}
         </div>
       </div>
     </section>
 
     {%- comment -%} SECTION 3: TECHPACK STUDIO ADVANTAGE {%- endcomment -%}
     <section class="why-v2-section why-v2-techpack" id="why-v2-section-3" data-section-index="3">
-      {% if section.settings.techpack_image != blank %}
+      {% if section.settings.techpack_bg_image != blank %}
         <div class="why-v2-section-background">
-          <img src="{{ section.settings.techpack_image | image_url: width: 2000 }}"
+          <img src="{{ section.settings.techpack_bg_image | image_url: width: 2000 }}"
                alt="{{ section.settings.techpack_title }}"
                loading="lazy"
                class="why-v2-bg-image">
@@ -121,8 +132,19 @@
       {% endif %}
 
       <div class="why-v2-section-inner">
-        <div class="why-v2-content-centered-text">
-          <div class="why-v2-content-box">
+        <div class="why-v2-content-grid why-v2-content-grid-reverse">
+          {% if section.settings.techpack_image != blank %}
+            <div class="why-v2-content-visual">
+              <div class="why-v2-visual-card why-v2-visual-card-glow">
+                <img src="{{ section.settings.techpack_image | image_url: width: 800 }}"
+                     alt="{{ section.settings.techpack_title }}"
+                     loading="lazy"
+                     class="why-v2-visual-image">
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="why-v2-content-text">
             {% if section.settings.techpack_badge != blank %}
               <span class="why-v2-badge why-v2-badge-accent">{{ section.settings.techpack_badge }}</span>
             {% endif %}
@@ -177,6 +199,16 @@
 
     {%- comment -%} SECTION 4: MOQs, PRICING & FLEXIBILITY {%- endcomment -%}
     <section class="why-v2-section why-v2-pricing" id="why-v2-section-4" data-section-index="4">
+      {% if section.settings.pricing_bg_image != blank %}
+        <div class="why-v2-section-background">
+          <img src="{{ section.settings.pricing_bg_image | image_url: width: 2000 }}"
+               alt="{{ section.settings.pricing_title }}"
+               loading="lazy"
+               class="why-v2-bg-image">
+          <div class="why-v2-section-overlay"></div>
+        </div>
+      {% endif %}
+
       <div class="why-v2-section-inner">
         <div class="why-v2-content-centered">
           {% if section.settings.pricing_badge != blank %}
@@ -226,6 +258,16 @@
 
     {%- comment -%} SECTION 5: TIMELINES & DELIVERY {%- endcomment -%}
     <section class="why-v2-section why-v2-timeline" id="why-v2-section-5" data-section-index="5">
+      {% if section.settings.timeline_bg_image != blank %}
+        <div class="why-v2-section-background">
+          <img src="{{ section.settings.timeline_bg_image | image_url: width: 2000 }}"
+               alt="{{ section.settings.timeline_title }}"
+               loading="lazy"
+               class="why-v2-bg-image">
+          <div class="why-v2-section-overlay"></div>
+        </div>
+      {% endif %}
+
       <div class="why-v2-section-inner">
         <div class="why-v2-content-centered">
           {% if section.settings.timeline_badge != blank %}
@@ -299,9 +341,9 @@
 
     {%- comment -%} SECTION 6: SUSTAINABILITY & QUALITY COMMITMENT {%- endcomment -%}
     <section class="why-v2-section why-v2-sustainability" id="why-v2-section-6" data-section-index="6">
-      {% if section.settings.sustainability_image != blank %}
+      {% if section.settings.sustainability_bg_image != blank %}
         <div class="why-v2-section-background">
-          <img src="{{ section.settings.sustainability_image | image_url: width: 2000 }}"
+          <img src="{{ section.settings.sustainability_bg_image | image_url: width: 2000 }}"
                alt="{{ section.settings.sustainability_title }}"
                loading="lazy"
                class="why-v2-bg-image">
@@ -310,8 +352,8 @@
       {% endif %}
 
       <div class="why-v2-section-inner">
-        <div class="why-v2-content-centered-text">
-          <div class="why-v2-content-box">
+        <div class="why-v2-content-grid">
+          <div class="why-v2-content-text">
             {% if section.settings.sustainability_badge != blank %}
               <span class="why-v2-badge why-v2-badge-success">{{ section.settings.sustainability_badge }}</span>
             {% endif %}
@@ -377,6 +419,17 @@
               </a>
             {% endif %}
           </div>
+
+          {% if section.settings.sustainability_image != blank %}
+            <div class="why-v2-content-visual">
+              <div class="why-v2-visual-card">
+                <img src="{{ section.settings.sustainability_image | image_url: width: 800 }}"
+                     alt="{{ section.settings.sustainability_title }}"
+                     loading="lazy"
+                     class="why-v2-visual-image">
+              </div>
+            </div>
+          {% endif %}
         </div>
       </div>
     </section>
@@ -486,7 +539,12 @@
     {
       "type": "image_picker",
       "id": "about_image",
-      "label": "Image"
+      "label": "Content Image (card next to text)"
+    },
+    {
+      "type": "image_picker",
+      "id": "about_bg_image",
+      "label": "Background Image (full section background)"
     },
     {
       "type": "header",
@@ -548,7 +606,12 @@
     {
       "type": "image_picker",
       "id": "techpack_image",
-      "label": "Image"
+      "label": "Content Image (card next to text)"
+    },
+    {
+      "type": "image_picker",
+      "id": "techpack_bg_image",
+      "label": "Background Image (full section background)"
     },
     {
       "type": "header",
@@ -619,6 +682,11 @@
       "id": "pricing_card_4_text",
       "label": "Card 4 Text",
       "default": "We optimize your designs for cost-efficiency without compromising quality or vision."
+    },
+    {
+      "type": "image_picker",
+      "id": "pricing_bg_image",
+      "label": "Background Image (full section background)"
     },
     {
       "type": "header",
@@ -715,6 +783,11 @@
       "default": "Final inspection, packaging, and worldwide shipping coordination."
     },
     {
+      "type": "image_picker",
+      "id": "timeline_bg_image",
+      "label": "Background Image (full section background)"
+    },
+    {
       "type": "header",
       "content": "Section 6: Sustainability & Quality"
     },
@@ -780,7 +853,12 @@
     {
       "type": "image_picker",
       "id": "sustainability_image",
-      "label": "Image"
+      "label": "Content Image (card next to text)"
+    },
+    {
+      "type": "image_picker",
+      "id": "sustainability_bg_image",
+      "label": "Background Image (full section background)"
     }
   ],
   "presets": [
