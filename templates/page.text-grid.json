@@ -1,1 +1,44 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"settings":{"padding_top":28,"padding_bottom":28}},"text_grid_jDWQyP":{"type":"text-grid","blocks":{"add_text_grid_6BFRzX":{"type":"Add-text-grid","settings":{"title":"METER IMAGEM FUNDO","subtitle":"High-end Lookbook","rich":"<p>1ST - REDIRECTS TO THE SHOP BLANKS OVERALL PAGE <\/p>"}},"add_text_grid_8KkPmz":{"type":"Add-text-grid","settings":{"title":"METER IMAGEM FUNDO","subtitle":"LUXURY LOOKBOOK","rich":"<p>5TH - REDIRECTS TO THE LUXURY LOOKBOOK PAGE<\/p>"}},"add_text_grid_r4L97h":{"type":"Add-text-grid","settings":{"title":"METER IMAGEM FUNDO","subtitle":"DESIGNER LAB","rich":"<p>2ND - REDIRECTS TO THE DESIGNERS LAB PAGE <\/p>"}},"add_text_grid_rWfMK6":{"type":"Add-text-grid","settings":{"title":"METER IMAGEM FUNDO","subtitle":"LABELLING & ACCESSORIES SERVICE","rich":"<p>4TH - REDIRECTS TO THE ABOUT US PAGE<\/p>"}},"add_text_grid_EqQjRH":{"type":"Add-text-grid","settings":{"title":"METER IMAGEM FUNDO","subtitle":"ABOUT US - GET TO KNOW US BETTER","rich":"<p>4TH - REDIRECTS TO THE ABOUT US PAGE <\/p>"}},"add_text_grid_VewDTG":{"type":"Add-text-grid","settings":{"title":"METER IMAGEM FUNDO","subtitle":"HELP CENTER","rich":"<p>6TH - REDIRECTS TO THE HELP CENTER PAGE <\/p>"}}},"block_order":["add_text_grid_6BFRzX","add_text_grid_8KkPmz","add_text_grid_r4L97h","add_text_grid_rWfMK6","add_text_grid_EqQjRH","add_text_grid_VewDTG"],"settings":{}}},"order":["main","text_grid_jDWQyP"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "text_grid_v2": {
+      "type": "text-grid-v2",
+      "settings": {
+        "color_scheme": "light",
+        "card1_badge": "Explore",
+        "card1_title": "Showroom",
+        "card1_description": "Browse our luxury and high-end collections",
+        "card1_url": "",
+        "card2_badge": "Getting Started",
+        "card2_title": "What Do You Need to Get Started",
+        "card2_description": "Everything you need to launch your brand",
+        "card2_url": "",
+        "card3_badge": "Our Story",
+        "card3_title": "About Us",
+        "card3_description": "Discover why we're different from other manufacturers",
+        "card3_url": "/pages/why-different",
+        "card4_badge": "Get in Touch",
+        "card4_title": "Contact Us",
+        "card4_description": "Let's discuss your project",
+        "card4_url": ""
+      }
+    }
+  },
+  "order": ["main", "text_grid_v2"]
+}
