@@ -515,6 +515,39 @@
 }
 
 /* ============================================
+   VISUAL CARDS (for content images)
+   ============================================ */
+
+.why-v2-visual-card {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+  box-shadow: var(--gb-shadow-lg);
+  transition: all var(--transition-base);
+}
+
+.why-v2-visual-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--gb-shadow-xl);
+}
+
+.why-v2-visual-card-glow {
+  box-shadow: var(--gb-shadow-lg), 0 0 40px rgba(59, 130, 246, 0.15);
+}
+
+.why-v2-visual-card-glow:hover {
+  box-shadow: var(--gb-shadow-xl), 0 0 60px rgba(59, 130, 246, 0.25);
+}
+
+.why-v2-visual-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ============================================
    SECTION 3: TECHPACK STEPS
    ============================================ */
 
