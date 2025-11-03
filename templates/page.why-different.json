@@ -16,14 +16,14 @@
         "hero_subtitle": "Manufacturing Excellence",
         "hero_title": "Luxury Manufacturing. Refined.",
         "hero_description": "20+ years of Portuguese craftsmanship meets modern precision",
-        "hero_image": "shopify://shop_images/Tech-Pack-Website-Page2EDIT.jpg",
+        "hero_image": "shopify://shop_images/pexels-beatriz-vilaca-1837523595-28460403.jpg",
         "about_badge": "Who We Are",
         "about_title": "Portuguese Excellence, Globally Trusted",
-        "about_description": "<p>Based in Barcelos, Portugal, we bring over 20 years of luxury streetwear manufacturing expertise to every project. Our state-of-the-art facility offers complete transparency—visit us, film the process, see quality in action.</p>",
-        "about_feature_1": "Barcelos, Portugal facility with open-door transparency",
-        "about_feature_2": "20+ years of luxury streetwear manufacturing",
-        "about_feature_3": "Complete in-house capabilities: cut & sew, embroidery, screen printing",
-        "about_feature_4": "Multi-stage quality assurance at every production phase",
+        "about_description": "<p>Portuguese Excellence, Globally Trusted<br/><br/>Based in Barcelos, Portugal's textile heart, we're a 20-person family factory that's produced for brands from Supreme to emerging designers since 2016. We built our operation for modern fashion - where speed matters, testing is essential, and flexibility beats volume.<br/><br/>Our direct factory approach means no middlemen, no markup games, and no communication delays. When brands needed European manufacturing that could deliver 50 pieces or 5000, maintain luxury quality, and actually meet deadlines, they found us.</p>",
+        "about_feature_1": "50 MOQ minimums (while industry demands 500+)",
+        "about_feature_2": "6-36hour quotations through our Garment Studio",
+        "about_feature_3": "3-4 weeks for basics, 5-6 for complex pieces",
+        "about_feature_4": "Complete in-house: pattern makers, cutting, sewing, embroidery, printing* Showroom visits welcome - see your production, meet your team",
         "techpack_badge": "Innovation",
         "techpack_title": "The TechPack Studio Advantage",
         "techpack_description": "<p>Our proprietary TechPack Studio transforms complex garment specifications into a seamless, guided experience. Professional-grade submissions made simple.</p>",
@@ -51,10 +51,10 @@
         "timeline_step_1_duration": "2-5 business days",
         "timeline_step_1_text": "Detailed quote with specifications, materials, and production timeline.",
         "timeline_step_2_title": "Sample Development",
-        "timeline_step_2_duration": "5-7 weeks",
+        "timeline_step_2_duration": "3-5 weeks",
         "timeline_step_2_text": "Complete sample creation with pre-washing, fit testing, and quality validation.",
         "timeline_step_3_title": "Bulk Production",
-        "timeline_step_3_duration": "3-4 weeks",
+        "timeline_step_3_duration": "3-7 weeks",
         "timeline_step_3_text": "Full production run with continuous quality checks at every stage.",
         "timeline_step_4_title": "Quality Control & Shipping",
         "timeline_step_4_duration": "3-5 days",
@@ -72,5 +72,7 @@
       }
     }
   },
-  "order": ["why_different_v2"]
+  "order": [
+    "why_different_v2"
+  ]
 }
