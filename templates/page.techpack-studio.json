@@ -9,21 +9,6 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "techpack-studio-entrance",
-      "disabled": true,
-      "settings": {
-        "wordmark_text": "TechPack-Studio",
-        "heading": "GARMENT DEVELOPMENT STUDIO",
-        "subtext_line_1": "We are a lowkey specialized garment manufacturer for custom brands and intend to make the products specially for each brand.",
-        "subtext_line_2": "This is the intent of using our system and our company. If you're looking for fast fashion, we're not the ideal partner for you.",
-        "primary_cta_label": "ACCESS SPECIALIZED STUDIO",
-        "download_label": "Download TechPack Templates",
-        "download_url": "",
-        "show_requirements_grid": true,
-        "theme_default": "light"
-      }
-    },
     "techpack_v11_entrance_TTk3eQ": {
       "type": "techpack-v11-entrance",
       "name": "TechPack V11 - Entrance",
@@ -36,7 +21,6 @@
     }
   },
   "order": [
-    "main",
     "techpack_v11_entrance_TTk3eQ"
   ]
 }
