@@ -4,6 +4,10 @@
   For: New clients (no login required) and registered clients
 {% endcomment %}
 
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
+
 <div class="techpack-v11 techpack-flow" data-section-id="{{ section.id }}" data-flow-type="quotation" data-current-step="1">
 
   {%- comment -%} TEST MODE BANNER {%- endcomment -%}
@@ -256,6 +260,19 @@
 
   {%- comment -%} Customer Data Injection (for auto-fill if logged in) {%- endcomment -%}
   <script>
+    window.TECHPACK_V11_CUSTOMER = {
+      isLoggedIn: {{ customer | json }} !== null,
+      {% if customer %}
+      id: {{ customer.id | json }},
+      email: {{ customer.email | json }},
+      name: {{ customer.name | json }}
+      {% else %}
+      id: null,
+      email: null,
+      name: null
+      {% endif %}
+    };
+
     window.TECHPACK_V11_STEP_DATA = {
       step: 1,
       flow: 'quotation',
@@ -265,6 +282,11 @@
   </script>
 
 </div>
+
+{% render 'techpack-v11-theme-switcher' %}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

@@ -4,6 +4,9 @@
   Features: Light/Dark theme toggle, clean fullscreen layout
 {% endcomment %}
 
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-entrance.css' | asset_url | stylesheet_tag }}
+
 <div class="techpack-v11" data-section-id="{{ section.id }}" data-section-type="techpack-entrance">
 
   {%- comment -%} Theme Toggle - Top Right {%- endcomment -%}
@@ -261,6 +264,11 @@
   </script>
 
 </div>
+
+{% render 'techpack-v11-theme-switcher' %}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
