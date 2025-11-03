@@ -585,7 +585,6 @@
     },
     "accessories_design_split_GRCNtp": {
       "type": "accessories-design-split",
-      "disabled": true,
       "name": "Accessories & Design Services",
       "settings": {
         "dynamic_class": "",
@@ -722,23 +721,22 @@
     "text_grid_itwK3a": {
       "type": "text-grid",
       "settings": {
+        "enable_footer": false,
         "color_scheme": "scheme-1",
-        "card1_badge": "Explore",
-        "card1_title": "Showroom",
-        "card1_description": "Browse our luxury and high-end collections",
-        "card1_url": "",
-        "card2_badge": "Getting Started",
-        "card2_title": "What Do You Need to Get Started",
-        "card2_description": "Everything you need to launch your brand",
-        "card2_url": "",
-        "card3_badge": "Our Story",
-        "card3_title": "About Us",
-        "card3_description": "Discover why we're different from other manufacturers",
-        "card3_url": "",
-        "card4_badge": "Get in Touch",
-        "card4_title": "Contact Us",
-        "card4_description": "Let's discuss your project",
-        "card4_url": ""
+        "newsletter_enable": true,
+        "newsletter_heading": "Subscribe to our emails",
+        "newsletter_paragraph": "",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": false,
+        "show_policy_menu": "",
+        "copyright_text": "",
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     }
   },
