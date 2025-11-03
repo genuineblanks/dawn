@@ -736,6 +736,8 @@ function initializeScrollSystem() {
   document.body.style.touchAction = 'auto';
 
   scrollSystem.$sections = $('section');
+
+  // Calculate positions immediately (don't wait for footer)
   calculateSectionPositions();
 
   // Requires minimum 4 sections
@@ -882,7 +884,7 @@ function handleWindowResize() {
     }
 
     scrollSystem.resizeTimeout = null;
-  }, 500);
+  }, 150); // Fix #3: Reduced from 500ms for faster resize response
 }
 
 // ===============================================
@@ -1126,6 +1128,185 @@ window.reinitializeScrollAnimations = reinitializeScrollAnimations;
 window.applyUltimateScrollFix = applyUltimateScrollFix;
 
 // ===============================================
+// RESIZE BUG FIX HELPER FUNCTIONS
+// ===============================================
+// Fix #1: Monitor image loading for accurate position calculations
+function monitorImageLoading() {
+  if (!isHomepage() || !scrollSystem.initialized) return;
+
+  const images = document.querySelectorAll('img, [style*="background-image"]');
+  let loadedCount = 0;
+  let totalImages = images.length;
+
+  if (totalImages === 0) return;
+
+  images.forEach(function(img) {
+    if (img.tagName === 'IMG') {
+      if (img.complete) {
+        loadedCount++;
+      } else {
+        img.addEventListener('load', function() {
+          loadedCount++;
+          if (loadedCount === totalImages) {
+            setTimeout(function() {
+              calculateSectionPositions();
+              updateDotNavigation();
+            }, 100);
+          }
+        });
+      }
+    }
+  });
+}
+
+// Fix #4: MutationObserver to detect footer loading
+function observeFooterLoading() {
+  if (!isHomepage() || !scrollSystem.initialized) return;
+
+  const observer = new MutationObserver(function(mutations) {
+    let footerAdded = false;
+
+    mutations.forEach(function(mutation) {
+      if (mutation.addedNodes.length) {
+        mutation.addedNodes.forEach(function(node) {
+          if (node.nodeType === 1) { // Element node
+            if (node.classList && (node.classList.contains('footer') || node.classList.contains('image-footer') || node.tagName === 'FOOTER')) {
+              footerAdded = true;
+            }
+          }
+        });
+      }
+    });
+
+    if (footerAdded) {
+      setTimeout(function() {
+        calculateSectionPositions();
+        updateDotNavigation();
+      }, 100);
+    }
+  });
+
+  // Observe the main content area for footer additions
+  const mainContent = document.querySelector('main') || document.body;
+  observer.observe(mainContent, {
+    childList: true,
+    subtree: true
+  });
+
+  // Store observer reference for cleanup
+  scrollSystem.footerObserver = observer;
+}
+
+// Fix #5: ResizeObserver to detect section height changes
+function observeSectionHeightChanges() {
+  if (!isHomepage() || !scrollSystem.initialized) return;
+  if (!window.ResizeObserver) return; // Browser compatibility check
+
+  let resizeTimeout;
+  const observer = new ResizeObserver(function(entries) {
+    // Debounce to avoid excessive recalculations
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+      calculateSectionPositions();
+      updateDotNavigation();
+    }, 100);
+  });
+
+  // Observe all sections
+  const sections = document.querySelectorAll('.home-section');
+  sections.forEach(function(section) {
+    observer.observe(section);
+  });
+
+  // Store observer reference for cleanup
+  scrollSystem.sectionResizeObserver = observer;
+}
+
+// Fix #6: Wait for footer to load before calculating positions
+function waitForFooterLoad(callback) {
+  if (!isHomepage()) {
+    callback();
+    return;
+  }
+
+  // Check if footer already exists
+  const footer = document.querySelector('.footer, .image-footer, footer');
+  if (footer) {
+    // Footer exists, proceed immediately
+    setTimeout(callback, 0);
+    return;
+  }
+
+  // If footer doesn't exist, wait briefly but don't block forever
+  let checkCount = 0;
+  const maxChecks = 10; // 1 second maximum wait (reduced from 5 seconds)
+  const checkInterval = setInterval(function() {
+    const footer = document.querySelector('.footer, .image-footer, footer');
+    checkCount++;
+
+    if (footer || checkCount >= maxChecks) {
+      clearInterval(checkInterval);
+      // Call callback regardless of whether footer was found
+      setTimeout(callback, 0);
+    }
+  }, 100);
+}
+
+// Fix #7: Monitor lazy-loaded images using MutationObserver
+function monitorLazyLoadedImages() {
+  if (!isHomepage() || !scrollSystem.initialized) return;
+
+  const observer = new MutationObserver(function(mutations) {
+    let imageAttributeChanged = false;
+
+    mutations.forEach(function(mutation) {
+      if (mutation.type === 'attributes') {
+        const target = mutation.target;
+        // Check if src or srcset changed (common lazy-load patterns)
+        if (mutation.attributeName === 'src' || mutation.attributeName === 'srcset' || mutation.attributeName === 'data-src') {
+          if (target.tagName === 'IMG' || target.tagName === 'SOURCE') {
+            imageAttributeChanged = true;
+
+            // Wait for this specific image to load
+            if (target.tagName === 'IMG') {
+              if (!target.complete) {
+                target.addEventListener('load', function() {
+                  setTimeout(function() {
+                    calculateSectionPositions();
+                    updateDotNavigation();
+                  }, 50);
+                }, { once: true });
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // If any image attributes changed, recalculate after a short delay
+    if (imageAttributeChanged) {
+      setTimeout(function() {
+        calculateSectionPositions();
+        updateDotNavigation();
+      }, 150);
+    }
+  });
+
+  // Observe all sections for lazy-loaded images
+  const sections = document.querySelectorAll('.home-section');
+  sections.forEach(function(section) {
+    observer.observe(section, {
+      attributes: true,
+      attributeFilter: ['src', 'srcset', 'data-src', 'loading'],
+      subtree: true
+    });
+  });
+
+  // Store observer reference for cleanup
+  scrollSystem.lazyImageObserver = observer;
+}
+
+// ===============================================
 // INITIALIZATION SEQUENCE - FASTER LOADING
 // ===============================================
 waitForJQuery(function() {
@@ -1157,17 +1338,27 @@ waitForJQuery(function() {
 
   $(window).on('load', function() {
     if (!scrollSystem.initialized && isHomepage()) {
-      setTimeout(initializeScrollSystem, 100);
+      setTimeout(function() {
+        initializeScrollSystem();
+        monitorImageLoading();
+        observeFooterLoading();
+        observeSectionHeightChanges();
+        monitorLazyLoadedImages();
+      }, 100);
     } else if (isHomepage() && !isMobileDevice()) {
       // Only recreate dots on desktop
       setTimeout(function() {
         calculateSectionPositions();
         createDotNavigation();
         updateDotNavigation();
+        monitorImageLoading();
+        observeFooterLoading();
+        observeSectionHeightChanges();
+        monitorLazyLoadedImages();
       }, 200);
     }
   });
-  
+
   // Shopify theme editor support
   document.addEventListener('shopify:section:load', function() {
     if (isHomepage()) {
