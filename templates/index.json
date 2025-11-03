@@ -726,16 +726,25 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "SHOWROOM, FACTORY & TEAM LOOKBOOK",
+            "subtitle": "FACTORY OVERVIEW & SHOW ROOM",
             "rich": "",
             "link": "shopify://pages/futuristic"
+          }
+        },
+        "add_text_grid_4_techpack": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "GARMENT STUDIO - Upload your Tech Pack",
+            "rich": "",
+            "link": "shopify://pages/tech-pack-submission"
           }
         },
         "add_text_grid_2_get_started": {
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "WHAT DO YOU NEED TO GET STARTED & FAQ'S",
+            "subtitle": "Frequently Asked Questions",
             "rich": "",
             "link": "shopify://pages/how-does-it-work"
           }
@@ -744,19 +753,10 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "ABOUT US - WHY WE'RE DIFFERENT",
+            "subtitle": "ABOUT US",
             "rich": "",
             "link": "shopify://pages/about-us",
             "background_image": "shopify://shop_images/ABOUT_US_4_1.jpg"
-          }
-        },
-        "add_text_grid_4_techpack": {
-          "type": "Add-text-grid",
-          "settings": {
-            "title": "",
-            "subtitle": "TECHPACK STUDIO - GARMENT SPECIFICATIONS",
-            "rich": "",
-            "link": "shopify://pages/tech-pack-submission"
           }
         },
         "image_footer": {
@@ -771,9 +771,9 @@
       },
       "block_order": [
         "add_text_grid_1_showroom",
+        "add_text_grid_4_techpack",
         "add_text_grid_2_get_started",
         "add_text_grid_3_about_us",
-        "add_text_grid_4_techpack",
         "image_footer"
       ],
       "settings": {
