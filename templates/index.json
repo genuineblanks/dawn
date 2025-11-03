@@ -585,6 +585,7 @@
     },
     "accessories_design_split_GRCNtp": {
       "type": "accessories-design-split",
+      "disabled": true,
       "name": "Accessories & Design Services",
       "settings": {
         "dynamic_class": "",
@@ -720,97 +721,24 @@
     },
     "text_grid_itwK3a": {
       "type": "text-grid",
-      "blocks": {
-        "add_text_grid_jJzfCM": {
-          "type": "Add-text-grid",
-          "settings": {
-            "title": "",
-            "subtitle": "SHOWROOM, FACTORY & TEAM LOOKBOOK",
-            "rich": "",
-            "link": "shopify://pages/futuristic"
-          }
-        },
-        "add_text_grid_zc3Xgn": {
-          "type": "Add-text-grid",
-          "settings": {
-            "title": "",
-            "subtitle": "WHAT DO YOU NEED TO GET STARTED & FAQ'S",
-            "rich": "",
-            "link": "shopify://pages/how-does-it-work"
-          }
-        },
-        "add_text_grid_Nz7RMR": {
-          "type": "Add-text-grid",
-          "settings": {
-            "title": "",
-            "subtitle": "BRANDING SOLUTIONS - labels, hang-tags & packaging",
-            "rich": "",
-            "link": "shopify://collections/accessories"
-          }
-        },
-        "add_text_grid_cKpzzE": {
-          "type": "Add-text-grid",
-          "settings": {
-            "title": "",
-            "subtitle": "DESIGN SERVICES - BRAND DEVELOPMENT ARTWORK",
-            "rich": "",
-            "link": "shopify://collections/design"
-          }
-        },
-        "add_text_grid_ktQ6ix": {
-          "type": "Add-text-grid",
-          "settings": {
-            "title": "",
-            "subtitle": "LUXURY & HIGH END LOOKBOOK",
-            "rich": "",
-            "link": "shopify://pages/luxury-lookbook"
-          }
-        },
-        "add_text_grid_atVwXA": {
-          "type": "Add-text-grid",
-          "settings": {
-            "title": "",
-            "subtitle": "HELP CENTER",
-            "rich": "",
-            "link": "shopify://pages/learn-more"
-          }
-        },
-        "image_7eijNM": {
-          "type": "image",
-          "settings": {
-            "title": "GENUINEBLANKS",
-            "richtext": "",
-            "image_width": 100,
-            "alignment": ""
-          }
-        }
-      },
-      "block_order": [
-        "add_text_grid_jJzfCM",
-        "add_text_grid_zc3Xgn",
-        "add_text_grid_Nz7RMR",
-        "add_text_grid_cKpzzE",
-        "add_text_grid_ktQ6ix",
-        "add_text_grid_atVwXA",
-        "image_7eijNM"
-      ],
       "settings": {
-        "enable_footer": true,
         "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "",
-        "newsletter_paragraph": "",
-        "enable_follow_on_shop": true,
-        "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "show_policy": false,
-        "show_policy_menu": "privacy-menu",
-        "copyright_text": "",
-        "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "card1_badge": "Explore",
+        "card1_title": "Showroom",
+        "card1_description": "Browse our luxury and high-end collections",
+        "card1_url": "",
+        "card2_badge": "Getting Started",
+        "card2_title": "What Do You Need to Get Started",
+        "card2_description": "Everything you need to launch your brand",
+        "card2_url": "",
+        "card3_badge": "Our Story",
+        "card3_title": "About Us",
+        "card3_description": "Discover why we're different from other manufacturers",
+        "card3_url": "",
+        "card4_badge": "Get in Touch",
+        "card4_title": "Contact Us",
+        "card4_description": "Let's discuss your project",
+        "card4_url": ""
       }
     }
   },
