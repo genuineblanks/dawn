@@ -1,0 +1,307 @@
+{% comment %}
+  TechPack V11 - Quotation Step 4: Review & Submit
+  Purpose: Review all information before submitting quotation request
+  For: Both new and registered clients
+{% endcomment %}
+
+<div class="techpack-v11 techpack-flow" data-section-id="{{ section.id }}" data-flow-type="quotation" data-current-step="4">
+
+  {%- comment -%} TEST MODE BANNER {%- endcomment -%}
+  <div class="test-mode-banner" id="testModeBanner" style="display: none;">
+    <div class="test-mode-banner__content">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <strong>TEST MODE ACTIVE</strong>
+        <p>Submission will be simulated (no actual form submission).</p>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Progress Header {%- endcomment -%}
+  <div class="techpack-progress">
+    <div class="techpack-progress__container">
+      <a href="javascript:history.back()" class="techpack-progress__back">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Back</span>
+      </a>
+
+      <div class="techpack-progress__steps">
+        <div class="progress-step progress-step--complete" data-step="1">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Client Info</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="2">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Files</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="3">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Garments</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--active" data-step="4">
+          <div class="progress-step__circle">4</div>
+          <div class="progress-step__label">Review</div>
+        </div>
+      </div>
+
+      <div class="techpack-progress__save">
+        <div class="save-indicator" id="saveIndicator">
+          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="save-indicator__text">All saved</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Main Content {%- endcomment -%}
+  <div class="techpack-content">
+    <div class="techpack-content__container">
+
+      {%- comment -%} Step Header {%- endcomment -%}
+      <header class="step-header">
+        <div class="step-header__badge">Step 4 of 4</div>
+        <h1 class="step-header__title">Review & Submit</h1>
+        <p class="step-header__description">
+          Double-check everything before submitting your quotation request
+        </p>
+      </header>
+
+      {%- comment -%} Review Sections {%- endcomment -%}
+      <div class="review-sections">
+
+        {%- comment -%} Client Information {%- endcomment -%}
+        <div class="review-section">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 10a4 4 0 100-8 4 4 0 000 8zM3.333 17.5a6.667 6.667 0 0113.334 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Client Information
+            </h3>
+            <button type="button" class="review-section__edit" data-action="edit-step" data-step="1">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.333 2A1.886 1.886 0 0114 4.667L5 13.667l-4 1 1-4L11.333 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="review-section__body">
+            <div class="review-item">
+              <span class="review-item__label">Company Name</span>
+              <span class="review-item__value" id="reviewCompanyName">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-item__label">Email Address</span>
+              <span class="review-item__value" id="reviewEmail">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-item__label">Estimated Quantity</span>
+              <span class="review-item__value" id="reviewQuantity">-</span>
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} Files Uploaded {%- endcomment -%}
+        <div class="review-section">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.667 2.5H5A1.667 1.667 0 003.333 4.167v11.666A1.667 1.667 0 005 17.5h10a1.667 1.667 0 001.667-1.667V7.5L11.667 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M11.667 2.5V7.5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Files Uploaded
+            </h3>
+            <button type="button" class="review-section__edit" data-action="edit-step" data-step="2">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.333 2A1.886 1.886 0 0114 4.667L5 13.667l-4 1 1-4L11.333 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="review-section__body">
+            <div class="review-item">
+              <span class="review-item__label">Design Files</span>
+              <span class="review-item__value" id="reviewDesignFiles">0 files</span>
+            </div>
+            <div class="review-item">
+              <span class="review-item__label">Measurement Files</span>
+              <span class="review-item__value" id="reviewMeasurementFiles">0 files</span>
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} Garments & Fabrics {%- endcomment -%}
+        <div class="review-section">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 7.5L7.5 5L10 7.5L12.5 5L15 7.5V15H5V7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Garments & Fabrics
+            </h3>
+            <button type="button" class="review-section__edit" data-action="edit-step" data-step="3">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.333 2A1.886 1.886 0 0114 4.667L5 13.667l-4 1 1-4L11.333 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="review-section__body">
+            <div class="review-item review-item--list">
+              <span class="review-item__label">Garment Types</span>
+              <div class="review-item__list" id="reviewGarments">
+                <span class="review-tag">T-Shirt</span>
+              </div>
+            </div>
+            <div class="review-item review-item--list">
+              <span class="review-item__label">Fabric Options</span>
+              <div class="review-item__list" id="reviewFabrics">
+                <span class="review-tag">100% Cotton</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {%- comment -%} Terms & Conditions {%- endcomment -%}
+      <div class="form-section">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            id="termsAcceptance"
+            name="terms_acceptance"
+            required
+            data-validation="required"
+          >
+          <span class="checkbox-label__box"></span>
+          <span class="checkbox-label__text">
+            I have reviewed all details and agree to the
+            <a href="/pages/terms" target="_blank" class="link-primary">Terms & Conditions</a>
+          </span>
+        </label>
+      </div>
+
+      {%- comment -%} Info Card {%- endcomment -%}
+      <div class="info-card info-card--success">
+        <div class="info-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="info-card__content">
+          <h4 class="info-card__title">What happens next?</h4>
+          <p class="info-card__text">
+            After submission, our team will review your request and send a detailed quotation to your email within 24-48 hours.
+            You'll receive pricing for all garment and fabric combinations you selected.
+          </p>
+        </div>
+      </div>
+
+      {%- comment -%} Form Navigation {%- endcomment -%}
+      <div class="form-navigation">
+        <button
+          type="button"
+          class="button-secondary"
+          data-action="previous-step"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back to Garments
+        </button>
+
+        <button
+          type="button"
+          class="button-primary button-primary--large"
+          data-action="submit-quotation"
+          id="submitButton"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 2.5L8.333 11.667M17.5 2.5L12.5 17.5l-4.167-5.833L2.5 7.5 17.5 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Submit Quotation Request
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  {%- comment -%} Success Modal (shown after submission) {%- endcomment -%}
+  <div class="success-modal" id="successModal" style="display: none;">
+    <div class="success-modal__backdrop"></div>
+    <div class="success-modal__container">
+      <div class="success-modal__icon">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="3"/>
+          <path d="M20 32l8 8 16-16" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2 class="success-modal__title">Request Submitted!</h2>
+      <p class="success-modal__message">
+        Thank you for your quotation request. We've received all your details and will send you a detailed pricing quote within 24-48 hours.
+      </p>
+      <div class="success-modal__details">
+        <div class="success-detail">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.5 6.667L10 11.667l7.5-5M3.333 15h13.334c.92 0 1.666-.746 1.666-1.667V6.667c0-.92-.746-1.667-1.666-1.667H3.333c-.92 0-1.666.746-1.666 1.667v6.666c0 .92.746 1.667 1.666 1.667z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Confirmation email sent to <strong id="confirmEmail">-</strong></span>
+        </div>
+        <div class="success-detail">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 17.5a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 5.833V10l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Response time: <strong>24-48 hours</strong></span>
+        </div>
+      </div>
+      <div class="success-modal__actions">
+        <a href="/pages/techpack-studio" class="button-secondary">Start New Request</a>
+        <a href="/" class="button-primary">Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "TP V11 Quote Step 4",
+  "class": "section-techpack-v11-step",
+  "settings": [
+    {
+      "type": "text",
+      "id": "terms_url",
+      "label": "Terms & Conditions URL",
+      "default": "/pages/terms"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack V11 - Quotation Step 4"
+    }
+  ]
+}
+{% endschema %}
