@@ -1338,23 +1338,13 @@ waitForJQuery(function() {
 
   $(window).on('load', function() {
     if (!scrollSystem.initialized && isHomepage()) {
-      setTimeout(function() {
-        initializeScrollSystem();
-        monitorImageLoading();
-        observeFooterLoading();
-        observeSectionHeightChanges();
-        monitorLazyLoadedImages();
-      }, 100);
+      setTimeout(initializeScrollSystem, 100);
     } else if (isHomepage() && !isMobileDevice()) {
       // Only recreate dots on desktop
       setTimeout(function() {
         calculateSectionPositions();
         createDotNavigation();
         updateDotNavigation();
-        monitorImageLoading();
-        observeFooterLoading();
-        observeSectionHeightChanges();
-        monitorLazyLoadedImages();
       }, 200);
     }
   });
