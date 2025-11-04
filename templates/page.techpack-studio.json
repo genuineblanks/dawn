@@ -18,44 +18,9 @@
         "show_support_link": true,
         "support_link": "/pages/contact"
       }
-    },
-    "techpack_v11_quotation_step1_LkY8HV": {
-      "type": "techpack-v11-quotation-step1",
-      "name": "TechPack V11 - Quotation Step 1",
-      "settings": {
-        "enable_test_mode": false,
-        "moq_minimum": 75,
-        "quantity_max": 5000
-      }
-    },
-    "techpack_v11_quotation_step2_MyxDVe": {
-      "type": "techpack-v11-quotation-step2",
-      "name": "TechPack V11 - Quotation Step 2",
-      "settings": {
-        "max_file_size": 10,
-        "max_files_per_type": 10
-      }
-    },
-    "techpack_v11_quotation_step3_CpcbVg": {
-      "type": "techpack-v11-quotation-step3",
-      "name": "TechPack V11 - Quotation Step 3",
-      "settings": {
-        "enable_custom_garments": true
-      }
-    },
-    "techpack_v11_quotation_step4_bFrrVz": {
-      "type": "techpack-v11-quotation-step4",
-      "name": "TechPack V11 - Quotation Step 4",
-      "settings": {
-        "terms_url": "/pages/terms"
-      }
     }
   },
   "order": [
-    "techpack_v11_entrance_TTk3eQ",
-    "techpack_v11_quotation_step1_LkY8HV",
-    "techpack_v11_quotation_step2_MyxDVe",
-    "techpack_v11_quotation_step3_CpcbVg",
-    "techpack_v11_quotation_step4_bFrrVz"
+    "techpack_v11_entrance_TTk3eQ"
   ]
 }
