@@ -17,20 +17,18 @@
         "padding_bottom": 0
       }
     },
-    "techpack_v11_entrance_m4pdmD": {
-      "type": "techpack-v11-entrance",
-      "name": "TechPack V11 - Entrance",
+    "techpack_v11_quotation_step1_EjRWnA": {
+      "type": "techpack-v11-quotation-step1",
+      "name": "TechPack V11 - Quotation Step 1",
       "settings": {
-        "logo_image": "shopify://shop_images/GENUINEBLANKS_LOGO_PNG.png",
-        "headline": "TechPack Studio",
-        "subheadline": "Professional garment production requests in minutes",
-        "show_support_link": true,
-        "support_link": "/pages/contact"
+        "enable_test_mode": false,
+        "moq_minimum": 75,
+        "quantity_max": 5000
       }
     }
   },
   "order": [
     "main",
-    "techpack_v11_entrance_m4pdmD"
+    "techpack_v11_quotation_step1_EjRWnA"
   ]
 }
