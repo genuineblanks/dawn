@@ -16,16 +16,16 @@
         "padding_bottom": 0
       }
     },
-    "techpack_v11_quotation_step3_jXXQUG": {
-      "type": "techpack-v11-quotation-step3",
-      "name": "TechPack V11 - Quotation Step 3",
+    "techpack_v11_quotation_step4_jYBNyG": {
+      "type": "techpack-v11-quotation-step4",
+      "name": "TechPack V11 - Quotation Step 4",
       "settings": {
-        "enable_custom_garments": true
+        "terms_url": "/pages/terms"
       }
     }
   },
   "order": [
     "main",
-    "techpack_v11_quotation_step3_jXXQUG"
+    "techpack_v11_quotation_step4_jYBNyG"
   ]
 }
