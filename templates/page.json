@@ -16,16 +16,18 @@
         "padding_bottom": 0
       }
     },
-    "techpack_v11_quotation_step4_jYBNyG": {
-      "type": "techpack-v11-quotation-step4",
-      "name": "TechPack V11 - Quotation Step 4",
+    "techpack_v11_quotation_step1_jCenDH": {
+      "type": "techpack-v11-quotation-step1",
+      "name": "TechPack V11 - Quotation Step 1",
       "settings": {
-        "terms_url": "/pages/terms"
+        "enable_test_mode": false,
+        "moq_minimum": 75,
+        "quantity_max": 5000
       }
     }
   },
   "order": [
     "main",
-    "techpack_v11_quotation_step4_jYBNyG"
+    "techpack_v11_quotation_step1_jCenDH"
   ]
 }
