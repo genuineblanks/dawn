@@ -1,0 +1,210 @@
+{% comment %}
+  TechPack V11 - Sample Request - Step 3B: Color Assignment
+  Purpose: Assign colors to garments built in Step 3A
+  Flow: Three color options per garment (Stock / Pantone / TechPack)
+  Features: Lab Dip Cart, fabric-based availability, batch assignment
+{% endcomment %}
+
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-step3b.css' | asset_url | stylesheet_tag }}
+
+<div class="techpack-v11 techpack-flow" id="sampleStep3B" data-section-id="{{ section.id }}" data-flow-type="sample" data-current-step="4">
+
+  {%- comment -%} Progress Header {%- endcomment -%}
+  <div class="techpack-progress">
+    <div class="techpack-progress__container">
+      <button type="button" class="techpack-progress__back" data-action="previous-step">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="techpack-progress__steps">
+        <div class="progress-step progress-step--complete" data-step="1">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Client Info</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="2">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Files</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="3">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Garments</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--active" data-step="4">
+          <div class="progress-step__circle">4</div>
+          <div class="progress-step__label">Colors</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="5">
+          <div class="progress-step__circle">5</div>
+          <div class="progress-step__label">Review</div>
+        </div>
+      </div>
+
+      <div class="techpack-progress__save">
+        <div class="save-indicator" id="saveIndicator">
+          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="save-indicator__text">All saved</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Main Content - 2 Column Layout {%- endcomment -%}
+  <div class="techpack-content">
+    <div class="techpack-content__container techpack-content__container--wide">
+
+      {%- comment -%} Step Header {%- endcomment -%}
+      <header class="step-header">
+        <div class="step-header__badge">Step 4 of 5</div>
+        <h1 class="step-header__title">Assign Colors to Your Garments</h1>
+        <p class="step-header__description">
+          Choose how to specify color for each garment below
+        </p>
+      </header>
+
+      {%- comment -%} 2-COLUMN LAYOUT: 70% Garments / 30% Cart {%- endcomment -%}
+      <div class="step3b-layout">
+
+        {%- comment -%} LEFT COLUMN: Garment List (70%) {%- endcomment -%}
+        <div class="step3b-left">
+
+          {%- comment -%} Collapsible Speed Guide {%- endcomment -%}
+          <div class="speed-guide" id="speedGuide">
+            <button type="button" class="speed-guide__toggle" data-action="toggle-speed-guide">
+              <svg class="speed-guide__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Color Options Guide</span>
+            </button>
+
+            <div class="speed-guide__content" id="speedGuideContent" style="display: none;">
+              <div class="speed-guide__item">
+                <div class="speed-guide__item-header">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 10L8 13L15 6" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <h4 class="speed-guide__item-title">Stock Colors - 2-4 weeks (All Fabrics)</h4>
+                </div>
+                <p class="speed-guide__item-text">Pre-made swatches in standard colors</p>
+              </div>
+
+              <div class="speed-guide__item">
+                <div class="speed-guide__item-header">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7" cy="7" r="4" stroke="#A855F7" stroke-width="2"/>
+                    <circle cx="13" cy="13" r="4" stroke="#A855F7" stroke-width="2"/>
+                  </svg>
+                  <h4 class="speed-guide__item-title">Pantone Custom - 4-6 weeks (100% Cotton Only)</h4>
+                </div>
+                <p class="speed-guide__item-text">Exact custom Pantone color development. Order lab dip swatches for approval.</p>
+              </div>
+
+              <div class="speed-guide__item">
+                <div class="speed-guide__item-header">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 3H14L16 5V17H6V3Z" stroke="#6B7280" stroke-width="2"/>
+                    <path d="M9 8H13M9 11H13M9 14H11" stroke="#6B7280" stroke-width="2"/>
+                  </svg>
+                  <h4 class="speed-guide__item-title">I Have a TechPack - 4-6 weeks (All Fabrics)</h4>
+                </div>
+                <p class="speed-guide__item-text">For brands with complete techpack documentation</p>
+                <ul class="speed-guide__item-list">
+                  <li>Cotton: Exact Pantone code matching</li>
+                  <li>Non-Cotton: Closest possible color match</li>
+                  <li>Also for: Patterns, prints, multi-color designs</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {%- comment -%} Garment List {%- endcomment -%}
+          <div class="garment-color-list" id="garmentColorList">
+            {%- comment -%} Populated by JavaScript {%- endcomment -%}
+          </div>
+
+        </div>
+
+        {%- comment -%} RIGHT COLUMN: Lab Dip Cart (30%) {%- endcomment -%}
+        <div class="step3b-right">
+          {% render 'techpack-v11-lab-dip-cart' %}
+        </div>
+
+      </div>
+
+      {%- comment -%} Form Navigation {%- endcomment -%}
+      <div class="form-navigation" id="step3BNavigation">
+        <button
+          type="button"
+          class="button-secondary"
+          data-action="previous-step"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back to Garments
+        </button>
+
+        <button
+          type="button"
+          class="button-primary"
+          data-action="next-step"
+          id="continueToReview"
+        >
+          Continue to Review
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{%- comment -%} Pantone Color Studio Modal {%- endcomment -%}
+{% render 'techpack-v11-color-studio-modal' %}
+
+<script>
+  window.TECHPACK_V11_CUSTOMER = {
+    isLoggedIn: {{ customer | json }} !== null
+  };
+</script>
+
+{% render 'techpack-v11-theme-switcher' %}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-step3b.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "TP V11 Sample Step 3B",
+  "class": "section-techpack-v11-step",
+  "settings": []
+}
+{% endschema %}
