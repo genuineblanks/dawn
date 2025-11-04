@@ -1,0 +1,94 @@
+{% comment %}
+  TechPack V11 - Lab Dip Cart Sidebar
+
+  Persistent sidebar showing Pantone lab dip swatches added for ordering
+  Features: Price calculation, garment assignment tracking, remove items
+  Always visible but empty until Pantone colors added
+{% endcomment %}
+
+<div class="lab-dip-cart" id="labDipCart">
+
+  {%- comment -%} Header with Tooltip {%- endcomment -%}
+  <div class="lab-dip-cart__header">
+    <h3 class="lab-dip-cart__title">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 3L8 2L12 2L14 3L15 6V16L12 18H8L5 16V6L6 3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M10 6V14M7 10H13" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      Lab Dip Cart
+    </h3>
+
+    {%- comment -%} Info Tooltip {%- endcomment -%}
+    <button type="button" class="lab-dip-cart__info-btn" data-action="toggle-labdip-tooltip">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M8 11V8M8 5H8.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    {%- comment -%} Tooltip Content (Hidden by default) {%- endcomment -%}
+    <div class="lab-dip-cart__tooltip" id="labDipTooltip" style="display: none;">
+      <h4 class="lab-dip-cart__tooltip-title">About Lab Dip Swatches</h4>
+      <p class="lab-dip-cart__tooltip-text">
+        Lab dips are 5cm × 5cm fabric swatches in your custom Pantone colors (~€5-10 each).
+      </p>
+      <p class="lab-dip-cart__tooltip-text">Use them to:</p>
+      <ul class="lab-dip-cart__tooltip-list">
+        <li>Test multiple color options</li>
+        <li>See colors on actual fabric</li>
+        <li>Approve before full production</li>
+      </ul>
+      <p class="lab-dip-cart__tooltip-note">
+        Not required if you trust the Pantone code accuracy.
+      </p>
+    </div>
+  </div>
+
+  {%- comment -%} Cart Content {%- endcomment -%}
+  <div class="lab-dip-cart__content" id="labDipCartContent">
+
+    {%- comment -%} Empty State {%- endcomment -%}
+    <div class="lab-dip-cart__empty" id="labDipCartEmpty">
+      <svg class="lab-dip-cart__empty-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="16" y="16" width="32" height="32" rx="4" stroke="currentColor" stroke-width="3" fill="none"/>
+        <path d="M32 24V40M24 32H40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <p class="lab-dip-cart__empty-text">No swatches added yet</p>
+      <p class="lab-dip-cart__empty-hint">
+        Add Pantone colors to order fabric swatches for approval.
+      </p>
+    </div>
+
+    {%- comment -%} Cart Items (Populated by JavaScript) {%- endcomment -%}
+    <div class="lab-dip-cart__items" id="labDipCartItems" style="display: none;">
+      {%- comment -%} Lab dip cards populated by JS {%- endcomment -%}
+    </div>
+
+  </div>
+
+  {%- comment -%} Cart Footer {%- endcomment -%}
+  <div class="lab-dip-cart__footer" id="labDipCartFooter" style="display: none;">
+    <div class="lab-dip-cart__summary">
+      <div class="lab-dip-cart__summary-row">
+        <span class="lab-dip-cart__summary-label" id="labDipCount">0 swatches</span>
+        <span class="lab-dip-cart__summary-value" id="labDipTotal">€0</span>
+      </div>
+    </div>
+
+    <div class="lab-dip-cart__actions">
+      <button type="button" class="lab-dip-cart__action-btn" data-action="view-labdip-details">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 6H13M3 10H13M5 3H11V13H5V3Z" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        View Details
+      </button>
+      <button type="button" class="lab-dip-cart__action-btn lab-dip-cart__action-btn--danger" data-action="clear-labdip-cart">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 4H14M12 4V13H4V4M6 4V2H10V4M6 7V11M10 7V11" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        Clear Cart
+      </button>
+    </div>
+  </div>
+
+</div>
