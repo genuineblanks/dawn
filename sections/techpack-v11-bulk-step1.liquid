@@ -7,7 +7,7 @@
 {{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
 {{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
 {{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
-{{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-bulk.css' | asset_url | stylesheet_tag }}
 
 <div class="techpack-v11 techpack-flow" data-section-id="{{ section.id }}" data-flow-type="bulk" data-current-step="1">
 
@@ -160,6 +160,126 @@
           </div>
         </div>
 
+        {%- comment -%} Shipping & Insurance Section (Bulk Only) {%- endcomment -%}
+        <div class="form-section shipping-insurance-section">
+          <div class="section-header--with-guidance">
+            <div>
+              <h3 class="form-section__title">Shipping & Insurance</h3>
+              <p class="form-section__subtitle">Choose your preferred shipping method and protection level</p>
+            </div>
+            <button
+              type="button"
+              class="guidance-btn"
+              data-action="show-shipping-guidance"
+              aria-label="Shipping guidance help"
+            >
+              WHAT SHOULD I CHOOSE
+            </button>
+          </div>
+
+          {%- comment -%} Shipping Method {%- endcomment -%}
+          <div class="form-field" data-field="shipping_method">
+            <label class="form-field__label">
+              Preferred Shipping Method
+              <span class="form-field__required">*</span>
+            </label>
+            <div class="shipping-methods">
+              <label class="shipping-method">
+                <input
+                  type="radio"
+                  name="shipping_method"
+                  value="air"
+                  id="shippingAir"
+                  required
+                  data-validation="required"
+                >
+                <span class="shipping-method-content">
+                  <div class="shipping-method-icon">✈️</div>
+                  <div class="shipping-method-text">
+                    <strong>Air Freight</strong>
+                    <small>Faster + Expensive (5-10 business days)</small>
+                  </div>
+                </span>
+              </label>
+              <label class="shipping-method">
+                <input
+                  type="radio"
+                  name="shipping_method"
+                  value="sea"
+                  id="shippingSea"
+                  required
+                  data-validation="required"
+                >
+                <span class="shipping-method-content">
+                  <div class="shipping-method-icon">🚢</div>
+                  <div class="shipping-method-text">
+                    <strong>Sea Freight</strong>
+                    <small>Slower + Cheaper (20-40 business days)</small>
+                  </div>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          {%- comment -%} Insurance {%- endcomment -%}
+          <div class="form-field" data-field="insurance">
+            <label class="form-field__label">
+              Shipping Insurance
+              <span class="form-field__required">*</span>
+            </label>
+            <div class="insurance-options">
+              <label class="insurance-option">
+                <input
+                  type="radio"
+                  name="insurance"
+                  value="yes"
+                  id="insuranceYes"
+                  required
+                  data-validation="required"
+                >
+                <span class="insurance-option-content">
+                  <div class="insurance-option-icon">🛡️</div>
+                  <div class="insurance-option-text">
+                    <strong>Yes, add insurance</strong>
+                    <small>2-6% of invoice value</small>
+                  </div>
+                </span>
+              </label>
+              <label class="insurance-option">
+                <input
+                  type="radio"
+                  name="insurance"
+                  value="no"
+                  id="insuranceNo"
+                  required
+                  data-validation="required"
+                >
+                <span class="insurance-option-content">
+                  <div class="insurance-option-icon">⚠️</div>
+                  <div class="insurance-option-text">
+                    <strong>No insurance</strong>
+                    <small>No protection coverage</small>
+                  </div>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          {%- comment -%} Insurance Help Box {%- endcomment -%}
+          <div class="help-box">
+            <div class="help-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M8 5V8M8 10H8.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="help-content">
+              <strong>Insurance covers missing or damaged items</strong> up to full invoice value.
+              Without insurance, there's no protection for lost goods during shipping.
+            </div>
+          </div>
+        </div>
+
         {%- comment -%} Form Navigation {%- endcomment -%}
         <div class="form-navigation">
           <button
@@ -188,6 +308,119 @@
 
       </form>
 
+    </div>
+  </div>
+
+  {%- comment -%} Shipping Guidance Modal {%- endcomment -%}
+  <div class="modal-overlay" id="shippingGuidanceModal" style="display: none;">
+    <div class="modal-container modal-container--medium">
+      <div class="modal-header">
+        <h3 class="modal-title">Shipping & Insurance Guidance</h3>
+        <button
+          type="button"
+          class="modal-close"
+          data-action="close-shipping-guidance"
+          aria-label="Close modal"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="guidance-section">
+          <h4 class="guidance-section__title">✈️ Air Freight vs 🚢 Sea Freight</h4>
+
+          <div class="guidance-comparison">
+            <div class="guidance-comparison__item">
+              <h5>Air Freight - Best for:</h5>
+              <ul>
+                <li>Urgent orders (fashion week, events, seasonal launches)</li>
+                <li>Small to medium quantities (under 500 kg)</li>
+                <li>High-value items where speed justifies cost</li>
+                <li>First orders where timing is critical</li>
+              </ul>
+              <p class="guidance-comparison__note">
+                <strong>Timeline:</strong> 5-10 business days<br>
+                <strong>Cost:</strong> Higher freight charges
+              </p>
+            </div>
+
+            <div class="guidance-comparison__item">
+              <h5>Sea Freight - Best for:</h5>
+              <ul>
+                <li>Large bulk orders (over 500 kg / multiple pallets)</li>
+                <li>Seasonal restocks planned in advance</li>
+                <li>Cost-sensitive projects with flexible timelines</li>
+                <li>Established brands with inventory planning</li>
+              </ul>
+              <p class="guidance-comparison__note">
+                <strong>Timeline:</strong> 20-40 business days<br>
+                <strong>Cost:</strong> Significantly cheaper for bulk
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="guidance-section">
+          <h4 class="guidance-section__title">🛡️ Shipping Insurance</h4>
+          <p class="guidance-section__description">
+            Insurance protects your investment against loss, damage, or theft during transit.
+          </p>
+
+          <div class="guidance-comparison">
+            <div class="guidance-comparison__item guidance-comparison__item--recommended">
+              <h5>✅ With Insurance (Recommended)</h5>
+              <ul>
+                <li>Full coverage up to invoice value</li>
+                <li>Protection against loss, damage, or theft</li>
+                <li>Peace of mind for high-value orders</li>
+                <li>Small cost (2-6% of order value)</li>
+              </ul>
+              <p class="guidance-comparison__note guidance-comparison__note--success">
+                <strong>Recommended for:</strong> All first-time orders, high-value orders, or when shipping to regions with higher risk
+              </p>
+            </div>
+
+            <div class="guidance-comparison__item">
+              <h5>⚠️ Without Insurance</h5>
+              <ul>
+                <li>No protection if goods are lost or damaged</li>
+                <li>You bear 100% of the risk</li>
+                <li>Save 2-6% on shipping costs</li>
+                <li>Only recommended for experienced clients</li>
+              </ul>
+              <p class="guidance-comparison__note guidance-comparison__note--warning">
+                <strong>Warning:</strong> Without insurance, you will not be compensated for any losses during shipping
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="guidance-section guidance-section--highlight">
+          <h4 class="guidance-section__title">💡 Our Recommendation</h4>
+          <p>
+            <strong>For most bulk orders:</strong> Choose <strong>Sea Freight + Insurance</strong> for the best balance of cost and protection.
+          </p>
+          <p>
+            <strong>For urgent orders:</strong> Choose <strong>Air Freight + Insurance</strong> to ensure fast delivery with full protection.
+          </p>
+          <p class="guidance-section__note">
+            Our team will provide exact shipping quotes based on your selection during the quotation process.
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="button-primary"
+          data-action="close-shipping-guidance"
+        >
+          Got it, thanks!
+        </button>
+      </div>
     </div>
   </div>
 
