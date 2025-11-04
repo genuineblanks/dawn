@@ -6,6 +6,16 @@
   - NO Measurement Requirements (already have from quotation)
 {% endcomment %}
 
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-files.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-sample.js' | asset_url }}" defer></script>
+
 <div class="step-container" id="sampleStep2">
   <div class="step-header">
     <h2 class="step-title">Upload Your Files</h2>

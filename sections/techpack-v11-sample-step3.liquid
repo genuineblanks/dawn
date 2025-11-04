@@ -10,6 +10,17 @@
      - TechPack Reference (mini color picker for naming)
 {% endcomment %}
 
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-color-studio.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-sample.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-color-studio.js' | asset_url }}" defer></script>
+
 <div class="step-container" id="sampleStep3">
   <div class="step-header">
     <h2 class="step-title">Garment Specifications</h2>

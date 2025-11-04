@@ -9,6 +9,16 @@
   - Cost Summary (garment samples + lab dips)
 {% endcomment %}
 
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-review.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-sample.js' | asset_url }}" defer></script>
+
 <div class="step-container" id="sampleStep4">
   <div class="step-header">
     <h2 class="step-title">Review & Submit Request</h2>
