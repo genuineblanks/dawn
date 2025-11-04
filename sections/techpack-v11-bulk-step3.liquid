@@ -1,0 +1,485 @@
+{% comment %}
+  TechPack V11 - Bulk Order - Step 3: Garment Building (No Color/Quantity Assignment)
+  Purpose: Build garment list with Type + Fabric only
+  Flow: Add Garment → Select Type → Select Fabric → Added (NO colorways yet)
+  Colorway assignment happens in Step 4
+{% endcomment %}
+
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
+
+<div class="techpack-v11 techpack-flow" id="bulkStep3" data-section-id="{{ section.id }}" data-flow-type="bulk" data-current-step="3">
+
+  {%- comment -%} TEST MODE BANNER {%- endcomment -%}
+  <div class="test-mode-banner" id="testModeBanner" style="display: none;">
+    <div class="test-mode-banner__content">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <strong>TEST MODE ACTIVE</strong>
+        <p>2 bulk garments auto-added for testing.</p>
+      </div>
+      <button type="button" class="test-mode-banner__toggle" data-action="toggle-test-mode">
+        Disable TEST Mode
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} Progress Header {%- endcomment -%}
+  <div class="techpack-progress">
+    <div class="techpack-progress__container">
+      <button type="button" class="techpack-progress__back" data-action="previous-step">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="techpack-progress__steps">
+        <div class="progress-step progress-step--complete" data-step="1">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Client Info</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="2">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Files</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--active" data-step="3">
+          <div class="progress-step__circle">3</div>
+          <div class="progress-step__label">Garments</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="4">
+          <div class="progress-step__circle">4</div>
+          <div class="progress-step__label">Colors</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="5">
+          <div class="progress-step__circle">5</div>
+          <div class="progress-step__label">Review</div>
+        </div>
+      </div>
+
+      <div class="techpack-progress__save">
+        <div class="save-indicator" id="saveIndicator">
+          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="save-indicator__text">All saved</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Main Content {%- endcomment -%}
+  <div class="techpack-content">
+    <div class="techpack-content__container techpack-content__container--wide">
+
+      {%- comment -%} Step Header {%- endcomment -%}
+      <header class="step-header">
+        <div class="step-header__badge">Step 3 of 5</div>
+        <h1 class="step-header__title">Build Your Garment List</h1>
+        <p class="step-header__description">
+          Add garments by selecting type and fabric. You'll assign colors and quantities in the next step.
+        </p>
+      </header>
+
+      {%- comment -%} IMPORTANT INFO BOX {%- endcomment -%}
+      <div class="info-card info-card--info">
+        <div class="info-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v-4m0-4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="info-card__content">
+          <h4 class="info-card__title">How This Works</h4>
+          <p class="info-card__text">
+            In this step, you'll select the garment type and fabric for each item in your bulk order. Don't worry about colors and quantities yet - you'll configure colorways (colors with quantities and sizes) in the next step.
+          </p>
+        </div>
+      </div>
+
+      {%- comment -%} GARMENT LIST (Always Visible) {%- endcomment -%}
+      <div class="form-section" id="bulkGarmentListSection">
+        <div class="section-header">
+          <div class="section-header__title-row">
+            <h3 class="section-header__title">Your Bulk Order Garments</h3>
+            <span class="garment-count" id="bulkGarmentCount">0 garments</span>
+          </div>
+        </div>
+
+        {%- comment -%} Empty State {%- endcomment -%}
+        <div class="empty-state" id="bulkEmptyState">
+          <div class="empty-state__icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 20L20 16L32 20L44 16L48 20V48H16V20Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M20 16V20M44 16V20M16 26H48" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h4 class="empty-state__title">No garments added yet</h4>
+          <p class="empty-state__description">
+            Click "Add Garment" below to start building your bulk order
+          </p>
+        </div>
+
+        {%- comment -%} Garment List {%- endcomment -%}
+        <div class="garment-list" id="bulkGarmentList" style="display: none;"></div>
+      </div>
+
+      {%- comment -%} ADD GARMENT BUTTON (Default State) {%- endcomment -%}
+      <div class="form-section" id="bulkAddGarmentSection">
+        <button type="button" class="button-add-garment" data-action="bulk-start-adding-garment">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <span id="bulkAddGarmentButtonText">Add Garment</span>
+        </button>
+      </div>
+
+      {%- comment -%} STEP 1: Garment Type Selection (Hidden Initially) {%- endcomment -%}
+      <div class="selection-step" id="bulkGarmentTypeStep" style="display: none;">
+        <div class="form-section">
+          <div class="section-header">
+            <h3 class="section-header__title">Select Garment Type</h3>
+            <p class="section-header__description">Choose which garment type for bulk production</p>
+          </div>
+
+          <div class="selection-grid selection-grid--visual">
+
+            {%- comment -%} T-Shirt {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="T-Shirt" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 26L26 20L60 26L94 20L100 26V100H20V26Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M26 20V26M94 20V26M20 40H100" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">T-Shirt</h4>
+                <p class="selection-card--visual__moq">Min: 100 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Hoodie {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Hoodie" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 30L26 20L60 23L94 20L104 30V103H16V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M45 20Q60 10 75 20" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Hoodie</h4>
+                <p class="selection-card--visual__moq">Min: 75 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Sweatshirt {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Sweatshirt" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 30L26 20L60 26L94 20L104 30V103H16V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <circle cx="60" cy="60" r="8" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Sweatshirt</h4>
+                <p class="selection-card--visual__moq">Min: 75 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Polo Shirt {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Polo Shirt" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 28L26 20L60 26L94 20L100 28V100H20V28Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M60 20V40M52 32L60 40L68 32" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Polo Shirt</h4>
+                <p class="selection-card--visual__moq">Min: 100 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Jacket {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Jacket" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 32L24 18L60 24L96 18L108 32V106H12V32Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M60 24V106M60 24L40 44M60 24L80 44" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Jacket</h4>
+                <p class="selection-card--visual__moq">Min: 50 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Pants {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Pants" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M30 20H90V70L75 110H45L30 70V20Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M30 50H90M60 20V70" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Pants</h4>
+                <p class="selection-card--visual__moq">Min: 75 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Shorts {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Shorts" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M30 30H90V70L80 90H40L30 70V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M30 50H90M60 30V70" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Shorts</h4>
+                <p class="selection-card--visual__moq">Min: 75 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Tank Top {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Tank Top" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M35 20L30 30V100H90V30L85 20H35Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M35 20V30M85 20V30" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Tank Top</h4>
+                <p class="selection-card--visual__moq">Min: 100 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Long Sleeve {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Long Sleeve" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 32L24 20L60 26L96 20L104 32V100H16V32Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M24 20L16 50M96 20L104 50M16 46H104" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Long Sleeve</h4>
+                <p class="selection-card--visual__moq">Min: 100 pcs</p>
+              </div>
+            </button>
+
+            {%- comment -%} Dress {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Dress" data-action="bulk-select-garment-type">
+              <div class="selection-card--visual__image">
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M40 20L35 30L30 50V110H90V50L85 30L80 20H40Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M40 20V30M80 20V30" stroke="currentColor" stroke-width="3"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Dress</h4>
+                <p class="selection-card--visual__moq">Min: 75 pcs</p>
+              </div>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} STEP 2: Fabric Type Selection (Hidden Initially) {%- endcomment -%}
+      <div class="selection-step" id="bulkFabricTypeStep" style="display: none;">
+        <div class="form-section">
+          <div class="section-header">
+            <div class="section-header__title-row">
+              <button type="button" class="button-back" data-action="bulk-back-to-garment-types">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Back
+              </button>
+              <div>
+                <h3 class="section-header__title">Select Fabric Type</h3>
+                <p class="section-header__description" id="bulkFabricTypeDescription">Choose fabric composition</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="selection-grid">
+
+            <button type="button" class="selection-card" data-fabric-type="100% Cotton" data-action="bulk-select-fabric-type">
+              <div class="selection-card__header">
+                <div class="selection-card__icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="12" r="6" stroke="currentColor" stroke-width="2"/>
+                    <path d="M16 18v8M12 22h8M14 26h4" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h4 class="selection-card__title">100% Cotton</h4>
+              </div>
+              <p class="selection-card__description">Natural, breathable, soft</p>
+            </button>
+
+            <button type="button" class="selection-card" data-fabric-type="Cotton Blend" data-action="bulk-select-fabric-type">
+              <div class="selection-card__header">
+                <div class="selection-card__icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="20" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                    <path d="M16 16v8M13 20h6M14 24h4" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h4 class="selection-card__title">Cotton Blend</h4>
+              </div>
+              <p class="selection-card__description">Cotton/polyester mix, durable</p>
+            </button>
+
+            <button type="button" class="selection-card" data-fabric-type="100% Polyester" data-action="bulk-select-fabric-type">
+              <div class="selection-card__header">
+                <div class="selection-card__icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 8h16v16H8z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 16h8M16 12v8" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h4 class="selection-card__title">100% Polyester</h4>
+              </div>
+              <p class="selection-card__description">Synthetic, moisture-wicking</p>
+            </button>
+
+            <button type="button" class="selection-card" data-fabric-type="Fleece" data-action="bulk-select-fabric-type">
+              <div class="selection-card__header">
+                <div class="selection-card__icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="22" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="10" cy="22" r="3" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="22" cy="22" r="3" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h4 class="selection-card__title">Fleece</h4>
+              </div>
+              <p class="selection-card__description">Warm, soft, insulating</p>
+            </button>
+
+            <button type="button" class="selection-card" data-fabric-type="French Terry" data-action="bulk-select-fabric-type">
+              <div class="selection-card__header">
+                <div class="selection-card__icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 16h20M6 10h20M6 22h20" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h4 class="selection-card__title">French Terry</h4>
+              </div>
+              <p class="selection-card__description">Looped back, medium weight</p>
+            </button>
+
+            <button type="button" class="selection-card" data-fabric-type="Jersey Knit" data-action="bulk-select-fabric-type">
+              <div class="selection-card__header">
+                <div class="selection-card__icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 8L16 12L24 8M8 16L16 20L24 16M8 24L16 28L24 24" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h4 class="selection-card__title">Jersey Knit</h4>
+              </div>
+              <p class="selection-card__description">Stretchy, comfortable</p>
+            </button>
+
+            <button type="button" class="selection-card" data-fabric-type="Performance Fabric" data-action="bulk-select-fabric-type">
+              <div class="selection-card__header">
+                <div class="selection-card__icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 4L20 12L28 14L22 20L24 28L16 24L8 28L10 20L4 14L12 12L16 4Z" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h4 class="selection-card__title">Performance Fabric</h4>
+              </div>
+              <p class="selection-card__description">Technical, athletic</p>
+            </button>
+
+            <button type="button" class="selection-card" data-fabric-type="Other" data-action="bulk-select-fabric-type">
+              <div class="selection-card__header">
+                <div class="selection-card__icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="2" fill="currentColor"/>
+                    <circle cx="8" cy="16" r="2" fill="currentColor"/>
+                    <circle cx="24" cy="16" r="2" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h4 class="selection-card__title">Other</h4>
+              </div>
+              <p class="selection-card__description">Custom or specialty fabric</p>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} Form Navigation {%- endcomment -%}
+      <div class="form-navigation" id="bulkFormNavigation">
+        <button
+          type="button"
+          class="button-secondary"
+          data-action="previous-step"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back to Files
+        </button>
+
+        <button
+          type="button"
+          class="button-primary"
+          data-action="next-step"
+          id="bulkContinueButton"
+        >
+          Continue to Colors & Quantities
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.TECHPACK_V11_CUSTOMER = {
+    isLoggedIn: {{ customer | json }} !== null
+  };
+</script>
+
+{% render 'techpack-v11-theme-switcher' %}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-bulk.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+
+{% schema %}
+{
+  "name": "TP V11 Bulk Step 3",
+  "class": "section-techpack-v11-step",
+  "settings": []
+}
+{% endschema %}
