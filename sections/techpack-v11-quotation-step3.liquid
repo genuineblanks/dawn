@@ -1,7 +1,7 @@
 {% comment %}
-  TechPack V11 - Quotation Step 3: Garment Builder (Visual 2-Step)
-  Purpose: Select garment types and fabrics using visual cards
-  Flow: Select Garment → Select Fabric → Added to List
+  TechPack V11 - Quotation Step 3: Garment Builder (Visual Card Selection)
+  Purpose: Select garment types and fabrics using visual image cards
+  Flow: Add Garment → Select Type → Select Fabric → Added to List
 {% endcomment %}
 
 {{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
@@ -18,7 +18,7 @@
       </svg>
       <div>
         <strong>TEST MODE ACTIVE</strong>
-        <p>2 test garments auto-added for testing.</p>
+        <p>3 test garments auto-added for testing.</p>
       </div>
     </div>
   </div>
@@ -81,14 +81,32 @@
       {%- comment -%} Step Header {%- endcomment -%}
       <header class="step-header">
         <div class="step-header__badge">Step 3 of 4</div>
-        <h1 class="step-header__title" id="stepTitle">Select Garments & Fabrics</h1>
-        <p class="step-header__description" id="stepDescription">
-          Choose garment types and their fabric compositions for your quotation
+        <h1 class="step-header__title">Build Your Garment List</h1>
+        <p class="step-header__description">
+          Add garments by selecting type and fabric composition
         </p>
       </header>
 
-      {%- comment -%} Garment List (Always Visible at Top) {%- endcomment -%}
-      <div class="form-section" id="garmentListSection" style="display: none;">
+      {%- comment -%} IMPORTANT INFO BOX {%- endcomment -%}
+      <div class="info-card info-card--primary">
+        <div class="info-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v-4m0-4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="info-card__content">
+          <h4 class="info-card__title">Important: Quote Specifications</h4>
+          <p class="info-card__text">
+            • Only garments configured here will be quoted<br>
+            • Add separate garment for each design variation (different fabrics/colors)<br>
+            • Your TechPack provides reference only
+          </p>
+        </div>
+      </div>
+
+      {%- comment -%} GARMENT LIST (Always Visible) {%- endcomment -%}
+      <div class="form-section" id="garmentListSection">
         <div class="section-header">
           <div class="section-header__title-row">
             <h3 class="section-header__title">Your Garments</h3>
@@ -96,273 +114,354 @@
           </div>
         </div>
 
-        <div class="garment-list" id="garmentList"></div>
+        {%- comment -%} Empty State {%- endcomment -%}
+        <div class="empty-state" id="emptyState">
+          <div class="empty-state__icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 20L20 16L32 20L44 16L48 20V48H16V20Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M20 16V20M44 16V20M16 26H48" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h4 class="empty-state__title">No garments added yet</h4>
+          <p class="empty-state__description">
+            Click "Add Garment" below to start building your quotation
+          </p>
+        </div>
+
+        {%- comment -%} Garment List {%- endcomment -%}
+        <div class="garment-list" id="garmentList" style="display: none;"></div>
       </div>
 
-      {%- comment -%} Step 1: Garment Type Selection {%- endcomment -%}
-      <div class="selection-step" id="garmentTypeStep">
+      {%- comment -%} ADD GARMENT BUTTON (Default State) {%- endcomment -%}
+      <div class="form-section" id="addGarmentSection">
+        <button type="button" class="button-add-garment" data-action="start-adding-garment">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <span id="addGarmentButtonText">Add Garment</span>
+        </button>
+      </div>
+
+      {%- comment -%} STEP 1: Garment Type Selection (Hidden Initially) {%- endcomment -%}
+      <div class="selection-step" id="garmentTypeStep" style="display: none;">
         <div class="form-section">
           <div class="section-header">
-            <h3 class="section-header__title">Step 1: Select Garment Type</h3>
-            <p class="section-header__description">Choose a garment type to add</p>
+            <h3 class="section-header__title">Select Garment Type</h3>
+            <p class="section-header__description">Choose which garment you want to add</p>
           </div>
 
-          <div class="selection-grid selection-grid--compact">
+          <div class="selection-grid selection-grid--visual">
 
             {%- comment -%} T-Shirt {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="T-Shirt" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 26L26 20L40 26L54 20L60 26V60H20V26Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M26 20V26M54 20V26M20 33H60" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="T-Shirt" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace SVG with: <img src="{{ 'tshirt.jpg' | asset_url }}" alt="T-Shirt"> {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 26L26 20L60 26L94 20L100 26V100H20V26Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M26 20V26M94 20V26M20 40H100" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">T-Shirt</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">T-Shirt</h4>
+              </div>
             </button>
 
             {%- comment -%} Hoodie {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Hoodie" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16 30L26 20L40 23L54 20L64 30V63H16V30Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M33 20Q40 13 47 20" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Hoodie" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 30L26 20L60 23L94 20L104 30V103H16V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M45 20Q60 10 75 20" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Hoodie</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Hoodie</h4>
+              </div>
             </button>
 
             {%- comment -%} Sweatshirt {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Sweatshirt" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16 30L26 20L40 26L54 20L64 30V63H16V30Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <circle cx="40" cy="43" r="5" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Sweatshirt" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 30L26 20L60 26L94 20L104 30V103H16V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <circle cx="60" cy="60" r="8" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Sweatshirt</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Sweatshirt</h4>
+              </div>
             </button>
 
             {%- comment -%} Polo Shirt {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Polo Shirt" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 26L26 20L40 26L54 20L60 26V60H20V26Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M36 26V36M44 26V36" stroke="currentColor" stroke-width="2"/>
-                  <rect x="33" y="23" width="14" height="6" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Polo Shirt" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 26L26 20L60 26L94 20L100 26V100H20V26Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <rect x="50" y="23" width="20" height="10" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Polo Shirt</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Polo Shirt</h4>
+              </div>
             </button>
 
             {%- comment -%} Tank Top {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Tank Top" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M26 23L33 20H47L54 23V60H26V23Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Tank Top" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M36 23L45 20H75L84 23V100H36V23Z" stroke="currentColor" stroke-width="3" fill="none"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Tank Top</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Tank Top</h4>
+              </div>
             </button>
 
             {%- comment -%} Long Sleeve {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Long Sleeve" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 26L26 20L40 26L54 20L60 26V60H20V26Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M20 26L13 33V53L20 50M60 26L67 33V53L60 50" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Long Sleeve" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 26L26 20L60 26L94 20L100 26V100H20V26Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M20 26L10 40V80L20 75M100 26L110 40V80L100 75" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Long Sleeve</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Long Sleeve</h4>
+              </div>
             </button>
 
             {%- comment -%} Shorts {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Shorts" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M26 20H54V45L47 50H33L26 45V20Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M40 20V50" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Shorts" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M30 25H90V65L75 75H45L30 65V25Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M60 25V75" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Shorts</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Shorts</h4>
+              </div>
             </button>
 
             {%- comment -%} Joggers {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Joggers" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M26 20H54V60L47 63H33L26 60V20Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M40 20V63" stroke="currentColor" stroke-width="2"/>
-                  <circle cx="33" cy="63" r="3" stroke="currentColor" stroke-width="2"/>
-                  <circle cx="47" cy="63" r="3" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Joggers" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M30 25H90V100L75 105H45L30 100V25Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M60 25V105" stroke="currentColor" stroke-width="3"/>
+                  <circle cx="45" cy="105" r="5" stroke="currentColor" stroke-width="3"/>
+                  <circle cx="75" cy="105" r="5" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Joggers</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Joggers</h4>
+              </div>
             </button>
 
             {%- comment -%} Zip Hoodie {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Zip Hoodie" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16 30L26 20L40 23L54 20L64 30V63H16V30Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M33 20Q40 13 47 20M40 23V63" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Zip Hoodie" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 30L26 20L60 23L94 20L104 30V103H16V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M45 20Q60 10 75 20M60 23V103" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Zip Hoodie</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Zip Hoodie</h4>
+              </div>
             </button>
 
             {%- comment -%} Jacket {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-garment-type="Jacket" data-action="select-garment-type">
-              <div class="selection-card-compact__image">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16 30L26 20L40 23L54 20L64 30V56H16V30Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M40 23V56M30 30H50M30 40H50" stroke="currentColor" stroke-width="2"/>
+            <button type="button" class="selection-card--visual" data-garment-type="Jacket" data-action="select-garment-type">
+              <div class="selection-card--visual__image">
+                {%- comment -%} Replace with real image {%- endcomment -%}
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 30L26 20L60 23L94 20L104 30V90H16V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                  <path d="M60 23V90M40 35H80M40 50H80" stroke="currentColor" stroke-width="3"/>
                 </svg>
               </div>
-              <h4 class="selection-card-compact__title">Jacket</h4>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Jacket</h4>
+              </div>
             </button>
 
           </div>
         </div>
       </div>
 
-      {%- comment -%} Step 2: Fabric Selection {%- endcomment -%}
+      {%- comment -%} STEP 2: Fabric Selection (Hidden Initially) {%- endcomment -%}
       <div class="selection-step" id="fabricTypeStep" style="display: none;">
         <div class="form-section">
           <div class="section-header">
             <div class="section-header__title-row">
-              <h3 class="section-header__title">Step 2: Select Fabric</h3>
+              <h3 class="section-header__title" id="fabricStepTitle">Select Fabric</h3>
               <button type="button" class="button-link" data-action="back-to-garment-types">
                 ← Back to garment types
               </button>
             </div>
-            <p class="section-header__description" id="fabricStepDescription">Choose fabric for your garment</p>
+            <p class="section-header__description" id="fabricStepDescription">Choose the fabric composition</p>
           </div>
 
-          <div class="selection-grid selection-grid--compact">
+          <div class="selection-grid selection-grid--visual">
 
             {%- comment -%} 100% Cotton {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="100% Cotton" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="20" cy="20" r="10" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M20 12.5V27.5M12.5 20H27.5" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="100% Cotton" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="40" r="20" stroke="currentColor" stroke-width="2"/>
+                    <path d="M40 20V60M20 40H60" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">100% Cotton</h4>
-              <p class="selection-card-compact__meta">180 GSM</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton</h4>
+                <p class="selection-card--visual__meta">180 GSM</p>
+              </div>
             </button>
 
             {%- comment -%} 70/30 Cotton/Poly {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="70/30 Cotton/Poly" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="15" cy="20" r="7.5" stroke="currentColor" stroke-width="1.5"/>
-                    <circle cx="25" cy="20" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="70/30 Cotton/Poly" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="30" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="50" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">70/30 Blend</h4>
-              <p class="selection-card-compact__meta">Cotton/Poly</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">70/30 Blend</h4>
+                <p class="selection-card--visual__meta">Cotton/Poly</p>
+              </div>
             </button>
 
             {%- comment -%} 80/20 Cotton/Poly {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="80/20 Cotton/Poly" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #ebebeb 0%, #d5d5d5 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="15" cy="20" r="7.5" stroke="currentColor" stroke-width="1.5"/>
-                    <circle cx="25" cy="20" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="80/20 Cotton/Poly" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #ebebeb 0%, #d5d5d5 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="30" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="50" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">80/20 Blend</h4>
-              <p class="selection-card-compact__meta">Cotton/Poly</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">80/20 Blend</h4>
+                <p class="selection-card--visual__meta">Cotton/Poly</p>
+              </div>
             </button>
 
             {%- comment -%} 50/50 Cotton/Poly {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="50/50 Cotton/Poly" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #e5e5e5 0%, #cccccc 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="15" cy="20" r="7.5" stroke="currentColor" stroke-width="1.5"/>
-                    <circle cx="25" cy="20" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="50/50 Cotton/Poly" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #e5e5e5 0%, #cccccc 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="30" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="50" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">50/50 Blend</h4>
-              <p class="selection-card-compact__meta">Cotton/Poly</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">50/50 Blend</h4>
+                <p class="selection-card--visual__meta">Cotton/Poly</p>
+              </div>
             </button>
 
             {%- comment -%} Organic Cotton {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="100% Organic Cotton" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #f0f4f0 0%, #d8e4d8 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 10C20 10 25 15 25 20C25 25 20 30 20 30C20 30 15 25 15 20C15 15 20 10 20 10Z" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="100% Organic Cotton" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #f0f4f0 0%, #d8e4d8 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40 15C40 15 50 25 50 35C50 45 40 55 40 55C40 55 30 45 30 35C30 25 40 15 40 15Z" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">Organic Cotton</h4>
-              <p class="selection-card-compact__meta">GOTS Certified</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Organic Cotton</h4>
+                <p class="selection-card--visual__meta">GOTS Certified</p>
+              </div>
             </button>
 
             {%- comment -%} French Terry {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="French Terry" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #eaeaea 0%, #c8c8c8 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="15" width="20" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M12.5 17.5H27.5M12.5 20H27.5M12.5 22.5H27.5" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="French Terry" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #eaeaea 0%, #c8c8c8 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="30" width="40" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M25 35H55M25 40H55M25 45H55" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">French Terry</h4>
-              <p class="selection-card-compact__meta">280 GSM</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">French Terry</h4>
+                <p class="selection-card--visual__meta">280 GSM</p>
+              </div>
             </button>
 
             {%- comment -%} Fleece 320gsm {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="Fleece 320gsm" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #e0e0e0 0%, #bebebe 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="15" width="20" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M12.5 17.5H27.5M12.5 20H27.5M12.5 22.5H27.5" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="Fleece 320gsm" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #e0e0e0 0%, #bebebe 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="30" width="40" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M25 35H55M25 40H55M25 45H55" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">Fleece 320gsm</h4>
-              <p class="selection-card-compact__meta">Heavyweight</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Fleece 320gsm</h4>
+                <p class="selection-card--visual__meta">Heavyweight</p>
+              </div>
             </button>
 
             {%- comment -%} Brushed Fleece {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="Brushed Fleece" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #e5e5e5 0%, #c0c0c0 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="15" width="20" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M12.5 17.5H27.5M12.5 20H27.5M12.5 22.5H27.5" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="Brushed Fleece" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #e5e5e5 0%, #c0c0c0 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="30" width="40" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M25 35H55M25 40H55M25 45H55" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">Brushed Fleece</h4>
-              <p class="selection-card-compact__meta">Soft Interior</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Brushed Fleece</h4>
+                <p class="selection-card--visual__meta">Soft Interior</p>
+              </div>
             </button>
 
             {%- comment -%} Performance Poly {%- endcomment -%}
-            <button type="button" class="selection-card-compact" data-fabric-type="Performance Poly" data-action="select-fabric-type">
-              <div class="selection-card-compact__image">
-                <div class="fabric-swatch" style="background: linear-gradient(135deg, #d8d8d8 0%, #b8b8b8 100%);">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 12L25 17L20 22L15 17L20 12Z" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M20 18L25 23L20 28L15 23L20 18Z" stroke="currentColor" stroke-width="1.5"/>
+            <button type="button" class="selection-card--visual" data-fabric-type="Performance Poly" data-action="select-fabric-type">
+              <div class="selection-card--visual__image">
+                <div class="fabric-swatch--large" style="background: linear-gradient(135deg, #d8d8d8 0%, #b8b8b8 100%);">
+                  {%- comment -%} Replace with real fabric image {%- endcomment -%}
+                  <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40 20L50 30L40 40L30 30L40 20Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M40 35L50 45L40 55L30 45L40 35Z" stroke="currentColor" stroke-width="2"/>
                   </svg>
                 </div>
               </div>
-              <h4 class="selection-card-compact__title">Performance Poly</h4>
-              <p class="selection-card-compact__meta">Moisture-wicking</p>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Performance Poly</h4>
+                <p class="selection-card--visual__meta">Moisture-wicking</p>
+              </div>
             </button>
 
           </div>
