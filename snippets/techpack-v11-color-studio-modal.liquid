@@ -23,17 +23,8 @@
     {%- comment -%} Modal Content - 2 Column Layout {%- endcomment -%}
     <div class="color-studio-modal__content">
 
-      {%- comment -%} LEFT: Color Selection (40%) {%- endcomment -%}
+      {%- comment -%} LEFT: Color Selection (65%) {%- endcomment -%}
       <div class="color-studio-modal__left">
-
-        {%- comment -%} Current Selection Display {%- endcomment -%}
-        <div class="modal-current-color" id="modalCurrentColor">
-          <div class="modal-current-color__swatch" id="modalCurrentColorSwatch" style="background-color: #EC4899;"></div>
-          <div class="modal-current-color__info">
-            <p class="modal-current-color__name" id="modalCurrentColorName">Pink</p>
-            <p class="modal-current-color__code" id="modalCurrentColorCode">17-2034 TPX</p>
-          </div>
-        </div>
 
         {%- comment -%} Pantone Code Search {%- endcomment -%}
         <div class="modal-search">
@@ -138,49 +129,52 @@
           </div>
         </div>
 
-        {%- comment -%} Add to Collection Button {%- endcomment -%}
-        <button type="button" class="modal-add-btn" data-action="modal-add-to-labdip-collection">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Add to Lab Dip Collection
-        </button>
-
       </div>
 
-      {%- comment -%} RIGHT: Lab Dip Collection + Assignment (60%) {%- endcomment -%}
+      {%- comment -%} RIGHT: Current Selection + Cart Preview (35%) {%- endcomment -%}
       <div class="color-studio-modal__right">
 
-        <h3 class="modal-collection-title">Your Lab Dip Collection</h3>
-        <p class="modal-collection-description">Build your swatch collection and assign to garments</p>
+        {%- comment -%} Current Selection Display {%- endcomment -%}
+        <div class="modal-selection-display">
+          <h4 class="modal-section-title">Current Selection</h4>
+          <div id="modalCurrentSelection" class="modal-current-selection">
+            <div class="modal-selection-swatch" id="modalSelectionSwatch" style="background-color: #EC4899;"></div>
+            <div class="modal-selection-info">
+              <p class="modal-selection-name" id="modalSelectionName">Pink Lavender</p>
+              <p class="modal-selection-code" id="modalSelectionCode">17-2034 TCX</p>
+            </div>
+          </div>
+          <button type="button" class="modal-add-btn" data-action="modal-add-to-cart" id="modalAddToCartBtn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add to Lab Dip Cart
+          </button>
+        </div>
 
-        {%- comment -%} Lab Dip Collection Cards {%- endcomment -%}
-        <div class="modal-labdip-collection" id="modalLabDipCollection">
+        {%- comment -%} Cart Preview (syncs with main page) {%- endcomment -%}
+        <div class="modal-cart-preview">
+          <h3 class="modal-collection-title">Your Lab Dip Cart</h3>
+          <p class="modal-collection-description">Swatches for approval (€7.50 each)</p>
+
           {%- comment -%} Empty State {%- endcomment -%}
-          <div class="modal-labdip-empty" id="modalLabDipEmpty">
+          <div class="modal-cart-empty" id="modalCartEmpty" style="display: flex;">
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="12" y="12" width="24" height="24" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M24 18V30M18 24H30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            <p class="modal-labdip-empty__text">No lab dips added yet</p>
-            <p class="modal-labdip-empty__hint">Select colors from the left to build your collection</p>
+            <p class="modal-cart-empty__text">No swatches yet</p>
+            <p class="modal-cart-empty__hint">Add colors to build your swatch order</p>
           </div>
 
-          {%- comment -%} Lab Dip Cards (populated by JS) {%- endcomment -%}
-          <div class="modal-labdip-cards" id="modalLabDipCards">
+          {%- comment -%} Cart Items (populated by JS from Step3B.labDipCart) {%- endcomment -%}
+          <div class="modal-cart-items" id="modalCartItems" style="display: none;">
             {%- comment -%} Populated by JavaScript {%- endcomment -%}
           </div>
-        </div>
 
-        {%- comment -%} Divider {%- endcomment -%}
-        <div class="modal-divider"></div>
-
-        {%- comment -%} Garment Assignment Area {%- endcomment -%}
-        <h4 class="modal-garments-title">Assign to Garments (100% Cotton Only)</h4>
-        <p class="modal-garments-description">Drag colors onto garments or use dropdown to assign</p>
-
-        <div class="modal-garments" id="modalCottonGarments">
-          {%- comment -%} Populated by JavaScript with cotton-only garments {%- endcomment -%}
+          <div class="modal-cart-total" id="modalCartTotal">
+            Total: 0 swatches (€0.00)
+          </div>
         </div>
 
       </div>
