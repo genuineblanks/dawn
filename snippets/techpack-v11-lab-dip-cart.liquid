@@ -8,35 +8,75 @@
 
 <div class="lab-dip-cart" id="labDipCart">
 
-  {%- comment -%} Header with Browse Button (UX Improvement #1) {%- endcomment -%}
+  {%- comment -%} Header with Prominent Browse Button {%- endcomment -%}
   <div class="lab-dip-cart__header">
-    <h3 class="lab-dip-cart__title">Lab Dip Cart</h3>
+    <div class="lab-dip-cart__header-top">
+      <h3 class="lab-dip-cart__title">Lab Dip Cart</h3>
+      <span class="cart-badge cart-badge--header" id="labDipCartBadge" style="display: none;">0</span>
+    </div>
     <button
       type="button"
-      class="lab-dip-cart__browse-btn"
+      class="lab-dip-cart__browse-btn lab-dip-cart__browse-btn--prominent"
       data-action="open-color-studio-standalone"
       title="Browse Pantone colors"
     >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <circle cx="13" cy="13" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
       </svg>
-      Browse Colors
-      <span class="cart-badge" id="labDipCartBadge" style="display: none;">0</span>
+      <span class="lab-dip-cart__browse-btn-text">Browse Pantone Colors</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
   </div>
 
   {%- comment -%} Cart Content {%- endcomment -%}
   <div class="lab-dip-cart__content" id="labDipCartContent">
 
-    {%- comment -%} Empty State {%- endcomment -%}
+    {%- comment -%} Empty State with Large CTA {%- endcomment -%}
     <div class="lab-dip-cart__empty" id="labDipCartEmpty">
-      <svg class="lab-dip-cart__empty-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="16" y="16" width="32" height="32" rx="4" stroke="currentColor" stroke-width="3" fill="none"/>
-        <path d="M32 24V40M24 32H40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <svg class="lab-dip-cart__empty-icon" width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="28" r="8" stroke="currentColor" stroke-width="3" fill="none"/>
+        <circle cx="52" cy="40" r="8" stroke="currentColor" stroke-width="3" fill="none"/>
+        <circle cx="28" cy="40" r="8" stroke="currentColor" stroke-width="3" fill="none"/>
+        <circle cx="40" cy="52" r="8" stroke="currentColor" stroke-width="3" fill="none"/>
       </svg>
-      <p class="lab-dip-cart__empty-text">No swatches added yet</p>
+      <h4 class="lab-dip-cart__empty-title">Ready to Choose Colors?</h4>
       <p class="lab-dip-cart__empty-hint">
-        Add Pantone colors to order fabric swatches for approval.
+        Browse our complete Pantone color library and add lab dip swatches to your order.
+      </p>
+
+      {%- comment -%} Large Primary CTA Button {%- endcomment -%}
+      <button
+        type="button"
+        class="lab-dip-cart__cta-btn"
+        data-action="open-color-studio-standalone"
+        title="Open Pantone Color Studio"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+          <circle cx="15" cy="15" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+        Browse Pantone Colors
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <p class="lab-dip-cart__empty-note">
+        💡 Lab dips cost €25.00 per swatch
+      </p>
+    </div>
+
+    {%- comment -%} Cart Instructions (shown when cart has items) {%- endcomment -%}
+    <div class="lab-dip-cart__instructions" id="labDipCartInstructions" style="display: none;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M10 6V10M10 14H10.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <p class="lab-dip-cart__instructions-text">
+        <strong>How to assign:</strong> Drag swatches onto garments below. Unassigned swatches will be ordered as fabric samples (€25.00 each).
       </p>
     </div>
 
