@@ -1,6 +1,6 @@
 {% comment %}
-  TechPack V11 - Quotation Step 3: Garment & Fabric Selection
-  Purpose: Select garment types and fabrics for quotation
+  TechPack V11 - Quotation Step 3: Garment Builder
+  Purpose: Add individual garments with detailed specifications
   For: Both new and registered clients
 {% endcomment %}
 
@@ -18,7 +18,7 @@
       </svg>
       <div>
         <strong>TEST MODE ACTIVE</strong>
-        <p>Pre-selected garments and fabrics for testing.</p>
+        <p>2 test garments auto-added for testing.</p>
       </div>
     </div>
   </div>
@@ -26,12 +26,12 @@
   {%- comment -%} Progress Header {%- endcomment -%}
   <div class="techpack-progress">
     <div class="techpack-progress__container">
-      <a href="javascript:history.back()" class="techpack-progress__back">
+      <button type="button" class="techpack-progress__back" data-action="previous-step">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span>Back</span>
-      </a>
+      </button>
 
       <div class="techpack-progress__steps">
         <div class="progress-step progress-step--complete" data-step="1">
@@ -76,246 +76,184 @@
 
   {%- comment -%} Main Content {%- endcomment -%}
   <div class="techpack-content">
-    <div class="techpack-content__container techpack-content__container--wide">
+    <div class="techpack-content__container">
 
       {%- comment -%} Step Header {%- endcomment -%}
       <header class="step-header">
         <div class="step-header__badge">Step 3 of 4</div>
-        <h1 class="step-header__title">Select Garments & Fabrics</h1>
+        <h1 class="step-header__title">Build Your Garment List</h1>
         <p class="step-header__description">
-          Choose the garment types and fabric options you need for accurate pricing
+          Add each garment variation with its specific fabric, color, and quantity details
         </p>
       </header>
 
       {%- comment -%} Form Content {%- endcomment -%}
       <form class="step-form" id="quotationStep3Form" data-step="3" data-flow="quotation">
 
-        {%- comment -%} Garment Selection {%- endcomment -%}
+        {%- comment -%} Garment List Section {%- endcomment -%}
         <div class="form-section">
           <div class="section-header">
-            <h3 class="section-header__title">Garment Types</h3>
+            <div class="section-header__title-row">
+              <h3 class="section-header__title">Garments</h3>
+              <span class="garment-count" id="garmentCount">0 garments</span>
+            </div>
             <p class="section-header__description">
-              Select one or more garment types for your quotation
+              Each garment can have unique specifications (fabric, color, quantity)
             </p>
           </div>
 
-          <div class="selection-grid" id="garmentGrid">
-
-            {%- comment -%} T-Shirt {%- endcomment -%}
-            <label class="selection-card" data-garment-id="tshirt">
-              <input type="checkbox" name="garments[]" value="tshirt" data-test-checked="true">
-              <div class="selection-card__image">
-                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M30 40L40 30L60 40L80 30L90 40V90H30V40Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M40 30V40M80 30V40M30 50H90" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">T-Shirt</h4>
-                <p class="selection-card__description">Classic crew neck or V-neck tees</p>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-            {%- comment -%} Sweatshirt {%- endcomment -%}
-            <label class="selection-card" data-garment-id="sweatshirt">
-              <input type="checkbox" name="garments[]" value="sweatshirt">
-              <div class="selection-card__image">
-                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M25 45L40 30L60 40L80 30L95 45V95H25V45Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <circle cx="60" cy="65" r="8" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">Sweatshirt</h4>
-                <p class="selection-card__description">Crewneck or hooded sweatshirts</p>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-            {%- comment -%} Hoodie {%- endcomment -%}
-            <label class="selection-card" data-garment-id="hoodie">
-              <input type="checkbox" name="garments[]" value="hoodie">
-              <div class="selection-card__image">
-                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M25 45L40 30L60 35L80 30L95 45V95H25V45Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M50 30Q60 20 70 30" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">Hoodie</h4>
-                <p class="selection-card__description">Pullover or zip-up hoodies</p>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-            {%- comment -%} Polo {%- endcomment -%}
-            <label class="selection-card" data-garment-id="polo">
-              <input type="checkbox" name="garments[]" value="polo">
-              <div class="selection-card__image">
-                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M30 40L40 30L60 40L80 30L90 40V90H30V40Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M55 40V55M65 40V55" stroke="currentColor" stroke-width="2"/>
-                  <rect x="50" y="35" width="20" height="8" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">Polo Shirt</h4>
-                <p class="selection-card__description">Classic polo with collar</p>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-            {%- comment -%} Tank Top {%- endcomment -%}
-            <label class="selection-card" data-garment-id="tank">
-              <input type="checkbox" name="garments[]" value="tank">
-              <div class="selection-card__image">
-                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M40 35L50 30H70L80 35V90H40V35Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                </svg>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">Tank Top</h4>
-                <p class="selection-card__description">Sleeveless athletic tanks</p>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-            {%- comment -%} Long Sleeve {%- endcomment -%}
-            <label class="selection-card" data-garment-id="longsleeve">
-              <input type="checkbox" name="garments[]" value="longsleeve">
-              <div class="selection-card__image">
-                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M30 40L40 30L60 40L80 30L90 40V90H30V40Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
-                  <path d="M30 40L20 50V80L30 75M90 40L100 50V80L90 75" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">Long Sleeve</h4>
-                <p class="selection-card__description">Long sleeve t-shirts</p>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-          </div>
-        </div>
-
-        {%- comment -%} Fabric Selection {%- endcomment -%}
-        <div class="form-section">
-          <div class="section-header">
-            <h3 class="section-header__title">Fabric Options</h3>
-            <p class="section-header__description">
-              Select fabric composition for your garments
+          {%- comment -%} Empty State (shown when no garments) {%- endcomment -%}
+          <div class="empty-state" id="emptyState">
+            <svg class="empty-state__icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 26L26 20L32 26L38 20L44 26V58H20V26Z" stroke="currentColor" stroke-width="2" fill="var(--color-surface)"/>
+              <path d="M26 20V26M38 20V26M20 32H44" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <h4 class="empty-state__title">No garments added yet</h4>
+            <p class="empty-state__description">
+              Click "Add Garment" to start building your quotation. You can add multiple variations with different fabrics and colors.
             </p>
           </div>
 
-          <div class="selection-grid" id="fabricGrid">
-
-            {%- comment -%} 100% Cotton {%- endcomment -%}
-            <label class="selection-card" data-fabric-id="cotton100">
-              <input type="checkbox" name="fabrics[]" value="cotton100" data-test-checked="true">
-              <div class="selection-card__image">
-                <div class="fabric-swatch fabric-swatch--cotton">
-                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="40" cy="40" r="20" stroke="currentColor" stroke-width="2"/>
-                    <path d="M40 25V55M25 40H55" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">100% Cotton</h4>
-                <p class="selection-card__description">Natural, breathable, soft</p>
-                <div class="selection-card__specs">
-                  <span class="spec-badge">180 GSM</span>
-                  <span class="spec-badge">Premium</span>
-                </div>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-            {%- comment -%} Cotton/Poly Blend {%- endcomment -%}
-            <label class="selection-card" data-fabric-id="blend">
-              <input type="checkbox" name="fabrics[]" value="blend">
-              <div class="selection-card__image">
-                <div class="fabric-swatch fabric-swatch--blend">
-                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="30" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="50" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">Cotton/Poly Blend</h4>
-                <p class="selection-card__description">65% Cotton, 35% Polyester</p>
-                <div class="selection-card__specs">
-                  <span class="spec-badge">170 GSM</span>
-                  <span class="spec-badge">Durable</span>
-                </div>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-            {%- comment -%} Organic Cotton {%- endcomment -%}
-            <label class="selection-card" data-fabric-id="organic">
-              <input type="checkbox" name="fabrics[]" value="organic">
-              <div class="selection-card__image">
-                <div class="fabric-swatch fabric-swatch--organic">
-                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M40 20C40 20 50 30 50 40C50 50 40 60 40 60C40 60 30 50 30 40C30 30 40 20 40 20Z" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">Organic Cotton</h4>
-                <p class="selection-card__description">GOTS certified organic</p>
-                <div class="selection-card__specs">
-                  <span class="spec-badge">190 GSM</span>
-                  <span class="spec-badge">Eco</span>
-                </div>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
-            {%- comment -%} French Terry {%- endcomment -%}
-            <label class="selection-card" data-fabric-id="terry">
-              <input type="checkbox" name="fabrics[]" value="terry">
-              <div class="selection-card__image">
-                <div class="fabric-swatch fabric-swatch--terry">
-                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="20" y="30" width="40" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
-                    <path d="M25 35H55M25 40H55M25 45H55" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="selection-card__content">
-                <h4 class="selection-card__title">French Terry</h4>
-                <p class="selection-card__description">Perfect for sweatshirts</p>
-                <div class="selection-card__specs">
-                  <span class="spec-badge">280 GSM</span>
-                  <span class="spec-badge">Cozy</span>
-                </div>
-              </div>
-              <div class="selection-card__badge">✓ Selected</div>
-            </label>
-
+          {%- comment -%} Garment List (populated by JavaScript) {%- endcomment -%}
+          <div class="garment-list" id="garmentList" style="display: none;">
+            {%- comment -%} Dynamically populated by JavaScript {%- endcomment -%}
           </div>
+
+          {%- comment -%} Add Garment Button {%- endcomment -%}
+          <button
+            type="button"
+            class="button-secondary button-secondary--icon"
+            id="addGarmentButton"
+            data-action="add-garment"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Garment
+          </button>
+
         </div>
 
-        {%- comment -%} Selection Summary {%- endcomment -%}
-        <div class="selection-summary" id="selectionSummary">
-          <div class="selection-summary__header">
-            <h4 class="selection-summary__title">Your Selection</h4>
-            <button type="button" class="button-link" data-action="clear-all">Clear all</button>
+        {%- comment -%} Garment Form (inline, shows/hides) {%- endcomment -%}
+        <div class="garment-form" id="garmentForm" style="display: none;">
+          <div class="garment-form__header">
+            <h4 class="garment-form__title" id="garmentFormTitle">New Garment</h4>
+            <button type="button" class="garment-form__close" data-action="close-garment-form" aria-label="Close form">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
           </div>
-          <div class="selection-summary__content">
-            <div class="selection-summary__item">
-              <strong><span id="garmentCount">0</span> Garment Types</strong>
-              <span class="selection-summary__status" id="garmentStatus">Select at least 1</span>
+
+          <div class="garment-form__content">
+
+            {%- comment -%} Garment Type {%- endcomment -%}
+            <div class="form-field">
+              <label for="garmentType" class="form-field__label">
+                Garment Type
+                <span class="form-field__required">*</span>
+              </label>
+              <select id="garmentType" name="garment_type" class="form-field__select" required>
+                <option value="">Select garment type...</option>
+                <option value="T-Shirt">T-Shirt</option>
+                <option value="Hoodie">Hoodie</option>
+                <option value="Sweatshirt">Sweatshirt</option>
+                <option value="Polo Shirt">Polo Shirt</option>
+                <option value="Tank Top">Tank Top</option>
+                <option value="Long Sleeve">Long Sleeve</option>
+                <option value="Shorts">Shorts</option>
+                <option value="Joggers">Joggers</option>
+                <option value="Zip Hoodie">Zip Hoodie</option>
+                <option value="Jacket">Jacket</option>
+              </select>
             </div>
-            <div class="selection-summary__item">
-              <strong><span id="fabricCount">0</span> Fabric Options</strong>
-              <span class="selection-summary__status" id="fabricStatus">Select at least 1</span>
+
+            {%- comment -%} Fabric Type {%- endcomment -%}
+            <div class="form-field">
+              <label for="fabricType" class="form-field__label">
+                Fabric Type
+                <span class="form-field__required">*</span>
+              </label>
+              <select id="fabricType" name="fabric_type" class="form-field__select" required>
+                <option value="">Select fabric...</option>
+                <option value="100% Cotton">100% Cotton</option>
+                <option value="70/30 Cotton/Poly">70/30 Cotton/Poly</option>
+                <option value="80/20 Cotton/Poly">80/20 Cotton/Poly</option>
+                <option value="50/50 Cotton/Poly">50/50 Cotton/Poly</option>
+                <option value="100% Organic Cotton">100% Organic Cotton</option>
+                <option value="French Terry">French Terry</option>
+                <option value="Fleece 320gsm">Fleece 320gsm</option>
+                <option value="Brushed Fleece">Brushed Fleece</option>
+                <option value="Performance Poly">Performance Poly</option>
+              </select>
             </div>
+
+            {%- comment -%} Color/Pantone {%- endcomment -%}
+            <div class="form-field">
+              <label for="garmentColor" class="form-field__label">
+                Color / Pantone
+                <span class="form-field__required">*</span>
+              </label>
+              <input
+                type="text"
+                id="garmentColor"
+                name="garment_color"
+                class="form-field__input"
+                placeholder="e.g., Navy Blue, PANTONE 19-4052 TCX"
+                required
+              >
+              <p class="form-field__help">
+                Enter color name or Pantone code (we'll match it during production)
+              </p>
+            </div>
+
+            {%- comment -%} Estimated Quantity (Optional) {%- endcomment -%}
+            <div class="form-field">
+              <label for="garmentQuantity" class="form-field__label">
+                Estimated Quantity
+                <span class="form-field__optional">(Optional)</span>
+              </label>
+              <input
+                type="number"
+                id="garmentQuantity"
+                name="garment_quantity"
+                class="form-field__input"
+                placeholder="e.g., 500"
+                min="0"
+                step="1"
+              >
+              <p class="form-field__help">
+                Approximate quantity for this specific garment/color combination
+              </p>
+            </div>
+
+            {%- comment -%} Additional Notes (Optional) {%- endcomment -%}
+            <div class="form-field">
+              <label for="garmentNotes" class="form-field__label">
+                Additional Notes
+                <span class="form-field__optional">(Optional)</span>
+              </label>
+              <textarea
+                id="garmentNotes"
+                name="garment_notes"
+                class="form-field__textarea"
+                placeholder="Any special requirements or notes for this garment..."
+                rows="3"
+              ></textarea>
+            </div>
+
+          </div>
+
+          <div class="garment-form__actions">
+            <button type="button" class="button-secondary" data-action="close-garment-form">
+              Cancel
+            </button>
+            <button type="button" class="button-primary" id="saveGarmentButton" data-action="save-garment">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Save Garment
+            </button>
           </div>
         </div>
 
@@ -323,13 +261,14 @@
         <div class="info-card info-card--primary">
           <div class="info-card__icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M12 16v-4m0-4h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
           </div>
           <div class="info-card__content">
-            <h4 class="info-card__title">Mix and match</h4>
+            <h4 class="info-card__title">Multiple variations?</h4>
             <p class="info-card__text">
-              You can select multiple garment types and fabrics. We'll provide pricing for all combinations in your quotation.
+              Need the same hoodie in different colors? Or same t-shirt in different fabrics? Add each variation as a separate garment. You can use the "Duplicate" button to speed this up!
             </p>
           </div>
         </div>
@@ -351,7 +290,7 @@
             type="submit"
             class="button-primary"
             data-action="next-step"
-            id="continueToReview"
+            id="continueToReviewButton"
           >
             Continue to Review
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -385,13 +324,14 @@
   "settings": [
     {
       "type": "header",
-      "content": "Garment Options"
+      "content": "Garment Settings"
     },
     {
       "type": "checkbox",
-      "id": "enable_custom_garments",
-      "label": "Allow custom garment requests",
-      "default": true
+      "id": "allow_duplicate",
+      "label": "Enable Duplicate Button",
+      "default": true,
+      "info": "Allow users to duplicate garments to speed up adding similar items"
     }
   ],
   "presets": [
