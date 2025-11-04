@@ -1,15 +1,14 @@
 {% comment %}
-  TechPack V11 - Sample Request - Step 3: Garment Selection with Colors
-  Purpose: 3-step garment selection (Type → Fabric → Sample Type with Colors)
-  Flow: Add Garment → Select Type → Select Fabric → Select Sample Type → Choose Color → Added
-  Sample Types: Stock Colors | Pantone/Color Studio | TechPack Reference
+  TechPack V11 - Sample Request - Step 3A: Garment Building (No Color Assignment)
+  Purpose: Build garment list with Type + Fabric only
+  Flow: Add Garment → Select Type → Select Fabric → Added (NO color yet)
+  Color assignment happens in Step 3B
 {% endcomment %}
 
 {{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
 {{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
 {{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
 {{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
-{{ 'techpack-v11-color-studio.css' | asset_url | stylesheet_tag }}
 
 <div class="techpack-v11 techpack-flow" id="sampleStep3" data-section-id="{{ section.id }}" data-flow-type="sample" data-current-step="3">
 
@@ -65,6 +64,11 @@
         <div class="progress-step__line"></div>
         <div class="progress-step" data-step="4">
           <div class="progress-step__circle">4</div>
+          <div class="progress-step__label">Colors</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="5">
+          <div class="progress-step__circle">5</div>
           <div class="progress-step__label">Review</div>
         </div>
       </div>
@@ -86,15 +90,15 @@
 
       {%- comment -%} Step Header {%- endcomment -%}
       <header class="step-header">
-        <div class="step-header__badge">Step 3 of 4</div>
-        <h1 class="step-header__title">Select Sample Garments & Colors</h1>
+        <div class="step-header__badge">Step 3 of 5</div>
+        <h1 class="step-header__title">Build Your Garment List</h1>
         <p class="step-header__description">
-          Add garments by selecting type, fabric, and color specifications
+          Add garments by selecting type and fabric. You'll assign colors in the next step.
         </p>
       </header>
 
       {%- comment -%} IMPORTANT INFO BOX {%- endcomment -%}
-      <div class="info-card info-card--primary">
+      <div class="info-card info-card--info">
         <div class="info-card__icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
@@ -102,11 +106,9 @@
           </svg>
         </div>
         <div class="info-card__content">
-          <h4 class="info-card__title">Sample Color Options</h4>
+          <h4 class="info-card__title">How This Works</h4>
           <p class="info-card__text">
-            • <strong>Stock Colors:</strong> Pre-made samples in standard colors (fastest, lowest cost)<br>
-            • <strong>Pantone Colors:</strong> Custom colors matched to Pantone TCX codes (requires lab dip)<br>
-            • <strong>TechPack Reference:</strong> Color specified in your uploaded files (no sample swatch needed)
+            In this step, you'll select the garment type and fabric for each sample you need. Don't worry about colors yet - you'll assign colors to all your garments in the next step.
           </p>
         </div>
       </div>
@@ -421,96 +423,7 @@
         </div>
       </div>
 
-      {%- comment -%} STEP 3: Sample Type Selection (Hidden Initially) {%- endcomment -%}
-      <div class="selection-step" id="sampleSampleTypeStep" style="display: none;">
-        <div class="form-section">
-          <div class="section-header">
-            <div class="section-header__title-row">
-              <button type="button" class="button-back" data-action="sample-back-to-fabric-types">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Back
-              </button>
-              <div>
-                <h3 class="section-header__title">Select Sample Type</h3>
-                <p class="section-header__description" id="sampleTypeDescription">Choose how to specify color</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="selection-grid">
-
-            {%- comment -%} Stock Colors {%- endcomment -%}
-            <button type="button" class="selection-card selection-card--large" data-sample-type="stock" data-action="sample-select-sample-type">
-              <div class="selection-card__header">
-                <div class="selection-card__icon selection-card__icon--success">
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="2"/>
-                    <path d="M12 16l2 2 6-6" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                </div>
-                <h4 class="selection-card__title">Stock Colors</h4>
-                <span class="selection-card__badge selection-card__badge--success">Fastest</span>
-              </div>
-              <p class="selection-card__description">
-                Pre-made samples in standard colors (Black, White, Navy, Gray, Charcoal, Beige). Quickest delivery, lowest cost.
-              </p>
-            </button>
-
-            {%- comment -%} Pantone Color Studio {%- endcomment -%}
-            <button type="button" class="selection-card selection-card--large" data-sample-type="pantone" data-action="sample-select-sample-type" id="pantoneOptionButton">
-              <div class="selection-card__header">
-                <div class="selection-card__icon selection-card__icon--primary">
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="22" cy="22" r="6" stroke="currentColor" stroke-width="2"/>
-                    <path d="M14 14l4 4" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                </div>
-                <h4 class="selection-card__title">Pantone Color Studio</h4>
-                <span class="selection-card__badge selection-card__badge--primary">Custom</span>
-              </div>
-              <p class="selection-card__description">
-                Select custom colors using Pantone TCX system. Requires lab dip swatch creation. 2000+ colors available.
-              </p>
-              <p class="selection-card__note" id="cottonWarning" style="display: none;">
-                ⚠️ Pantone matching only available for 100% Cotton fabrics
-              </p>
-            </button>
-
-            {%- comment -%} TechPack Reference {%- endcomment -%}
-            <button type="button" class="selection-card selection-card--large" data-sample-type="techpack" data-action="sample-select-sample-type" id="techpackOptionButton">
-              <div class="selection-card__header">
-                <div class="selection-card__icon">
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 4h16l4 4v20H8V4z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M12 12h8M12 16h8M12 20h4" stroke="currentColor" stroke-width="2"/>
-                  </svg>
-                </div>
-                <h4 class="selection-card__title">TechPack Reference</h4>
-              </div>
-              <p class="selection-card__description">
-                Color specified in your uploaded TechPack files. No sample swatch needed. We'll match to your documentation.
-              </p>
-              <p class="selection-card__note" id="cottonWarningTechpack" style="display: none;">
-                ⚠️ Custom color matching only available for 100% Cotton fabrics
-              </p>
-            </button>
-
-          </div>
-        </div>
-      </div>
-
-      {%- comment -%} Stock Colors Snippet (Renders when stock selected) {%- endcomment -%}
-      <div id="stockColorsSelection" style="display: none;">
-        {% render 'techpack-v11-stock-colors' %}
-      </div>
-
-      {%- comment -%} TechPack Color Picker Snippet (Renders when techpack selected) {%- endcomment -%}
-      <div id="techpackColorPicker" style="display: none;">
-        {% render 'techpack-v11-techpack-color-picker' %}
-      </div>
+      {%- comment -%} REMOVED: Sample Type Selection - Now in Step 3B {%- endcomment -%}
 
       {%- comment -%} Form Navigation {%- endcomment -%}
       <div class="form-navigation" id="sampleFormNavigation">
@@ -531,7 +444,7 @@
           data-action="next-step"
           id="sampleContinueButton"
         >
-          Continue to Review
+          Continue to Color Selection
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -543,8 +456,7 @@
 
 </div>
 
-{%- comment -%} Color Studio Snippet (Side Panel Overlay) {%- endcomment -%}
-{% render 'techpack-v11-color-studio' %}
+{%- comment -%} Color Studio moved to Step 3B {%- endcomment -%}
 
 <script>
   window.TECHPACK_V11_CUSTOMER = {
@@ -554,10 +466,9 @@
 
 {% render 'techpack-v11-theme-switcher' %}
 
-<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
-<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
-<script src="{{ 'techpack-v11-sample.js' | asset_url }}" defer></script>
-<script src="{{ 'techpack-v11-color-studio.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-core.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-sample.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
 
 {% schema %}
 {

@@ -193,13 +193,17 @@
   window.TECHPACK_V11_CUSTOMER = {
     isLoggedIn: {{ customer | json }} !== null
   };
+
+  // Pantone color JSON URL (for Color Studio)
+  window.TECHPACK_V11_PANTONE_URL = "{{ 'pantone-colors.json' | asset_url }}";
 </script>
 
 {% render 'techpack-v11-theme-switcher' %}
 
-<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
-<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
-<script src="{{ 'techpack-v11-step3b.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-core.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-step3b.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-color-studio.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
 
 {% schema %}
 {
