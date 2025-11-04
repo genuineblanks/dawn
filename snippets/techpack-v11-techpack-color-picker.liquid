@@ -1,0 +1,123 @@
+{% comment %}
+  TechPack V11 - TechPack Color Picker
+
+  Mini color picker for naming purposes when client selects "TechPack Reference"
+  Client picks approximate color for order naming
+  Actual color verified from TechPack files by GENUINEBLANKS team
+{% endcomment %}
+
+<div id="techpackColorPicker" class="techpack-color-picker" style="display: none;">
+  <div class="selection-step-header">
+    <h3 class="selection-step-title">TechPack Color Reference</h3>
+    <button type="button" class="button-back" data-action="sample-back-to-sample-types">
+      ← Back
+    </button>
+  </div>
+
+  <div class="techpack-color-content">
+
+    <div class="info-card info-card--info">
+      <div class="info-card__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="info-card__content">
+        <h4 class="info-card__title">How This Works</h4>
+        <p class="info-card__text">
+          Select an approximate colorway for naming purposes. Our team will verify the exact color from your TechPack files and confirm with you before production.
+        </p>
+      </div>
+    </div>
+
+    <div class="techpack-color-form">
+      <h4 class="form-section-title">Select Approximate Colorway</h4>
+      <p class="form-section-description">Choose the closest match for order identification</p>
+
+      <div class="basic-color-grid">
+
+        {%- comment -%} 12 COMMON COLORS FOR NAMING {%- endcomment -%}
+
+        <button type="button" class="basic-color-card" data-color-name="Black" data-color-hex="#000000" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #000000;"></div>
+          <span class="basic-color-card__name">Black</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="White" data-color-hex="#FFFFFF" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #FFFFFF; border: 2px solid #e0e0e0;"></div>
+          <span class="basic-color-card__name">White</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Navy Blue" data-color-hex="#1E3A8A" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #1E3A8A;"></div>
+          <span class="basic-color-card__name">Navy Blue</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Red" data-color-hex="#DC2626" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #DC2626;"></div>
+          <span class="basic-color-card__name">Red</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Green" data-color-hex="#16A34A" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #16A34A;"></div>
+          <span class="basic-color-card__name">Green</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Blue" data-color-hex="#3B82F6" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #3B82F6;"></div>
+          <span class="basic-color-card__name">Blue</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Yellow" data-color-hex="#EAB308" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #EAB308;"></div>
+          <span class="basic-color-card__name">Yellow</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Pink" data-color-hex="#EC4899" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #EC4899;"></div>
+          <span class="basic-color-card__name">Pink</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Purple" data-color-hex="#A855F7" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #A855F7;"></div>
+          <span class="basic-color-card__name">Purple</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Orange" data-color-hex="#F97316" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #F97316;"></div>
+          <span class="basic-color-card__name">Orange</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Brown" data-color-hex="#92400E" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #92400E;"></div>
+          <span class="basic-color-card__name">Brown</span>
+        </button>
+
+        <button type="button" class="basic-color-card" data-color-name="Gray" data-color-hex="#6B7280" data-action="techpack-select-color">
+          <div class="basic-color-card__swatch" style="background-color: #6B7280;"></div>
+          <span class="basic-color-card__name">Gray</span>
+        </button>
+
+      </div>
+
+      {%- comment -%} SELECTED COLOR DISPLAY {%- endcomment -%}
+      <div id="techpackSelectedColor" class="selected-color-display" style="display: none;">
+        <h4 class="form-section-title">Selected Colorway</h4>
+        <div class="selected-color-card">
+          <div id="techpackSelectedSwatch" class="selected-color-card__swatch"></div>
+          <div class="selected-color-card__info">
+            <p id="techpackSelectedName" class="selected-color-card__name"></p>
+            <p class="selected-color-card__note">Exact color will be verified from your TechPack</p>
+          </div>
+        </div>
+
+        <button type="button" class="button button--primary" data-action="confirm-techpack-color">
+          Add Garment with TechPack Color
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

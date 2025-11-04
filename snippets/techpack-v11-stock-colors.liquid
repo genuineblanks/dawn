@@ -1,0 +1,73 @@
+{% comment %}
+  TechPack V11 - Stock Colors Selection
+
+  6 visual color swatch cards for stock fabric colors
+  Shown when "Stock Color" sample type is selected
+{% endcomment %}
+
+<div id="stockColorsSelection" class="stock-colors-selection" style="display: none;">
+  <div class="selection-step-header">
+    <h3 class="selection-step-title">Select Stock Color</h3>
+    <button type="button" class="button-back" data-action="sample-back-to-sample-types">
+      ← Back
+    </button>
+  </div>
+
+  <div class="stock-colors-grid">
+
+    {%- comment -%} BLACK {%- endcomment -%}
+    <button type="button" class="stock-color-card" data-stock-color="Black" data-color-hex="#000000" data-action="sample-select-stock-color">
+      <div class="stock-color-card__swatch" style="background-color: #000000;"></div>
+      <div class="stock-color-card__content">
+        <h4 class="stock-color-card__name">Black</h4>
+        <p class="stock-color-card__code">#000000</p>
+      </div>
+    </button>
+
+    {%- comment -%} WHITE {%- endcomment -%}
+    <button type="button" class="stock-color-card" data-stock-color="White" data-color-hex="#FFFFFF" data-action="sample-select-stock-color">
+      <div class="stock-color-card__swatch" style="background-color: #FFFFFF; border: 2px solid #e0e0e0;"></div>
+      <div class="stock-color-card__content">
+        <h4 class="stock-color-card__name">White</h4>
+        <p class="stock-color-card__code">#FFFFFF</p>
+      </div>
+    </button>
+
+    {%- comment -%} NAVY {%- endcomment -%}
+    <button type="button" class="stock-color-card" data-stock-color="Navy" data-color-hex="#1E3A8A" data-action="sample-select-stock-color">
+      <div class="stock-color-card__swatch" style="background-color: #1E3A8A;"></div>
+      <div class="stock-color-card__content">
+        <h4 class="stock-color-card__name">Navy</h4>
+        <p class="stock-color-card__code">#1E3A8A</p>
+      </div>
+    </button>
+
+    {%- comment -%} GRAY {%- endcomment -%}
+    <button type="button" class="stock-color-card" data-stock-color="Gray" data-color-hex="#6B7280" data-action="sample-select-stock-color">
+      <div class="stock-color-card__swatch" style="background-color: #6B7280;"></div>
+      <div class="stock-color-card__content">
+        <h4 class="stock-color-card__name">Gray</h4>
+        <p class="stock-color-card__code">#6B7280</p>
+      </div>
+    </button>
+
+    {%- comment -%} CHARCOAL {%- endcomment -%}
+    <button type="button" class="stock-color-card" data-stock-color="Charcoal" data-color-hex="#374151" data-action="sample-select-stock-color">
+      <div class="stock-color-card__swatch" style="background-color: #374151;"></div>
+      <div class="stock-color-card__content">
+        <h4 class="stock-color-card__name">Charcoal</h4>
+        <p class="stock-color-card__code">#374151</p>
+      </div>
+    </button>
+
+    {%- comment -%} BEIGE {%- endcomment -%}
+    <button type="button" class="stock-color-card" data-stock-color="Beige" data-color-hex="#D4C5B9" data-action="sample-select-stock-color">
+      <div class="stock-color-card__swatch" style="background-color: #D4C5B9;"></div>
+      <div class="stock-color-card__content">
+        <h4 class="stock-color-card__name">Beige</h4>
+        <p class="stock-color-card__code">#D4C5B9</p>
+      </div>
+    </button>
+
+  </div>
+</div>
