@@ -21,6 +21,7 @@
       "type": "techpack-v11-entrance",
       "name": "TechPack V11 - Entrance",
       "settings": {
+        "logo_image": "shopify://shop_images/GENUINEBLANKS_LOGO_PNG.png",
         "headline": "TechPack Studio",
         "subheadline": "Professional garment production requests in minutes",
         "show_support_link": true,
