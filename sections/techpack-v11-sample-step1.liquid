@@ -1,12 +1,7 @@
 {% comment %}
   TechPack V11 - Sample Request - Step 1: Client Info & Delivery Address
-
-  Sample-specific requirements:
-  - Company Name* (pre-filled for registered)
-  - Company Email* (pre-filled for registered)
-  - Delivery Address* (NEW - Sample/Bulk only)
-    - Company Address (default)
-    - Different Address (expands to full address form)
+  Purpose: Collect company info, email, and delivery address for samples
+  For: Registered clients (requires previous quotation)
 {% endcomment %}
 
 {{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
@@ -14,272 +9,367 @@
 {{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
 {{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
 
+<div class="techpack-v11 techpack-flow" data-section-id="{{ section.id }}" data-flow-type="sample" data-current-step="1">
+
+  {%- comment -%} TEST MODE BANNER {%- endcomment -%}
+  <div class="test-mode-banner" id="testModeBanner" style="display: none;">
+    <div class="test-mode-banner__content">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <strong>TEST MODE ACTIVE</strong>
+        <p>Login bypass, pre-filled data, simulated uploads. Remove before production.</p>
+      </div>
+      <button type="button" class="test-mode-banner__toggle" data-action="toggle-test-mode">
+        Disable TEST Mode
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} Progress Header {%- endcomment -%}
+  <div class="techpack-progress">
+    <div class="techpack-progress__container">
+
+      {%- comment -%} Back Button {%- endcomment -%}
+      <a href="/pages/techpack-studio" class="techpack-progress__back">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Back</span>
+      </a>
+
+      {%- comment -%} Progress Steps {%- endcomment -%}
+      <div class="techpack-progress__steps">
+        <div class="progress-step progress-step--active" data-step="1">
+          <div class="progress-step__circle">1</div>
+          <div class="progress-step__label">Client Info</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="2">
+          <div class="progress-step__circle">2</div>
+          <div class="progress-step__label">Files</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="3">
+          <div class="progress-step__circle">3</div>
+          <div class="progress-step__label">Garments</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="4">
+          <div class="progress-step__circle">4</div>
+          <div class="progress-step__label">Review</div>
+        </div>
+      </div>
+
+      {%- comment -%} Save Status {%- endcomment -%}
+      <div class="techpack-progress__save">
+        <div class="save-indicator" id="saveIndicator">
+          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="save-indicator__text">All saved</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {%- comment -%} Main Content {%- endcomment -%}
+  <div class="techpack-content">
+    <div class="techpack-content__container">
+
+      {%- comment -%} Step Header {%- endcomment -%}
+      <header class="step-header">
+        <div class="step-header__badge">Step 1 of 4</div>
+        <h1 class="step-header__title">Client Information</h1>
+        <p class="step-header__description">
+          Tell us about your brand and where to send your samples.
+        </p>
+      </header>
+
+      {%- comment -%} Form Content {%- endcomment -%}
+      <form class="step-form" id="sampleStep1Form" data-step="1" data-flow="sample">
+
+        {%- comment -%} Company Name {%- endcomment -%}
+        <div class="form-section">
+          <div class="form-field" data-field="company_name">
+            <label for="sampleCompanyName" class="form-field__label">
+              Company Name
+              <span class="form-field__required">*</span>
+            </label>
+            <input
+              type="text"
+              id="sampleCompanyName"
+              name="company_name"
+              class="form-field__input"
+              placeholder="Your company or brand name"
+              required
+              data-validation="required"
+            >
+            <div class="form-field__status" id="sampleCompanyNameStatus"></div>
+            <p class="form-field__help">
+              Your registered business name or brand name
+            </p>
+          </div>
+        </div>
+
+        {%- comment -%} Email Address {%- endcomment -%}
+        <div class="form-section">
+          <div class="form-field" data-field="email">
+            <label for="sampleCompanyEmail" class="form-field__label">
+              Company Email Address
+              <span class="form-field__required">*</span>
+            </label>
+            <input
+              type="email"
+              id="sampleCompanyEmail"
+              name="email"
+              class="form-field__input"
+              placeholder="contact@yourcompany.com"
+              required
+              data-validation="email"
+            >
+            <div class="form-field__status" id="sampleEmailStatus"></div>
+            <p class="form-field__help">
+              We'll send your sample updates to this email
+            </p>
+          </div>
+        </div>
+
+        {%- comment -%} DELIVERY ADDRESS {%- endcomment -%}
+        <div class="form-section">
+          <h3 class="form-section__title">
+            Delivery Address
+            <span class="form-field__required">*</span>
+          </h3>
+          <p class="form-section__description">Where should we send your samples?</p>
+
+          <div class="radio-group">
+            <label class="radio-option">
+              <input
+                type="radio"
+                name="deliveryOption"
+                value="company"
+                data-field="deliveryOption"
+                data-action="toggle-delivery-address"
+                checked
+              />
+              <span class="radio-label">
+                <svg class="radio-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 2L3 7V16L10 18L17 16V7L10 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                Use Company Address
+              </span>
+              <span class="radio-description">Same as registered business address</span>
+            </label>
+
+            <label class="radio-option">
+              <input
+                type="radio"
+                name="deliveryOption"
+                value="different"
+                data-field="deliveryOption"
+                data-action="toggle-delivery-address"
+              />
+              <span class="radio-label">
+                <svg class="radio-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M17 8L10 2L3 8V17H7V12H13V17H17V8Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                Different Address
+              </span>
+              <span class="radio-description">Specify alternative delivery location</span>
+            </label>
+          </div>
+
+          {%- comment -%} DIFFERENT ADDRESS FORM {%- endcomment -%}
+          <div id="differentAddressForm" class="address-form" style="display: none;">
+
+            {%- comment -%} WARNING BOX {%- endcomment -%}
+            <div class="info-card info-card--warning">
+              <div class="info-card__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="info-card__content">
+                <h4 class="info-card__title">Important Notice</h4>
+                <p class="info-card__text">This address cannot be changed once processing begins. Please verify all details carefully.</p>
+              </div>
+            </div>
+
+            {%- comment -%} CONTACT INFORMATION {%- endcomment -%}
+            <div class="form-row form-row--two-col">
+              <div class="form-field" data-field="contact_name">
+                <label for="contactName" class="form-field__label">
+                  Contact Name
+                  <span class="form-field__required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contactName"
+                  name="contact_name"
+                  class="form-field__input"
+                  placeholder="Full name"
+                  data-validation="required"
+                >
+              </div>
+
+              <div class="form-field" data-field="contact_phone">
+                <label for="contactPhone" class="form-field__label">
+                  Contact Phone
+                  <span class="form-field__required">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="contactPhone"
+                  name="contact_phone"
+                  class="form-field__input"
+                  placeholder="+351 123 456 789"
+                  data-validation="required"
+                >
+              </div>
+            </div>
+
+            {%- comment -%} ADDRESS LINES {%- endcomment -%}
+            <div class="form-field" data-field="address_line1">
+              <label for="addressLine1" class="form-field__label">
+                Address Line 1
+                <span class="form-field__required">*</span>
+              </label>
+              <input
+                type="text"
+                id="addressLine1"
+                name="address_line1"
+                class="form-field__input"
+                placeholder="Street address, P.O. box, company name"
+                data-validation="required"
+              >
+            </div>
+
+            <div class="form-field" data-field="address_line2">
+              <label for="addressLine2" class="form-field__label">Address Line 2</label>
+              <input
+                type="text"
+                id="addressLine2"
+                name="address_line2"
+                class="form-field__input"
+                placeholder="Apartment, suite, unit, building, floor, etc."
+              >
+            </div>
+
+            {%- comment -%} CITY, STATE, POSTAL {%- endcomment -%}
+            <div class="form-row form-row--three-col">
+              <div class="form-field" data-field="city">
+                <label for="city" class="form-field__label">
+                  City
+                  <span class="form-field__required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  class="form-field__input"
+                  placeholder="City name"
+                  data-validation="required"
+                >
+              </div>
+
+              <div class="form-field" data-field="state">
+                <label for="state" class="form-field__label">State / Province</label>
+                <input
+                  type="text"
+                  id="state"
+                  name="state"
+                  class="form-field__input"
+                  placeholder="Optional"
+                >
+              </div>
+
+              <div class="form-field" data-field="postal_code">
+                <label for="postalCode" class="form-field__label">
+                  Postal Code
+                  <span class="form-field__required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  name="postal_code"
+                  class="form-field__input"
+                  placeholder="4000-123"
+                  data-validation="required"
+                >
+              </div>
+            </div>
+
+            {%- comment -%} COUNTRY {%- endcomment -%}
+            <div class="form-field" data-field="country">
+              <label for="country" class="form-field__label">
+                Country
+                <span class="form-field__required">*</span>
+              </label>
+              <select
+                id="country"
+                name="country"
+                class="form-field__select"
+                data-validation="required"
+              >
+                <option value="">Select country</option>
+                <option value="PT">Portugal</option>
+                <option value="ES">Spain</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+                <option value="IT">Italy</option>
+                <option value="GB">United Kingdom</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="BR">Brazil</option>
+                <option value="MX">Mexico</option>
+                <option value="AR">Argentina</option>
+                <option value="CL">Chile</option>
+                <option value="CO">Colombia</option>
+                <option value="PE">Peru</option>
+                <option value="AU">Australia</option>
+                <option value="NZ">New Zealand</option>
+                <option value="JP">Japan</option>
+                <option value="CN">China</option>
+                <option value="KR">South Korea</option>
+                <option value="IN">India</option>
+                <option value="AE">United Arab Emirates</option>
+                <option value="SA">Saudi Arabia</option>
+                <option value="ZA">South Africa</option>
+                <option value="NG">Nigeria</option>
+                <option value="KE">Kenya</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        {%- comment -%} Form Actions {%- endcomment -%}
+        <div class="form-actions">
+          <button type="button" class="button button--secondary" data-action="save-draft">
+            Save Draft
+          </button>
+          <button type="submit" class="button button--primary">
+            Continue to Files
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
 <script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
 <script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
 <script src="{{ 'techpack-v11-sample.js' | asset_url }}" defer></script>
 
-<div class="step-container" id="sampleStep1">
-  <div class="step-header">
-    <h2 class="step-title">Client Information</h2>
-    <p class="step-subtitle">Tell us about your brand and where to send samples</p>
-  </div>
-
-  <div class="step-content">
-
-    {%- comment -%} BASIC INFORMATION {%- endcomment -%}
-    <div class="form-section">
-      <h3 class="form-section-title">Basic Information</h3>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label for="sampleCompanyName" class="form-label">
-            Company Name
-            <span class="required-indicator">*</span>
-          </label>
-          <input
-            type="text"
-            id="sampleCompanyName"
-            class="form-input"
-            placeholder="Your company or brand name"
-            data-field="companyName"
-            required
-          />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label for="sampleCompanyEmail" class="form-label">
-            Company Email Address
-            <span class="required-indicator">*</span>
-          </label>
-          <input
-            type="email"
-            id="sampleCompanyEmail"
-            class="form-input"
-            placeholder="contact@yourcompany.com"
-            data-field="companyEmail"
-            required
-          />
-        </div>
-      </div>
-    </div>
-
-    {%- comment -%} DELIVERY ADDRESS {%- endcomment -%}
-    <div class="form-section">
-      <h3 class="form-section-title">
-        Delivery Address
-        <span class="required-indicator">*</span>
-      </h3>
-      <p class="form-section-description">Where should we send your samples?</p>
-
-      <div class="form-row">
-        <div class="radio-group">
-          <label class="radio-option">
-            <input
-              type="radio"
-              name="deliveryOption"
-              value="company"
-              data-field="deliveryOption"
-              data-action="toggle-delivery-address"
-              checked
-            />
-            <span class="radio-label">
-              <svg class="radio-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M10 2L3 7V16L10 18L17 16V7L10 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-              Use Company Address
-            </span>
-            <span class="radio-description">Same as registered business address</span>
-          </label>
-
-          <label class="radio-option">
-            <input
-              type="radio"
-              name="deliveryOption"
-              value="different"
-              data-field="deliveryOption"
-              data-action="toggle-delivery-address"
-            />
-            <span class="radio-label">
-              <svg class="radio-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M17 8L10 2L3 8V17H7V12H13V17H17V8Z" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-              Different Address
-            </span>
-            <span class="radio-description">Specify alternative delivery location</span>
-          </label>
-        </div>
-      </div>
-
-      {%- comment -%} DIFFERENT ADDRESS FORM (hidden by default) {%- endcomment -%}
-      <div id="differentAddressForm" class="address-form" style="display: none;">
-
-        {%- comment -%} WARNING BOX {%- endcomment -%}
-        <div class="info-card info-card--warning">
-          <div class="info-card__icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="info-card__content">
-            <h4 class="info-card__title">Important Notice</h4>
-            <p class="info-card__text">This address cannot be changed once processing begins. Please verify all details carefully.</p>
-          </div>
-        </div>
-
-        {%- comment -%} CONTACT INFORMATION {%- endcomment -%}
-        <div class="form-row form-row--two-col">
-          <div class="form-field">
-            <label for="contactName" class="form-label">
-              Contact Name
-              <span class="required-indicator">*</span>
-            </label>
-            <input
-              type="text"
-              id="contactName"
-              class="form-input"
-              placeholder="Full name"
-              data-field="deliveryAddress.contactName"
-            />
-          </div>
-
-          <div class="form-field">
-            <label for="contactPhone" class="form-label">
-              Contact Phone
-              <span class="required-indicator">*</span>
-            </label>
-            <input
-              type="tel"
-              id="contactPhone"
-              class="form-input"
-              placeholder="+351 123 456 789"
-              data-field="deliveryAddress.contactPhone"
-            />
-          </div>
-        </div>
-
-        {%- comment -%} ADDRESS LINES {%- endcomment -%}
-        <div class="form-row">
-          <div class="form-field">
-            <label for="addressLine1" class="form-label">
-              Address Line 1
-              <span class="required-indicator">*</span>
-            </label>
-            <input
-              type="text"
-              id="addressLine1"
-              class="form-input"
-              placeholder="Street address, P.O. box, company name"
-              data-field="deliveryAddress.addressLine1"
-            />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="addressLine2" class="form-label">Address Line 2</label>
-            <input
-              type="text"
-              id="addressLine2"
-              class="form-input"
-              placeholder="Apartment, suite, unit, building, floor, etc."
-              data-field="deliveryAddress.addressLine2"
-            />
-          </div>
-        </div>
-
-        {%- comment -%} CITY, STATE, POSTAL {%- endcomment -%}
-        <div class="form-row form-row--three-col">
-          <div class="form-field">
-            <label for="city" class="form-label">
-              City
-              <span class="required-indicator">*</span>
-            </label>
-            <input
-              type="text"
-              id="city"
-              class="form-input"
-              placeholder="City name"
-              data-field="deliveryAddress.city"
-            />
-          </div>
-
-          <div class="form-field">
-            <label for="state" class="form-label">State / Province</label>
-            <input
-              type="text"
-              id="state"
-              class="form-input"
-              placeholder="Optional"
-              data-field="deliveryAddress.state"
-            />
-          </div>
-
-          <div class="form-field">
-            <label for="postalCode" class="form-label">
-              Postal Code
-              <span class="required-indicator">*</span>
-            </label>
-            <input
-              type="text"
-              id="postalCode"
-              class="form-input"
-              placeholder="4000-123"
-              data-field="deliveryAddress.postalCode"
-            />
-          </div>
-        </div>
-
-        {%- comment -%} COUNTRY {%- endcomment -%}
-        <div class="form-row">
-          <div class="form-field">
-            <label for="country" class="form-label">
-              Country
-              <span class="required-indicator">*</span>
-            </label>
-            <select
-              id="country"
-              class="form-select"
-              data-field="deliveryAddress.country"
-            >
-              <option value="">Select country</option>
-              <option value="PT">Portugal</option>
-              <option value="ES">Spain</option>
-              <option value="FR">France</option>
-              <option value="DE">Germany</option>
-              <option value="IT">Italy</option>
-              <option value="GB">United Kingdom</option>
-              <option value="US">United States</option>
-              <option value="CA">Canada</option>
-              <option value="BR">Brazil</option>
-              <option value="MX">Mexico</option>
-              <option value="AR">Argentina</option>
-              <option value="CL">Chile</option>
-              <option value="CO">Colombia</option>
-              <option value="PE">Peru</option>
-              <option value="AU">Australia</option>
-              <option value="NZ">New Zealand</option>
-              <option value="JP">Japan</option>
-              <option value="CN">China</option>
-              <option value="KR">South Korea</option>
-              <option value="IN">India</option>
-              <option value="AE">United Arab Emirates</option>
-              <option value="SA">Saudi Arabia</option>
-              <option value="ZA">South Africa</option>
-              <option value="NG">Nigeria</option>
-              <option value="KE">Kenya</option>
-            </select>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
-
-{%- comment -%} SCHEMA {%- endcomment -%}
 {% schema %}
 {
   "name": "Sample Step 1",
