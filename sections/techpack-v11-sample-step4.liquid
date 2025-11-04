@@ -1,0 +1,330 @@
+{% comment %}
+  TechPack V11 - Sample Request - Step 4: Review & Submit
+  Purpose: Review all sample information before submission
+
+  Sample-specific sections:
+  - Client Information (includes Delivery Address)
+  - Uploaded Files
+  - Garment Specifications (with Pantone colors)
+  - Fabric Swatches (Lab Dip requests)
+  - Cost Summary (garment samples + lab dips)
+{% endcomment %}
+
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-review.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
+
+<div class="techpack-v11 techpack-flow" data-section-id="{{ section.id }}" data-flow-type="sample" data-current-step="5">
+
+  {%- comment -%} TEST MODE BANNER {%- endcomment -%}
+  <div class="test-mode-banner" id="testModeBanner" style="display: none;">
+    <div class="test-mode-banner__content">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <strong>TEST MODE ACTIVE</strong>
+        <p>Submission will be simulated (no actual form submission).</p>
+      </div>
+      <button type="button" class="test-mode-banner__toggle" data-action="toggle-test-mode">
+        Disable TEST Mode
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} Progress Header {%- endcomment -%}
+  <div class="techpack-progress">
+    <div class="techpack-progress__container">
+      <a href="javascript:history.back()" class="techpack-progress__back">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Back</span>
+      </a>
+
+      <div class="techpack-progress__steps">
+        <div class="progress-step progress-step--complete" data-step="1">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Client Info</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="2">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Files</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="3">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Garments</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="4">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Colors</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--active" data-step="5">
+          <div class="progress-step__circle">5</div>
+          <div class="progress-step__label">Review</div>
+        </div>
+      </div>
+
+      <div class="techpack-progress__save">
+        <div class="save-indicator" id="saveIndicator">
+          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="save-indicator__text">All saved</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Main Content {%- endcomment -%}
+  <div class="techpack-content">
+    <div class="techpack-content__container">
+
+      {%- comment -%} Step Header {%- endcomment -%}
+      <header class="step-header">
+        <div class="step-header__badge">Step 5 of 5</div>
+        <h1 class="step-header__title">Review & Submit</h1>
+        <p class="step-header__description">
+          Double-check everything before submitting your sample request
+        </p>
+      </header>
+
+      {%- comment -%} Review Sections {%- endcomment -%}
+      <div class="review-sections">
+
+        {%- comment -%} SECTION 1: CLIENT INFORMATION {%- endcomment -%}
+        <div class="review-section">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 10a4 4 0 100-8 4 4 0 000 8zM3.333 17.5a6.667 6.667 0 0113.334 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Client Information
+            </h3>
+            <button type="button" class="review-section__edit" data-action="edit-step" data-step="1">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.333 2A1.886 1.886 0 0114 4.667L5 13.667l-4 1 1-4L11.333 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="review-section__body">
+            <div class="review-item">
+              <span class="review-item__label">Company Name</span>
+              <span class="review-item__value" id="reviewCompanyName">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-item__label">Email Address</span>
+              <span class="review-item__value" id="reviewCompanyEmail">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-item__label">Request Type</span>
+              <span class="review-item__value">
+                <span class="review-badge review-badge--sample">Sample Request</span>
+              </span>
+            </div>
+            <div class="review-item">
+              <span class="review-item__label">Delivery Address</span>
+              <div class="review-item__value review-address" id="reviewDeliveryAddress">
+                {%- comment -%} Populated by JavaScript {%- endcomment -%}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} SECTION 2: UPLOADED FILES {%- endcomment -%}
+        <div class="review-section">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.667 2.5H5A1.667 1.667 0 003.333 4.167v11.666A1.667 1.667 0 005 17.5h10a1.667 1.667 0 001.667-1.667V7.5L11.667 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M11.667 2.5V7.5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Uploaded Files
+            </h3>
+            <button type="button" class="review-section__edit" data-action="edit-step" data-step="2">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.333 2A1.886 1.886 0 0114 4.667L5 13.667l-4 1 1-4L11.333 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="review-section__body">
+            <div id="reviewFiles" class="review-files">
+              {%- comment -%} Populated by JavaScript {%- endcomment -%}
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} SECTION 3: GARMENT SPECIFICATIONS {%- endcomment -%}
+        <div class="review-section">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 5l2-2 6 2 6-2 2 2v10H4V5z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M6 3v2m12-2v2M4 8h16" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Garment Specifications
+            </h3>
+            <button type="button" class="review-section__edit" data-action="edit-step" data-step="3">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.333 2A1.886 1.886 0 0114 4.667L5 13.667l-4 1 1-4L11.333 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="review-section__body">
+            <div id="reviewGarments" class="review-garments">
+              {%- comment -%} Populated by JavaScript with visual garment cards {%- endcomment -%}
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} SECTION 4: FABRIC SWATCHES (Lab Dips) - NEW for Sample {%- endcomment -%}
+        <div class="review-section" id="labDipsSection">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="13" cy="13" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10 10l3 3" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Fabric Swatches
+            </h3>
+            <span class="review-section__badge">Lab Dip Requests</span>
+          </div>
+          <div class="review-section__body">
+            <div id="reviewLabDips" class="review-lab-dips">
+              {%- comment -%} Populated by JavaScript {%- endcomment -%}
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} SECTION 5: COST SUMMARY {%- endcomment -%}
+        <div class="review-section review-section--highlighted">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.667 9.167h6.666M6.667 12.5h6.666M15 17.5H5a1.667 1.667 0 01-1.667-1.667V4.167A1.667 1.667 0 015 2.5h6.667L15 5.833v10a1.667 1.667 0 01-1.667 1.667z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Cost Summary
+            </h3>
+            <div class="currency-toggle">
+              <button type="button" class="currency-button" data-currency="EUR" data-action="toggle-currency">
+                € EUR
+              </button>
+              <button type="button" class="currency-button currency-button--active" data-currency="USD" data-action="toggle-currency">
+                $ USD
+              </button>
+            </div>
+          </div>
+          <div class="review-section__body">
+            <div class="cost-breakdown">
+              <div class="cost-row">
+                <span class="cost-label">Garment Samples</span>
+                <span id="garmentSamplesCost" class="cost-value">$0.00</span>
+              </div>
+              <div class="cost-row">
+                <span class="cost-label">
+                  Lab Dip Swatches
+                  <span id="labDipCount" class="cost-count">(0 colors)</span>
+                </span>
+                <span id="labDipsCost" class="cost-value">$0.00</span>
+              </div>
+              <div class="cost-row cost-row--total">
+                <span class="cost-label">Total Estimate</span>
+                <span id="totalCost" class="cost-value cost-value--total">$0.00</span>
+              </div>
+            </div>
+            <div class="cost-note">
+              <svg class="cost-note__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M10 6V10M10 14H10.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <p class="cost-note__text">This is an estimated price. Final quotation will be provided after submission review.</p>
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} SECTION 6: CONFIRMATION {%- endcomment -%}
+        <div class="review-section">
+          <div class="review-section__body">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                id="confirmationCheckbox"
+                class="checkbox-input"
+                required
+              />
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-text">
+                I confirm that all information provided is accurate and I understand this is a sample request. GENUINEBLANKS will review my TechPack and contact me with a final quotation.
+              </span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      {%- comment -%} SUBMIT BUTTON {%- endcomment -%}
+      <div class="form-actions form-actions--centered">
+        <button
+          type="button"
+          class="button-primary button-primary--large"
+          id="submitSampleRequest"
+          data-action="submit-sample-request"
+          disabled
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 3L8 12M17 3L11 17L8 12M17 3L3 9L8 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Submit Sample Request
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.TECHPACK_V11_CUSTOMER = {
+    isLoggedIn: {{ customer | json }} !== null
+  };
+</script>
+
+{% render 'techpack-v11-theme-switcher' %}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-v11-sample.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "TP V11 Sample Step 4",
+  "class": "section-techpack-v11-step",
+  "settings": []
+}
+{% endschema %}
