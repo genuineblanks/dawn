@@ -1,0 +1,392 @@
+{% comment %}
+  TechPack V11 - Sample Request - Step 3: Garment Specifications
+
+  3-step visual selection:
+  1. Garment Type (reuse Quotation cards)
+  2. Fabric Type (reuse Quotation cards)
+  3. Sample Type (NEW - 3 options):
+     - Stock Color (6 visual cards)
+     - Pantone Library (opens Color Studio)
+     - TechPack Reference (mini color picker for naming)
+{% endcomment %}
+
+<div class="step-container" id="sampleStep3">
+  <div class="step-header">
+    <h2 class="step-title">Garment Specifications</h2>
+    <p class="step-subtitle">Configure samples for your collection</p>
+    <div class="step-count">
+      <span id="sampleGarmentCount">0 garments</span>
+    </div>
+  </div>
+
+  <div class="step-content">
+
+    {%- comment -%} IMPORTANT INFO BOX {%- endcomment -%}
+    <div class="info-card info-card--primary">
+      <div class="info-card__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="info-card__content">
+        <h4 class="info-card__title">Important: Sample Specifications</h4>
+        <p class="info-card__text">
+          • Only garments configured here will be sampled<br>
+          • Add separate garment for each colorway needed<br>
+          • Lab dip costs apply for custom Pantone colors ($27.50 each)
+        </p>
+      </div>
+    </div>
+
+    {%- comment -%} GARMENT LIST (Your Garments Tab) {%- endcomment -%}
+    <div class="garments-section">
+      <h3 class="section-title">Your Garments</h3>
+
+      {%- comment -%} EMPTY STATE {%- endcomment -%}
+      <div id="sampleEmptyState" class="empty-state">
+        <svg class="empty-state-icon" width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <path d="M16 20L20 16L40 20L60 16L64 20V64H16V20Z" stroke="currentColor" stroke-width="3" fill="none"/>
+          <path d="M20 16V20M60 16V20M16 32H64" stroke="currentColor" stroke-width="3"/>
+        </svg>
+        <h4 class="empty-state-title">No garments added yet</h4>
+        <p class="empty-state-description">Click "Add Garment" below to start configuring your samples</p>
+      </div>
+
+      {%- comment -%} GARMENT GRID (populated by JS) {%- endcomment -%}
+      <div id="sampleGarmentList" class="garment-list" style="display: none;">
+        {%- comment -%} Garments rendered here by JavaScript {%- endcomment -%}
+      </div>
+    </div>
+
+    {%- comment -%} ADD GARMENT BUTTON {%- endcomment -%}
+    <div id="sampleAddGarmentSection" class="add-garment-section">
+      <button type="button" class="button-add-garment" data-action="sample-start-adding-garment">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span id="sampleAddGarmentButtonText">Add Garment</span>
+      </button>
+    </div>
+
+    {%- comment -%} STEP 1: GARMENT TYPE SELECTION {%- endcomment -%}
+    <div id="sampleGarmentTypeStep" class="selection-step" style="display: none;">
+      <div class="selection-step-header">
+        <h3 class="selection-step-title">Select Garment Type</h3>
+        <button type="button" class="button-cancel" data-action="sample-cancel-selection">
+          Cancel
+        </button>
+      </div>
+
+      <div class="selection-grid selection-grid--visual">
+
+        <button type="button" class="selection-card--visual" data-garment-type="T-Shirt" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M20 26L26 20L60 26L94 20L100 26V100H20V26Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M26 20V26M94 20V26M20 40H100" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">T-Shirt</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Hoodie" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M16 30L26 20L60 23L94 20L104 30V103H16V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M45 20Q60 10 75 20" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Hoodie</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Sweatshirt" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M18 28L28 20L60 24L92 20L102 28V102H18V28Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M28 20V28M92 20V28M18 45H102" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Sweatshirt</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Polo Shirt" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M22 28L28 22L60 26L92 22L98 28V100H22V28Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M60 26V45M55 30L60 26L65 30" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Polo Shirt</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Tank Top" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M30 20L40 25L60 26L80 25L90 20V100H30V20Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M30 35H90" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Tank Top</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Sweatpants" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M40 20H80V60L70 100H50L40 60V20Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M40 20H80M60 20V60" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Sweatpants</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Shorts" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M35 20H85V70L75 75H45L35 70V20Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M35 20H85M60 20V70" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Shorts</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Zip-Up Hoodie" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M16 30L26 20L60 23L94 20L104 30V103H16V30Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M45 20Q60 10 75 20M60 23V103" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Zip-Up Hoodie</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Long Sleeve T-Shirt" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M10 26L26 20L60 26L94 20L110 26V100H60M60 100H10V26" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M26 20V40M94 20V40" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Long Sleeve</h4>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-garment-type="Crewneck" data-action="sample-select-garment-type">
+          <div class="selection-card--visual__image">
+            <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none">
+              <path d="M18 28L28 20L60 24L92 20L102 28V102H18V28Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <ellipse cx="60" cy="25" rx="15" ry="5" stroke="currentColor" stroke-width="3" fill="none"/>
+            </svg>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Crewneck</h4>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    {%- comment -%} STEP 2: FABRIC TYPE SELECTION {%- endcomment -%}
+    <div id="sampleFabricTypeStep" class="selection-step" style="display: none;">
+      <div class="selection-step-header">
+        <h3 class="selection-step-title">Select Fabric Type</h3>
+        <button type="button" class="button-back" data-action="sample-back-to-garment-types">
+          ← Back
+        </button>
+      </div>
+
+      <div class="selection-grid selection-grid--visual">
+
+        <button type="button" class="selection-card--visual" data-fabric-type="100% Cotton" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">100% Cotton</h4>
+            <p class="selection-card--visual__description">Soft, breathable</p>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-fabric-type="100% Organic Cotton Brushed Fleece" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">100% Organic Cotton Brushed Fleece</h4>
+            <p class="selection-card--visual__description">Premium, warm</p>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-fabric-type="100% Organic Cotton French Terry" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #ececec 0%, #d8d8d8 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">100% Organic Cotton French Terry</h4>
+            <p class="selection-card--visual__description">Looped interior</p>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-fabric-type="50/50 Cotton/Poly" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #e5e5e5 0%, #c8c8c8 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">50/50 Cotton/Poly</h4>
+            <p class="selection-card--visual__description">Durable blend</p>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-fabric-type="80/20 Cotton/Poly" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">80/20 Cotton/Poly</h4>
+            <p class="selection-card--visual__description">Mostly cotton</p>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-fabric-type="100% Polyester" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">100% Polyester</h4>
+            <p class="selection-card--visual__description">Performance fabric</p>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-fabric-type="Tri-Blend (Cotton/Poly/Rayon)" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #e8e8e8 0%, #c8c8c8 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Tri-Blend</h4>
+            <p class="selection-card--visual__description">Vintage feel</p>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-fabric-type="Jersey Knit" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #ececec 0%, #d0d0d0 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Jersey Knit</h4>
+            <p class="selection-card--visual__description">Stretchy, smooth</p>
+          </div>
+        </button>
+
+        <button type="button" class="selection-card--visual" data-fabric-type="Pique Knit" data-action="sample-select-fabric-type">
+          <div class="selection-card--visual__image" style="background: linear-gradient(135deg, #e5e5e5 0%, #c8c8c8 100%);">
+            <div class="fabric-texture"></div>
+          </div>
+          <div class="selection-card--visual__content">
+            <h4 class="selection-card--visual__title">Pique Knit</h4>
+            <p class="selection-card--visual__description">Textured polo fabric</p>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    {%- comment -%} STEP 3: SAMPLE TYPE SELECTION {%- endcomment -%}
+    <div id="sampleSampleTypeStep" class="selection-step" style="display: none;">
+      <div class="selection-step-header">
+        <h3 class="selection-step-title">Select Sample Type</h3>
+        <button type="button" class="button-back" data-action="sample-back-to-fabric-types">
+          ← Back
+        </button>
+      </div>
+
+      <div class="selection-grid selection-grid--sample-type">
+
+        {%- comment -%} OPTION 1: STOCK COLOR {%- endcomment -%}
+        <button type="button" class="selection-card--sample-type" data-sample-type="stock" data-action="sample-select-sample-type">
+          <div class="selection-card--sample-type__icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <circle cx="20" cy="20" r="8" fill="#000000"/>
+              <circle cx="44" cy="20" r="8" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+              <circle cx="20" cy="44" r="8" fill="#1E3A8A"/>
+              <circle cx="44" cy="44" r="8" fill="#6B7280"/>
+            </svg>
+          </div>
+          <h4 class="selection-card--sample-type__title">Stock Color</h4>
+          <p class="selection-card--sample-type__description">Choose from 6 standard fabric colors</p>
+        </button>
+
+        {%- comment -%} OPTION 2: PANTONE LIBRARY {%- endcomment -%}
+        <button type="button" class="selection-card--sample-type" data-sample-type="pantone" data-action="sample-select-sample-type">
+          <div class="selection-card--sample-type__icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <rect x="10" y="10" width="44" height="44" rx="4" stroke="currentColor" stroke-width="3" fill="none"/>
+              <line x1="10" y1="22" x2="54" y2="22" stroke="currentColor" stroke-width="3"/>
+              <line x1="10" y1="32" x2="54" y2="32" stroke="currentColor" stroke-width="3"/>
+              <line x1="10" y1="42" x2="54" y2="42" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <h4 class="selection-card--sample-type__title">Pantone Library</h4>
+          <p class="selection-card--sample-type__description">Pick from 2000+ Pantone colors</p>
+        </button>
+
+        {%- comment -%} OPTION 3: TECHPACK REFERENCE {%- endcomment -%}
+        <button type="button" class="selection-card--sample-type" data-sample-type="techpack" data-action="sample-select-sample-type">
+          <div class="selection-card--sample-type__icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <path d="M16 8H40L52 20V56H16V8Z" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M40 8V20H52" stroke="currentColor" stroke-width="3"/>
+              <line x1="24" y1="32" x2="44" y2="32" stroke="currentColor" stroke-width="3"/>
+              <line x1="24" y1="40" x2="44" y2="40" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <h4 class="selection-card--sample-type__title">TechPack Reference</h4>
+          <p class="selection-card--sample-type__description">Color specified in your TechPack</p>
+        </button>
+
+      </div>
+
+      {%- comment -%} COTTON-ONLY WARNING (shown by JS if fabric is not cotton) {%- endcomment -%}
+      <div id="cottonOnlyWarning" class="info-card info-card--warning" style="display: none; margin-top: var(--space-6);">
+        <div class="info-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="info-card__content">
+          <h4 class="info-card__title">Custom Colors Limited</h4>
+          <p class="info-card__text">Custom Pantone colors are only available for 100% Cotton fabrics. For this fabric, please choose from stock colors.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% render 'techpack-v11-stock-colors' %}
+{% render 'techpack-v11-techpack-color-picker' %}
+{% render 'techpack-v11-color-studio' %}
+
+{%- comment -%} SCHEMA {%- endcomment -%}
+{% schema %}
+{
+  "name": "Sample Step 3",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,187 @@
+{% comment %}
+  TechPack V11 - Sample Request - Step 4: Review & Submit
+
+  Sample-specific sections:
+  - Client Information (includes Delivery Address)
+  - Uploaded Files
+  - Garment Specifications (with Pantone colors)
+  - Fabric Swatches (Lab Dip requests) - NEW
+  - Cost Summary (garment samples + lab dips)
+{% endcomment %}
+
+<div class="step-container" id="sampleStep4">
+  <div class="step-header">
+    <h2 class="step-title">Review & Submit Request</h2>
+    <p class="step-subtitle">Please review all details before submitting</p>
+  </div>
+
+  <div class="step-content">
+
+    {%- comment -%} SECTION 1: CLIENT INFORMATION {%- endcomment -%}
+    <div class="review-section">
+      <div class="review-section-header">
+        <h3 class="review-section-title">Client Information</h3>
+        <button type="button" class="review-edit-button" data-action="edit-step" data-step="1">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M11.333 2.00004C11.5081 1.82494 11.716 1.68605 11.9447 1.59129C12.1735 1.49653 12.4187 1.44775 12.6663 1.44775C12.914 1.44775 13.1592 1.49653 13.3879 1.59129C13.6167 1.68605 13.8246 1.82494 13.9997 2.00004C14.1748 2.17513 14.3137 2.383 14.4084 2.61178C14.5032 2.84055 14.552 3.08575 14.552 3.33337C14.552 3.58099 14.5032 3.82619 14.4084 4.05497C14.3137 4.28374 14.1748 4.49161 13.9997 4.66671L5.33301 13.3334L1.33301 14.6667L2.66634 10.6667L11.333 2.00004Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Edit
+        </button>
+      </div>
+
+      <div class="review-content">
+        <div class="review-row">
+          <span class="review-label">Company Name:</span>
+          <span id="reviewCompanyName" class="review-value">—</span>
+        </div>
+
+        <div class="review-row">
+          <span class="review-label">Email Address:</span>
+          <span id="reviewCompanyEmail" class="review-value">—</span>
+        </div>
+
+        <div class="review-row">
+          <span class="review-label">Request Type:</span>
+          <span class="review-value review-tag review-tag--sample">Sample Request</span>
+        </div>
+
+        <div class="review-row">
+          <span class="review-label">Delivery Address:</span>
+          <div id="reviewDeliveryAddress" class="review-value review-address">
+            {%- comment -%} Populated by JavaScript {%- endcomment -%}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} SECTION 2: UPLOADED FILES {%- endcomment -%}
+    <div class="review-section">
+      <div class="review-section-header">
+        <h3 class="review-section-title">Uploaded Files</h3>
+        <button type="button" class="review-edit-button" data-action="edit-step" data-step="2">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M11.333 2.00004C11.5081 1.82494 11.716 1.68605 11.9447 1.59129C12.1735 1.49653 12.4187 1.44775 12.6663 1.44775C12.914 1.44775 13.1592 1.49653 13.3879 1.59129C13.6167 1.68605 13.8246 1.82494 13.9997 2.00004C14.1748 2.17513 14.3137 2.383 14.4084 2.61178C14.5032 2.84055 14.552 3.08575 14.552 3.33337C14.552 3.58099 14.5032 3.82619 14.4084 4.05497C14.3137 4.28374 14.1748 4.49161 13.9997 4.66671L5.33301 13.3334L1.33301 14.6667L2.66634 10.6667L11.333 2.00004Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Edit
+        </button>
+      </div>
+
+      <div id="reviewFiles" class="review-content review-files">
+        {%- comment -%} Populated by JavaScript {%- endcomment -%}
+      </div>
+    </div>
+
+    {%- comment -%} SECTION 3: GARMENT SPECIFICATIONS {%- endcomment -%}
+    <div class="review-section">
+      <div class="review-section-header">
+        <h3 class="review-section-title">Garment Specifications</h3>
+        <button type="button" class="review-edit-button" data-action="edit-step" data-step="3">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M11.333 2.00004C11.5081 1.82494 11.716 1.68605 11.9447 1.59129C12.1735 1.49653 12.4187 1.44775 12.6663 1.44775C12.914 1.44775 13.1592 1.49653 13.3879 1.59129C13.6167 1.68605 13.8246 1.82494 13.9997 2.00004C14.1748 2.17513 14.3137 2.383 14.4084 2.61178C14.5032 2.84055 14.552 3.08575 14.552 3.33337C14.552 3.58099 14.5032 3.82619 14.4084 4.05497C14.3137 4.28374 14.1748 4.49161 13.9997 4.66671L5.33301 13.3334L1.33301 14.6667L2.66634 10.6667L11.333 2.00004Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Edit
+        </button>
+      </div>
+
+      <div id="reviewGarments" class="review-content">
+        {%- comment -%} Populated by JavaScript with visual garment cards {%- endcomment -%}
+      </div>
+    </div>
+
+    {%- comment -%} SECTION 4: FABRIC SWATCHES (Lab Dips) - NEW for Sample {%- endcomment -%}
+    <div class="review-section">
+      <div class="review-section-header">
+        <h3 class="review-section-title">Fabric Swatches</h3>
+        <span class="review-section-badge">Lab Dip Requests</span>
+      </div>
+
+      <div id="reviewLabDips" class="review-content">
+        {%- comment -%} Populated by JavaScript {%- endcomment -%}
+      </div>
+    </div>
+
+    {%- comment -%} SECTION 5: COST SUMMARY {%- endcomment -%}
+    <div class="review-section review-section--highlighted">
+      <div class="review-section-header">
+        <h3 class="review-section-title">Cost Summary</h3>
+        <div class="currency-toggle">
+          <button type="button" class="currency-button" data-currency="EUR" data-action="toggle-currency">
+            € EURO
+          </button>
+          <button type="button" class="currency-button currency-button--active" data-currency="USD" data-action="toggle-currency">
+            $ DOLLAR
+          </button>
+        </div>
+      </div>
+
+      <div class="review-content">
+        <div class="cost-breakdown">
+
+          <div class="cost-row">
+            <span class="cost-label">Garment Samples</span>
+            <span id="garmentSamplesCost" class="cost-value">$0.00</span>
+          </div>
+
+          <div class="cost-row">
+            <span class="cost-label">
+              Lab Dip Swatches
+              <span id="labDipCount" class="cost-count">(0 colors)</span>
+            </span>
+            <span id="labDipsCost" class="cost-value">$0.00</span>
+          </div>
+
+          <div class="cost-row cost-row--total">
+            <span class="cost-label">Total Estimate</span>
+            <span id="totalCost" class="cost-value cost-value--total">$0.00</span>
+          </div>
+
+        </div>
+
+        <div class="cost-note">
+          <svg class="cost-note-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path d="M10 6V10M10 14H10.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <p class="cost-note-text">This is an estimated price. Final quotation will be provided after submission review.</p>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} SECTION 6: CONFIRMATION {%- endcomment -%}
+    <div class="review-section">
+      <div class="review-content">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            id="confirmationCheckbox"
+            class="checkbox-input"
+            required
+          />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-text">
+            I confirm that all information provided is accurate and I understand this is a sample request. GENUINEBLANKS will review my TechPack and contact me with a final quotation.
+          </span>
+        </label>
+      </div>
+    </div>
+
+    {%- comment -%} SUBMIT BUTTON {%- endcomment -%}
+    <div class="review-actions">
+      <button type="button" class="button button--primary button--large" id="submitSampleRequest" data-action="submit-sample-request" disabled>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M17 3L8 12M17 3L11 17L8 12M17 3L3 9L8 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Submit Sample Request
+      </button>
+    </div>
+
+  </div>
+</div>
+
+{%- comment -%} SCHEMA {%- endcomment -%}
+{% schema %}
+{
+  "name": "Sample Step 4",
+  "settings": []
+}
+{% endschema %}

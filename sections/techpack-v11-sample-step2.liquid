@@ -1,0 +1,108 @@
+{% comment %}
+  TechPack V11 - Sample Request - Step 2: File Upload
+
+  Sample-specific:
+  - Simple file upload only
+  - NO Measurement Requirements (already have from quotation)
+{% endcomment %}
+
+<div class="step-container" id="sampleStep2">
+  <div class="step-header">
+    <h2 class="step-title">Upload Your Files</h2>
+    <p class="step-subtitle">Share your design files and technical specifications</p>
+  </div>
+
+  <div class="step-content">
+
+    {%- comment -%} FILE UPLOAD ZONE {%- endcomment -%}
+    <div class="file-upload-section">
+
+      <div
+        class="file-upload-zone"
+        id="sampleFileUploadZone"
+        data-action="file-drop-zone"
+      >
+        <svg class="file-upload-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <path d="M32 12V36M32 36L22 26M32 36L42 26" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 44V50C12 51.0609 12.4214 52.0783 13.1716 52.8284C13.9217 53.5786 14.9391 54 16 54H48C49.0609 54 50.0783 53.5786 50.8284 52.8284C51.5786 52.0783 52 51.0609 52 50V44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+
+        <h3 class="file-upload-title">Drag & Drop Files Here</h3>
+        <p class="file-upload-description">or click to browse</p>
+
+        <input
+          type="file"
+          id="sampleFileInput"
+          class="file-upload-input"
+          multiple
+          accept=".pdf,.ai,.png,.jpg,.jpeg,.zip"
+          data-action="file-input"
+        />
+      </div>
+
+      {%- comment -%} FILE SPECS {%- endcomment -%}
+      <div class="file-specs">
+        <div class="file-spec-item">
+          <svg class="file-spec-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M12 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V16C4 16.5304 4.21071 17.0391 4.58579 17.4142C4.96086 17.7893 5.46957 18 6 18H14C14.5304 18 15.0391 17.7893 15.4142 17.4142C15.7893 17.0391 16 16.5304 16 16V6L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 2V6H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>PDF, AI, PNG, JPG, ZIP</span>
+        </div>
+
+        <div class="file-spec-item">
+          <svg class="file-spec-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path d="M10 6V10L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Max 10MB per file</span>
+        </div>
+
+        <div class="file-spec-item">
+          <svg class="file-spec-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M6 9L10 13L18 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 13L6 15L2 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Up to 5 files</span>
+        </div>
+      </div>
+
+      {%- comment -%} FILE LIST (populated by JS) {%- endcomment -%}
+      <div id="sampleFileList" class="file-list" style="display: none;">
+        <h4 class="file-list-title">Uploaded Files</h4>
+        <div id="sampleFileListContainer" class="file-list-container">
+          {%- comment -%} Files will be rendered here by JavaScript {%- endcomment -%}
+        </div>
+      </div>
+
+    </div>
+
+    {%- comment -%} HELPFUL INFO BOX {%- endcomment -%}
+    <div class="info-card info-card--info">
+      <div class="info-card__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="info-card__content">
+        <h4 class="info-card__title">What to Include</h4>
+        <p class="info-card__text">
+          • TechPack with specifications and measurements<br>
+          • Design mockups or sketches<br>
+          • Color references (Pantone codes if available)<br>
+          • Any additional notes or requirements
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{%- comment -%} SCHEMA {%- endcomment -%}
+{% schema %}
+{
+  "name": "Sample Step 2",
+  "settings": []
+}
+{% endschema %}
