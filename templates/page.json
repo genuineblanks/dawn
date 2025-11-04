@@ -17,18 +17,19 @@
         "padding_bottom": 0
       }
     },
-    "techpack_v11_quotation_step1_jCenDH": {
-      "type": "techpack-v11-quotation-step1",
-      "name": "TechPack V11 - Quotation Step 1",
+    "techpack_v11_entrance_JXAiWJ": {
+      "type": "techpack-v11-entrance",
+      "name": "TechPack V11 - Entrance",
       "settings": {
-        "enable_test_mode": false,
-        "moq_minimum": 75,
-        "quantity_max": 5000
+        "headline": "TechPack Studio",
+        "subheadline": "Professional garment production requests in minutes",
+        "show_support_link": true,
+        "support_link": "/pages/contact"
       }
     }
   },
   "order": [
     "main",
-    "techpack_v11_quotation_step1_jCenDH"
+    "techpack_v11_entrance_JXAiWJ"
   ]
 }
