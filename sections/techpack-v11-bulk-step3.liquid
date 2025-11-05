@@ -142,12 +142,25 @@
 
       {%- comment -%} STEP 1: Garment Type Selection (Hidden Initially) {%- endcomment -%}
       <div class="selection-step" id="bulkGarmentTypeStep" style="display: none;">
-        <div class="form-section">
-          <div class="section-header">
-            <h3 class="section-header__title">Select Garment Type</h3>
-            <p class="section-header__description">Choose which garment type for bulk production</p>
+        {%- comment -%} Selection Header Bar {%- endcomment -%}
+        <div class="selection-header">
+          <div class="selection-header__mode">
+            <h3 class="selection-header__mode-title" id="bulkSelectionModeTitle">Adding New Garment</h3>
           </div>
+          <div class="selection-header__status">
+            <h3 class="selection-header__title">Select Garment Type</h3>
+            <p class="selection-header__progress">Step 1 of 2</p>
+          </div>
+          <div class="selection-header__close-wrapper">
+            <button type="button" class="selection-header__close" data-action="bulk-cancel-selection" aria-label="Cancel">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
 
+        <div class="form-section">
           <div class="selection-grid selection-grid--visual">
 
             
@@ -298,6 +311,24 @@
 
       {%- comment -%} STEP 2: Fabric Type Selection (Hidden Initially) {%- endcomment -%}
       <div class="selection-step" id="bulkFabricTypeStep" style="display: none;">
+        {%- comment -%} Selection Header Bar {%- endcomment -%}
+        <div class="selection-header">
+          <div class="selection-header__mode">
+            <h3 class="selection-header__mode-title" id="bulkSelectionModeTitleFabric">Adding New Garment</h3>
+          </div>
+          <div class="selection-header__status">
+            <h3 class="selection-header__title">Select Fabric Type</h3>
+            <p class="selection-header__progress">Step 2 of 2</p>
+          </div>
+          <div class="selection-header__close-wrapper">
+            <button type="button" class="selection-header__close" data-action="bulk-cancel-selection" aria-label="Cancel">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
         <div class="form-section">
           <div class="section-header">
             <div class="section-header__title-row">
@@ -305,12 +336,8 @@
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Back
+                Back to Garment Type
               </button>
-              <div>
-                <h3 class="section-header__title">Select Fabric Type</h3>
-                <p class="section-header__description" id="bulkFabricTypeDescription">Choose fabric composition</p>
-              </div>
             </div>
           </div>
 
@@ -369,7 +396,8 @@
               <div class="selection-card--visual__content">
                 <h4 class="selection-card--visual__title">100% Polyester</h4>
               </div>
-            
+            </button>
+
             {%- comment -%} 100% Cotton Sherpa {%- endcomment -%}
             <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Sherpa" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts" data-action="bulk-select-fabric-type">
               <div class="selection-card--visual__image">
@@ -380,8 +408,6 @@
                 <h4 class="selection-card--visual__title">100% Cotton Sherpa</h4>
               </div>
             </button>
-
-</button>
 
             {%- comment -%} 100% Organic Cotton Jersey {%- endcomment -%}
                         <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Organic Cotton Jersey" data-garment-types="T-Shirt,Long Sleeve,Tank Top" data-action="bulk-select-fabric-type">
@@ -480,7 +506,8 @@
               <div class="selection-card--visual__content">
                 <h4 class="selection-card--visual__title">100% Linen</h4>
               </div>
-            
+            </button>
+
             {%- comment -%} 50/50 Linen Cotton {%- endcomment -%}
             <button type="button" class="selection-card--visual fabric-option" data-fabric-type="50/50 Linen Cotton" data-garment-types="Shirt" data-action="bulk-select-fabric-type">
               <div class="selection-card--visual__image">
@@ -491,8 +518,6 @@
                 <h4 class="selection-card--visual__title">50/50 Linen Cotton</h4>
               </div>
             </button>
-
-</button>
 
             {%- comment -%} 55% Hemp / 45% Cotton {%- endcomment -%}
                         <button type="button" class="selection-card--visual fabric-option" data-fabric-type="55% Hemp / 45% Cotton" data-garment-types="Shirt" data-action="bulk-select-fabric-type">
