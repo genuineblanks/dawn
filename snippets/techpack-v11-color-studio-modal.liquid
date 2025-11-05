@@ -26,26 +26,6 @@
       {%- comment -%} LEFT: Color Selection (65%) {%- endcomment -%}
       <div class="color-studio-modal__left">
 
-        {%- comment -%} Pantone Code Search {%- endcomment -%}
-        <div class="modal-search">
-          <label for="modalPantoneSearch" class="modal-search__label">Pantone Code</label>
-          <div class="modal-search__input-group">
-            <input
-              type="text"
-              id="modalPantoneSearch"
-              class="modal-search__input"
-              placeholder="e.g., 18-1664"
-              data-action="modal-search-pantone"
-            />
-            <button type="button" class="modal-search__btn" data-action="modal-search-pantone-button">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
-                <path d="M13 13L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
         {%- comment -%} Popular Colors Grid {%- endcomment -%}
         <div class="modal-popular">
           <h4 class="modal-popular__title">Popular Colors</h4>
@@ -144,6 +124,134 @@
             </svg>
             Add to Lab Dip Cart
           </button>
+
+          {%- comment -%} Wash Technique Warning Message {%- endcomment -%}
+          <div id="washTechniqueCartWarning" class="wash-technique-cart-warning" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 1L1 14H15L8 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M8 6V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="8" cy="11.5" r="0.75" fill="currentColor"/>
+            </svg>
+            <span>Washing techniques must be assigned directly to a garment using the dropdown below</span>
+          </div>
+
+          {%- comment -%} OR Divider {%- endcomment -%}
+          <div class="modal-divider">
+            <span class="modal-divider__line"></span>
+            <span class="modal-divider__text">OR</span>
+            <span class="modal-divider__line"></span>
+          </div>
+
+          {%- comment -%} Instant Garment Assignment (Bypasses Cart) {%- endcomment -%}
+          <div class="modal-garment-assignment">
+            <label for="modalGarmentSelect" class="modal-garment-assignment__label">
+              Assign Directly to Garment (Bypass Cart)
+            </label>
+            <select id="modalGarmentSelect" class="modal-garment-assignment__select" data-action="update-assign-button-state">
+              <option value="">Select a garment...</option>
+              {%- comment -%} Populated by JavaScript with Pantone-eligible garments {%- endcomment -%}
+            </select>
+            <button type="button" class="modal-assign-btn" id="modalAssignToGarmentBtn" data-action="assign-color-to-garment" disabled>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 10L8 13L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span id="modalAssignBtnText">Assign to Garment</span>
+            </button>
+          </div>
+
+          {%- comment -%} Washing Techniques (Optional Advanced Feature) {%- endcomment -%}
+          <div class="wash-techniques-section">
+            <button type="button" class="wash-techniques-section__toggle" data-action="toggle-wash-techniques">
+              <svg class="wash-techniques-section__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Advanced: Washing Techniques (Optional)</span>
+            </button>
+
+            <div class="wash-techniques-section__content" id="washTechniquesContent" style="display: none;">
+
+              {%- comment -%} 5 Visual Cards {%- endcomment -%}
+              <div class="wash-technique-cards">
+                <button type="button" class="wash-technique-card" data-technique="pigment-dye" data-action="select-wash-technique">
+                  <div class="wash-technique-card__icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/>
+                      <path d="M16 8v16M8 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <h4 class="wash-technique-card__title">Pigment Dye</h4>
+                  <p class="wash-technique-card__timeline">+2 weeks</p>
+                </button>
+
+                <button type="button" class="wash-technique-card" data-technique="fade-out" data-action="select-wash-technique">
+                  <div class="wash-technique-card__icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <path d="M6 16h20M6 10h20M6 22h20" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+                      <path d="M6 16h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <h4 class="wash-technique-card__title">Fade-out Wash</h4>
+                  <p class="wash-technique-card__timeline">+3 weeks</p>
+                </button>
+
+                <button type="button" class="wash-technique-card" data-technique="stone-wash" data-action="select-wash-technique">
+                  <div class="wash-technique-card__icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="4 2"/>
+                    </svg>
+                  </div>
+                  <h4 class="wash-technique-card__title">Stone Wash</h4>
+                  <p class="wash-technique-card__timeline">+2 weeks</p>
+                </button>
+
+                <button type="button" class="wash-technique-card" data-technique="tie-dye" data-action="select-wash-technique">
+                  <div class="wash-technique-card__icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <circle cx="16" cy="16" r="4" stroke="currentColor" stroke-width="2"/>
+                      <circle cx="16" cy="16" r="8" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+                      <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                    </svg>
+                  </div>
+                  <h4 class="wash-technique-card__title">Tie Dye</h4>
+                  <p class="wash-technique-card__timeline">+4 weeks</p>
+                </button>
+
+                <button type="button" class="wash-technique-card" data-technique="ice-dye" data-action="select-wash-technique">
+                  <div class="wash-technique-card__icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <path d="M16 6v20M6 16h20M10 10l12 12M10 22l12-12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <h4 class="wash-technique-card__title">Ice Dye</h4>
+                  <p class="wash-technique-card__timeline">+4 weeks</p>
+                </button>
+              </div>
+
+              {%- comment -%} Color Discrepancy Warning (shows for Fade-out/Tie/Ice) {%- endcomment -%}
+              <div class="wash-warning" id="washColorWarning" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 6v4m0 4h.01M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <p>This technique has <strong>10-15% color discrepancy</strong> — final color will vary slightly from the swatch</p>
+              </div>
+
+              {%- comment -%} 4-Button Guide {%- endcomment -%}
+              <div class="wash-guide">
+                <h4 class="wash-guide__title">Learn About Each Technique:</h4>
+                <div class="wash-guide__buttons">
+                  <button type="button" class="wash-guide__btn" data-guide="pigment-dye" data-action="select-wash-guide">Pigment Dye</button>
+                  <button type="button" class="wash-guide__btn" data-guide="fade-out" data-action="select-wash-guide">Fade-out</button>
+                  <button type="button" class="wash-guide__btn" data-guide="stone" data-action="select-wash-guide">Stone</button>
+                  <button type="button" class="wash-guide__btn" data-guide="tie-ice" data-action="select-wash-guide">Tie/Ice</button>
+                </div>
+                <div class="wash-guide__description" id="washGuideDescription">
+                  <p>Select a technique above to learn more about the process, timeline, and requirements.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
 
         {%- comment -%} Cart Preview (syncs with main page) {%- endcomment -%}
