@@ -11,7 +11,10 @@
   {%- comment -%} Header with Prominent Browse Button (only shows when cart has items) {%- endcomment -%}
   <div class="lab-dip-cart__header">
     <div class="lab-dip-cart__header-top">
-      <h3 class="lab-dip-cart__title">Lab Dip Cart</h3>
+      <h3 class="lab-dip-cart__title">
+        <span class="cart-title--sample">Lab Dip Cart</span>
+        <span class="cart-title--bulk" style="display:none;">Bulk Color Cart</span>
+      </h3>
       <span class="cart-badge cart-badge--header" id="labDipCartBadge" style="display: none;">0</span>
     </div>
     <button
@@ -45,8 +48,11 @@
         <circle cx="40" cy="52" r="8" stroke="currentColor" stroke-width="3" fill="none"/>
       </svg>
       <h4 class="lab-dip-cart__empty-title">Ready to Choose Colors?</h4>
-      <p class="lab-dip-cart__empty-hint">
+      <p class="lab-dip-cart__empty-hint cart-empty-hint--sample">
         Browse our complete Pantone color library and add lab dip swatches to your order.
+      </p>
+      <p class="lab-dip-cart__empty-hint cart-empty-hint--bulk" style="display:none;">
+        Browse our complete Pantone color library and add colors to manage your bulk colorways.
       </p>
 
       {%- comment -%} Large Primary CTA Button {%- endcomment -%}
@@ -66,8 +72,11 @@
         </svg>
       </button>
 
-      <p class="lab-dip-cart__empty-note">
+      <p class="lab-dip-cart__empty-note cart-empty-note--sample">
         💡 Lab dips cost €25.00 per swatch
+      </p>
+      <p class="lab-dip-cart__empty-note cart-empty-note--bulk" style="display:none;">
+        💡 Colors stay in cart for reuse across multiple garments
       </p>
     </div>
 
