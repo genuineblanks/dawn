@@ -1,0 +1,691 @@
+{% comment %}
+  TechPack V11 - Sample Request - Step 3A: Garment Building (No Color Assignment)
+  Purpose: Build garment list with Type + Fabric only
+  Flow: Add Garment → Select Type → Select Fabric → Added (NO color yet)
+  Color assignment happens in Step 3B
+{% endcomment %}
+
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-flow.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-forms.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-sample.css' | asset_url | stylesheet_tag }}
+
+<div class="techpack-v11 techpack-flow" id="sampleStep3" data-section-id="{{ section.id }}" data-flow-type="sample" data-current-step="3">
+
+  {%- comment -%} TEST MODE BANNER {%- endcomment -%}
+  <div class="test-mode-banner" id="testModeBanner" style="display: none;">
+    <div class="test-mode-banner__content">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <strong>TEST MODE ACTIVE</strong>
+        <p>2 sample garments auto-added for testing.</p>
+      </div>
+      <button type="button" class="test-mode-banner__toggle" data-action="toggle-test-mode">
+        Disable TEST Mode
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} Progress Header {%- endcomment -%}
+  <div class="techpack-progress">
+    <div class="techpack-progress__container">
+      <button type="button" class="techpack-progress__back" data-action="previous-step">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="techpack-progress__steps">
+        <div class="progress-step progress-step--complete" data-step="1">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Client Info</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--complete" data-step="2">
+          <div class="progress-step__circle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="progress-step__label">Files</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step progress-step--active" data-step="3">
+          <div class="progress-step__circle">3</div>
+          <div class="progress-step__label">Garments</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="4">
+          <div class="progress-step__circle">4</div>
+          <div class="progress-step__label">Colors</div>
+        </div>
+        <div class="progress-step__line"></div>
+        <div class="progress-step" data-step="5">
+          <div class="progress-step__circle">5</div>
+          <div class="progress-step__label">Review</div>
+        </div>
+      </div>
+
+      <div class="techpack-progress__save">
+        <div class="save-indicator" id="saveIndicator">
+          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="save-indicator__text">All saved</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Main Content {%- endcomment -%}
+  <div class="techpack-content">
+    <div class="techpack-content__container techpack-content__container--wide">
+
+      {%- comment -%} Step Header {%- endcomment -%}
+      <header class="step-header">
+        <div class="step-header__badge">Step 3 of 5</div>
+        <h1 class="step-header__title">Build Your Garment List</h1>
+        <p class="step-header__description">
+          Add garments by selecting type and fabric. You'll assign colors in the next step.
+        </p>
+      </header>
+
+      {%- comment -%} IMPORTANT INFO BOX {%- endcomment -%}
+      <div class="info-card info-card--info">
+        <div class="info-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v-4m0-4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="info-card__content">
+          <h4 class="info-card__title">How This Works</h4>
+          <p class="info-card__text">
+            In this step, you'll select the garment type and fabric for each sample you need. Don't worry about colors yet - you'll assign colors to all your garments in the next step.
+          </p>
+        </div>
+      </div>
+
+      {%- comment -%} GARMENT LIST (Always Visible) {%- endcomment -%}
+      <div class="form-section" id="sampleGarmentListSection">
+        <div class="section-header">
+          <div class="section-header__title-row">
+            <h3 class="section-header__title">Your Sample Garments</h3>
+            <span class="garment-count" id="sampleGarmentCount">0 garments</span>
+          </div>
+        </div>
+
+        {%- comment -%} Empty State {%- endcomment -%}
+        <div class="empty-state" id="sampleEmptyState">
+          <div class="empty-state__icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 20L20 16L32 20L44 16L48 20V48H16V20Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M20 16V20M44 16V20M16 26H48" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h4 class="empty-state__title">No sample garments added yet</h4>
+          <p class="empty-state__description">
+            Click "Add Garment" below to start building your sample request
+          </p>
+        </div>
+
+        {%- comment -%} Garment List {%- endcomment -%}
+        <div class="garment-list" id="sampleGarmentList" style="display: none;"></div>
+      </div>
+
+      {%- comment -%} ADD GARMENT BUTTON (Default State) {%- endcomment -%}
+      <div class="form-section" id="sampleAddGarmentSection">
+        <button type="button" class="button-add-garment" data-action="sample-start-adding-garment">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <span id="sampleAddGarmentButtonText">Add Garment</span>
+        </button>
+      </div>
+
+      {%- comment -%} STEP 1: Garment Type Selection (Hidden Initially) {%- endcomment -%}
+      <div class="selection-step" id="sampleGarmentTypeStep" style="display: none;">
+        <div class="form-section">
+          <div class="section-header">
+            <h3 class="section-header__title">Select Garment Type</h3>
+            <p class="section-header__description">Choose which garment you want to sample</p>
+          </div>
+
+          <div class="selection-grid selection-grid--visual">
+
+            {%- comment -%} T-Shirt {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="T-Shirt" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/TSHIRT.jpg?v=1762324252" alt="T-Shirt" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">T-Shirt</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Long Sleeve {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Long Sleeve" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/LONGSLEEVE.jpg?v=1762324252" alt="Long Sleeve" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Long Sleeve</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Tank Top {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Tank Top" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/TANKTOP.jpg?v=1762324252" alt="Tank Top" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Tank Top</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Polo Shirt {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Polo Shirt" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/POLO_SHIRT.jpg?v=1762324559" alt="Polo Shirt" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Polo Shirt</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Shirt {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Shirt" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/SHIRT.jpg?v=1762324253" alt="Shirt" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Shirt</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Hoodie {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Hoodie" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/HOODIE.jpg?v=1762324252" alt="Hoodie" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Hoodie</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Zip Hoodie {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Zip Hoodie" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/ZIP-UP_HOODIE.jpg?v=1762324253" alt="Zip Hoodie" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Zip Hoodie</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Sweatshirt {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Sweatshirt" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/SWEATSHIRT.jpg?v=1762324252" alt="Sweatshirt" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Sweatshirt</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Sweatpants {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Sweatpants" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/SWEATPANTS.jpg?v=1762324252" alt="Sweatpants" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Sweatpants</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Shorts {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Shorts" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/SHORTS.jpg?v=1762324252" alt="Shorts" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Shorts</h4>
+              </div>
+            </button>
+{%- comment -%} Other {%- endcomment -%}
+            <button type="button" class="selection-card--visual" data-garment-type="Other" data-action="sample-select-garment-type">
+              <div class="selection-card--visual__image">
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/OTHERS.jpg?v=1762324710" alt="Other" width="240" height="240" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Other</h4>
+              </div>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} STEP 2: Fabric Type Selection (Hidden Initially) {%- endcomment -%}
+      <div class="selection-step" id="sampleFabricTypeStep" style="display: none;">
+        <div class="form-section">
+          <div class="section-header">
+            <div class="section-header__title-row">
+              <button type="button" class="button-back" data-action="sample-back-to-garment-types">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Back
+              </button>
+              <div>
+                <h3 class="section-header__title">Select Fabric Type</h3>
+                <p class="section-header__description" id="sampleFabricTypeDescription">Choose fabric composition</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="selection-grid selection-grid--visual" id="sampleFabricGrid">
+
+            {%- comment -%} 100% Organic Cotton Brushed Fleece {%- endcomment -%}
+            <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Organic Cotton Brushed Fleece" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/felpa_americana_100_algodao_480.jpg?v=1762317899" alt="100% Organic Cotton Brushed Fleece texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Organic Cotton Brushed Fleece</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Organic Cotton French Terry {%- endcomment -%}
+            <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Organic Cotton French Terry" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/felpa_italiana_100_algodao_480.jpg?v=1762322440" alt="100% Organic Cotton French Terry texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Organic Cotton French Terry</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 70/30 Cotton-Poly {%- endcomment -%}
+            <button type="button" class="selection-card--visual fabric-option" data-fabric-type="70/30 Cotton-Poly" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/felpa_70_30_480.jpg?v=1762322440" alt="70/30 Cotton-Poly texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">70/30 Cotton-Poly</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 50/50 Cotton-Poly {%- endcomment -%}
+            <button type="button" class="selection-card--visual fabric-option" data-fabric-type="50/50 Cotton-Poly" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts,T-Shirt,Long Sleeve,Polo Shirt,Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/felpa_50-50_480.jpg?v=1762322441" alt="50/50 Cotton-Poly texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">50/50 Cotton-Poly</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Polyester {%- endcomment -%}
+            <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Polyester" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts,T-Shirt,Long Sleeve,Polo Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_polyester_felpa.jpg?v=1762322441" alt="100% Polyester texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Polyester</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Sherpa {%- endcomment -%}
+            <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Sherpa" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/sherpa_100_algodao.jpg?v=1762322441" alt="100% Cotton Sherpa texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Sherpa</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Organic Cotton Jersey {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Organic Cotton Jersey" data-garment-types="T-Shirt,Long Sleeve" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_organic_cotton_jersey.jpg?v=1762322440" alt="100% Organic Cotton Jersey texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Organic Cotton Jersey</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 95% Cotton 5% Elastan {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="95% Cotton 5% Elastan" data-garment-types="T-Shirt,Long Sleeve,Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/jersey_95-5.jpg?v=1762322440" alt="95% Cotton 5% Elastan texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">95% Cotton 5% Elastan</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 80/20 Cotton-Poly {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="80/20 Cotton-Poly" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/80-20_polycotton_fleece.jpg?v=1762322440" alt="80/20 Cotton-Poly texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">80/20 Cotton-Poly</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Recycled Polyester {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="Recycled Polyester" data-garment-types="T-Shirt,Long Sleeve" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/recycled_jersey.jpg?v=1762322440" alt="Recycled Polyester texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Recycled Polyester</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Poplin {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Poplin" data-garment-types="Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_cotton_poplin.jpg?v=1762322440" alt="100% Cotton Poplin texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Poplin</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Oxford {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Oxford" data-garment-types="Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_cotton_oxford.jpg?v=1762322440" alt="100% Cotton Oxford texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Oxford</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Twill {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Twill" data-garment-types="Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_cotton_twill.jpg?v=1762322440" alt="100% Cotton Twill texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Twill</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Canvas {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Canvas" data-garment-types="Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_cotton_canvas.jpg?v=1762322440" alt="100% Cotton Canvas texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Canvas</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Linen {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Linen" data-garment-types="Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_linen.jpg?v=1762322439" alt="100% Linen texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Linen</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 50/50 Linen Cotton {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="50/50 Linen Cotton" data-garment-types="Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/50-50_linen_cotton.jpg?v=1762322440" alt="50/50 Linen Cotton texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">50/50 Linen Cotton</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 55% Hemp / 45% Cotton {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="55% Hemp / 45% Cotton" data-garment-types="Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/55_hemp_45_cotton.jpg?v=1762322441" alt="55% Hemp / 45% Cotton texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">55% Hemp / 45% Cotton</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Piqué {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Piqué" data-garment-types="Polo Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_cotton_pique.jpg?v=1762322440" alt="100% Cotton Piqué texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Piqué</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 95/5 Cotton-Elastane Piqué {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="95/5 Cotton-Elastane Piqué" data-garment-types="Polo Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/95-5_pique_cotton.jpg?v=1762322440" alt="95/5 Cotton-Elastane Piqué texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">95/5 Cotton-Elastane Piqué</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 50/50 Cotton-Poly Piqué {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="50/50 Cotton-Poly Piqué" data-garment-types="Polo Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/50-50_poly_cotton_pique.jpg?v=1762322440" alt="50/50 Cotton-Poly Piqué texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">50/50 Cotton-Poly Piqué</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Polyester Piqué {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Polyester Piqué" data-garment-types="Polo Shirt" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_polyester_pique.jpg?v=1762322440" alt="100% Polyester Piqué texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Polyester Piqué</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Jersey (Tank Top) {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Jersey" data-garment-types="Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="20" y="20" width="80" height="80" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Jersey</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Slub Jersey {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Slub Jersey" data-garment-types="T-Shirt,Long Sleeve,Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_slub_jersey.jpg?v=1762322440" alt="100% Cotton Slub Jersey texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Slub Jersey</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Waffle Knit {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Waffle Knit" data-garment-types="T-Shirt,Long Sleeve,Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_cotton_waffle_knit.jpg?v=1762322440" alt="100% Cotton Waffle Knit texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Waffle Knit</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton Lightweight French Terry {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton Lightweight French Terry" data-garment-types="T-Shirt,Long Sleeve,Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_lightweight_french_terry.jpg?v=1762322441" alt="100% Cotton Lightweight French Terry texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton Lightweight French Terry</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Cotton 2x2 Rib Knit {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Cotton 2x2 Rib Knit" data-garment-types="T-Shirt,Long Sleeve,Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <img src="https://cdn.shopify.com/s/files/1/0936/4376/8132/files/100_cotton_2x2_rib_knit.jpg?v=1762322441" alt="100% Cotton 2x2 Rib Knit texture" width="480" height="480" loading="lazy">
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Cotton 2x2 Rib Knit</h4>
+              </div>
+            </button>
+{%- comment -%} 50/50 Cotton-Poly Jersey {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="50/50 Cotton-Poly Jersey" data-garment-types="Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="20" y="20" width="80" height="80" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">50/50 Cotton-Poly Jersey</h4>
+              </div>
+            </button>
+
+            {%- comment -%} 100% Polyester Mesh {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="100% Polyester Mesh" data-garment-types="Tank Top" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="20" y="20" width="80" height="80" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">100% Polyester Mesh</h4>
+              </div>
+            </button>
+{%- comment -%} Custom Fabric (Other garment type) {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="Custom Fabric" data-garment-types="Other" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="20" y="20" width="80" height="80" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Custom Fabric</h4>
+              </div>
+            </button>
+
+            {%- comment -%} Other (Always Available) {%- endcomment -%}
+                        <button type="button" class="selection-card--visual fabric-option" data-fabric-type="Other" data-garment-types="Zip Hoodie,Hoodie,Sweatshirt,Sweatpants,Shorts,T-Shirt,Long Sleeve,Shirt,Polo Shirt,Tank Top,Hat/Cap,Beanie,Other" data-action="sample-select-fabric-type">
+              <div class="selection-card--visual__image">
+                <span class="fabric-moq-badge fabric-moq-badge--300">300 MOQ</span>
+                <svg class="selection-card--visual__placeholder" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="20" y="20" width="80" height="80" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                </svg>
+              </div>
+              <div class="selection-card--visual__content">
+                <h4 class="selection-card--visual__title">Other</h4>
+              </div>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} REMOVED: Sample Type Selection - Now in Step 3B {%- endcomment -%}
+
+      {%- comment -%} Form Navigation {%- endcomment -%}
+      <div class="form-navigation" id="sampleFormNavigation">
+        <button
+          type="button"
+          class="button-secondary"
+          data-action="previous-step"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back to Files
+        </button>
+
+        <button
+          type="button"
+          class="button-primary"
+          data-action="next-step"
+          id="sampleContinueButton"
+        >
+          Continue to Color Selection
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{%- comment -%} Color Studio moved to Step 3B {%- endcomment -%}
+
+<script>
+  window.TECHPACK_V11_CUSTOMER = {
+    isLoggedIn: {{ customer | json }} !== null
+  };
+</script>
+
+{% render 'techpack-v11-theme-switcher' %}
+
+<script src="{{ 'techpack-v11-core.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-actions.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+<script src="{{ 'techpack-v11-sample.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+
+{% schema %}
+{
+  "name": "TP V11 Sample Step 3",
+  "class": "section-techpack-v11-step",
+  "settings": []
+}
+{% endschema %}
