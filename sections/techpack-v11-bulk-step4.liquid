@@ -15,62 +15,41 @@
 
 <div class="techpack-v11 techpack-flow" id="bulkStep4" data-section-id="{{ section.id }}" data-flow-type="bulk" data-current-step="4">
 
-  {%- comment -%} Progress Header {%- endcomment -%}
-  <div class="techpack-progress">
-    <div class="techpack-progress__container">
-      <button type="button" class="techpack-progress__back" data-action="previous-step">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>Back</span>
-      </button>
-
-      <div class="techpack-progress__steps">
-        <div class="progress-step progress-step--complete" data-step="1">
-          <div class="progress-step__circle">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  {%- comment -%} Progress Bar Header {%- endcomment -%}
+  <div class="techpack-progress-bar">
+    <div class="techpack-progress-bar__container">
+      <div class="techpack-progress-bar__wrapper">
+        <div class="progress-bar__labels">
+          <div class="progress-bar__label progress-bar__label--complete">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11.667 3.5L5.25 9.917L2.333 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
+            <span>Client Info</span>
           </div>
-          <div class="progress-step__label">Client Info</div>
-        </div>
-        <div class="progress-step__line"></div>
-        <div class="progress-step progress-step--complete" data-step="2">
-          <div class="progress-step__circle">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <div class="progress-bar__label progress-bar__label--complete">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11.667 3.5L5.25 9.917L2.333 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
+            <span>Files</span>
           </div>
-          <div class="progress-step__label">Files</div>
-        </div>
-        <div class="progress-step__line"></div>
-        <div class="progress-step progress-step--complete" data-step="3">
-          <div class="progress-step__circle">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <div class="progress-bar__label progress-bar__label--complete">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11.667 3.5L5.25 9.917L2.333 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
+            <span>Garments</span>
           </div>
-          <div class="progress-step__label">Garments</div>
+          <div class="progress-bar__label progress-bar__label--active">
+            <div class="progress-bar__marker"></div>
+            <span>Colors</span>
+          </div>
+          <div class="progress-bar__label">
+            <span>Review</span>
+          </div>
         </div>
-        <div class="progress-step__line"></div>
-        <div class="progress-step progress-step--active" data-step="4">
-          <div class="progress-step__circle">4</div>
-          <div class="progress-step__label">Colors</div>
+        <div class="progress-bar__track">
+          <div class="progress-bar__fill" style="width: 60%;"></div>
         </div>
-        <div class="progress-step__line"></div>
-        <div class="progress-step" data-step="5">
-          <div class="progress-step__circle">5</div>
-          <div class="progress-step__label">Review</div>
-        </div>
-      </div>
-
-      <div class="techpack-progress__save">
-        <div class="save-indicator" id="saveIndicator">
-          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="save-indicator__text">All saved</span>
-        </div>
+        <div class="progress-bar__percentage">Step 4 of 5 • 60% Complete</div>
       </div>
     </div>
   </div>
@@ -79,13 +58,25 @@
   <div class="techpack-content">
     <div class="techpack-content__container techpack-content__container--wide">
 
-      {%- comment -%} Step Header {%- endcomment -%}
-      <header class="step-header">
-        <div class="step-header__badge">Step 4 of 5</div>
-        <h1 class="step-header__title">Configure Colorways & Quantities</h1>
-        <p class="step-header__description">
-          Add colors with quantities and size distributions for each garment
-        </p>
+      {%- comment -%} Premium Header {%- endcomment -%}
+      <header class="premium-header">
+        <div class="premium-header__card">
+          <div class="premium-header__icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 12h24M4 20h24M12 4v24M20 4v24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="8" cy="8" r="2" fill="currentColor"/>
+              <circle cx="24" cy="8" r="2" fill="currentColor"/>
+              <circle cx="8" cy="24" r="2" fill="currentColor"/>
+              <circle cx="24" cy="24" r="2" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="premium-header__content">
+            <h1 class="premium-header__title">Configure Colorways & Quantities</h1>
+            <p class="premium-header__description">
+              Add colors with quantities and size distributions for each garment
+            </p>
+          </div>
+        </div>
       </header>
 
       {%- comment -%} MOQ Progress Bar {%- endcomment -%}
@@ -200,7 +191,7 @@
       </div>
 
       {%- comment -%} Form Navigation {%- endcomment -%}
-      <div class="form-navigation" id="bulkStep4Navigation">
+      <div class="form-navigation form-navigation--three-buttons" id="bulkStep4Navigation">
         <button
           type="button"
           class="button-secondary"
@@ -210,6 +201,18 @@
             <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           Back to Garments
+        </button>
+
+        <button
+          type="button"
+          class="button-secondary button-save-draft"
+          data-action="save-draft"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.833 17.5H4.167c-.92 0-1.667-.746-1.667-1.667V4.167c0-.92.746-1.667 1.667-1.667h8.333L15.833 5.833v10c0 .92-.746 1.667-1.666 1.667z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13.333 17.5v-6.667H6.667V17.5M6.667 2.5V5.833h5.833" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Save Draft
         </button>
 
         <button

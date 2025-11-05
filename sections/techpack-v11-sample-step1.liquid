@@ -27,51 +27,38 @@
     </div>
   </div>
 
-  {%- comment -%} Progress Header {%- endcomment -%}
-  <div class="techpack-progress">
-    <div class="techpack-progress__container">
+  {%- comment -%} Progress Bar Header {%- endcomment -%}
+  <div class="techpack-progress-bar">
+    <div class="techpack-progress-bar__container">
+      <div class="techpack-progress-bar__wrapper">
+        {%- comment -%} Step Labels Above Bar {%- endcomment -%}
+        <div class="progress-bar__labels">
+          <div class="progress-bar__label progress-bar__label--active">
+            <div class="progress-bar__marker"></div>
+            <span>Client Info</span>
+          </div>
+          <div class="progress-bar__label">
+            <span>Files</span>
+          </div>
+          <div class="progress-bar__label">
+            <span>Garments</span>
+          </div>
+          <div class="progress-bar__label">
+            <span>Colors</span>
+          </div>
+          <div class="progress-bar__label">
+            <span>Review</span>
+          </div>
+        </div>
 
-      {%- comment -%} Back Button {%- endcomment -%}
-      <a href="/pages/techpack-studio" class="techpack-progress__back">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>Back</span>
-      </a>
+        {%- comment -%} Progress Bar Track {%- endcomment -%}
+        <div class="progress-bar__track">
+          <div class="progress-bar__fill" style="width: 0%;"></div>
+        </div>
 
-      {%- comment -%} Progress Steps {%- endcomment -%}
-      <div class="techpack-progress__steps">
-        <div class="progress-step progress-step--active" data-step="1">
-          <div class="progress-step__circle">1</div>
-          <div class="progress-step__label">Client Info</div>
-        </div>
-        <div class="progress-step__line"></div>
-        <div class="progress-step" data-step="2">
-          <div class="progress-step__circle">2</div>
-          <div class="progress-step__label">Files</div>
-        </div>
-        <div class="progress-step__line"></div>
-        <div class="progress-step" data-step="3">
-          <div class="progress-step__circle">3</div>
-          <div class="progress-step__label">Garments</div>
-        </div>
-        <div class="progress-step__line"></div>
-        <div class="progress-step" data-step="4">
-          <div class="progress-step__circle">4</div>
-          <div class="progress-step__label">Review</div>
-        </div>
+        {%- comment -%} Progress Percentage {%- endcomment -%}
+        <div class="progress-bar__percentage">Step 1 of 5 • 0% Complete</div>
       </div>
-
-      {%- comment -%} Save Status {%- endcomment -%}
-      <div class="techpack-progress__save">
-        <div class="save-indicator" id="saveIndicator">
-          <svg class="save-indicator__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.333 4L6 11.333L2.667 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="save-indicator__text">All saved</span>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -79,13 +66,22 @@
   <div class="techpack-content">
     <div class="techpack-content__container">
 
-      {%- comment -%} Step Header {%- endcomment -%}
-      <header class="step-header">
-        <div class="step-header__badge">Step 1 of 4</div>
-        <h1 class="step-header__title">Client Information</h1>
-        <p class="step-header__description">
-          Tell us about your brand and where to send your samples.
-        </p>
+      {%- comment -%} Premium Header {%- endcomment -%}
+      <header class="premium-header">
+        <div class="premium-header__card">
+          <div class="premium-header__icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 28c6.627 0 12-5.373 12-12S22.627 4 16 4 4 9.373 4 16s5.373 12 12 12z" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 12v8M12 16h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="premium-header__content">
+            <h1 class="premium-header__title">Client Information</h1>
+            <p class="premium-header__description">
+              Tell us about your brand and where to send your samples
+            </p>
+          </div>
+        </div>
       </header>
 
       {%- comment -%} Form Content {%- endcomment -%}
