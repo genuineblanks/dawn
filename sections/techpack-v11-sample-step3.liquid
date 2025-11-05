@@ -152,6 +152,19 @@
 
       {%- comment -%} STEP 1: Garment Type Selection (Hidden Initially) {%- endcomment -%}
       <div class="selection-step" id="sampleGarmentTypeStep" style="display: none;">
+        {%- comment -%} Selection Header Bar {%- endcomment -%}
+        <div class="selection-header">
+          <div class="selection-header__status">
+            <h3 class="selection-header__title" id="sampleSelectionModeTitle">Adding New Garment</h3>
+            <p class="selection-header__progress">Step 1 of 2: Select Type</p>
+          </div>
+          <button type="button" class="selection-header__close" data-action="sample-cancel-selection" aria-label="Cancel">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
         <div class="form-section">
           <div class="section-header">
             <h3 class="section-header__title">Select Garment Type</h3>
@@ -297,6 +310,19 @@
 
       {%- comment -%} STEP 2: Fabric Type Selection (Hidden Initially) {%- endcomment -%}
       <div class="selection-step" id="sampleFabricTypeStep" style="display: none;">
+        {%- comment -%} Selection Header Bar {%- endcomment -%}
+        <div class="selection-header">
+          <div class="selection-header__status">
+            <h3 class="selection-header__title" id="sampleSelectionModeTitleFabric">Adding New Garment</h3>
+            <p class="selection-header__progress">Step 2 of 2: Select Fabric</p>
+          </div>
+          <button type="button" class="selection-header__close" data-action="sample-cancel-selection" aria-label="Cancel">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
         <div class="form-section">
           <div class="section-header">
             <div class="section-header__title-row">
