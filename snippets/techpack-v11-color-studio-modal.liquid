@@ -214,7 +214,8 @@
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            Add to Lab Dip Cart
+            <span class="modal-btn-text--sample">Add to Lab Dip Cart</span>
+            <span class="modal-btn-text--bulk" style="display:none;">Add to Bulk Color Cart</span>
           </button>
 
           {%- comment -%} Assign to Garment Button {%- endcomment -%}
@@ -238,8 +239,14 @@
 
         {%- comment -%} Cart Preview (syncs with main page) {%- endcomment -%}
         <div class="modal-cart-preview">
-          <h3 class="modal-collection-title">Your Lab Dip Cart</h3>
-          <p class="modal-collection-description">Swatches for approval (€25.00 each)</p>
+          <h3 class="modal-collection-title">
+            <span class="modal-cart-title--sample">Your Lab Dip Cart</span>
+            <span class="modal-cart-title--bulk" style="display:none;">Bulk Color Cart</span>
+          </h3>
+          <p class="modal-collection-description">
+            <span class="modal-cart-desc--sample">Swatches for approval (€25.00 each)</span>
+            <span class="modal-cart-desc--bulk" style="display:none;">Manage your colorways for bulk production</span>
+          </p>
 
           {%- comment -%} Empty State {%- endcomment -%}
           <div class="modal-cart-empty" id="modalCartEmpty" style="display: flex;">
@@ -257,7 +264,8 @@
           </div>
 
           <div class="modal-cart-total" id="modalCartTotal">
-            Total: 0 swatches (€0.00)
+            <span class="modal-cart-total--sample">Total: 0 swatches (€0.00)</span>
+            <span class="modal-cart-total--bulk" style="display:none;">0 colors</span>
           </div>
         </div>
 
