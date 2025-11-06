@@ -657,6 +657,10 @@
 
 {%- comment -%} Color Studio moved to Step 3B {%- endcomment -%}
 
+{%- comment -%} Lab Dip Modals (Step 3B) {%- endcomment -%}
+{% render 'techpack-v11-modal-apply-color' %}
+{% render 'techpack-v11-modal-duplicate-labdips' %}
+
 <script>
   window.TECHPACK_V11_CUSTOMER = {
     isLoggedIn: {{ customer | json }} !== null

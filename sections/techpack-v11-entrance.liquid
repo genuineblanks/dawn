@@ -8,45 +8,109 @@
 {{ 'techpack-v11-entrance.css' | asset_url | stylesheet_tag }}
 {{ 'techpack-v11-modals.css' | asset_url | stylesheet_tag }}
 
+<style>
+  /* Hide theme header and footer on entrance page */
+  .section-techpack-v11-entrance ~ * {
+    display: none !important;
+  }
+  body:has(.section-techpack-v11-entrance) .shopify-section-header,
+  body:has(.section-techpack-v11-entrance) header,
+  body:has(.section-techpack-v11-entrance) footer {
+    display: none !important;
+  }
+</style>
+
 <div class="techpack-v11" data-section-id="{{ section.id }}" data-section-type="techpack-entrance">
 
-  {%- comment -%} Premium Top Bar (Horizontal Layout) {%- endcomment -%}
-  <div class="techpack-v11__top-bar">
-    <div class="top-bar__container">
+  {%- comment -%} Standalone Navigation Header {%- endcomment -%}
+  <div class="techpack-v11__standalone-header">
+    <div class="standalone-header__container">
 
-      {%- comment -%} Left: Download Button {%- endcomment -%}
-      <a
-        href="{{ section.settings.template_download_url | default: '#' }}"
-        class="top-bar__download-btn"
-        {% if section.settings.template_download_url != blank %}download{% endif %}
-        aria-label="Download techpack template"
-      >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17 13V15C17 15.5304 16.7893 16.0391 16.4142 16.4142C16.0391 16.7893 15.5304 17 15 17H5C4.46957 17 3.96086 16.7893 3.58579 16.4142C3.21071 16.0391 3 15.5304 3 15V13M6 9L10 13M10 13L14 9M10 13V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="top-bar__download-text">Download our techpack templates</span>
+      {%- comment -%} Left: Logo {%- endcomment -%}
+      <a href="/" class="standalone-header__logo" aria-label="Homepage">
+        {% if section.settings.logo_image != blank %}
+          <img
+            src="{{ section.settings.logo_image | image_url: width: 180 }}"
+            alt="{{ shop.name }}"
+            width="180"
+            height="auto"
+            loading="eager"
+          >
+        {% else %}
+          <span class="standalone-header__logo-text">{{ shop.name }}</span>
+        {% endif %}
       </a>
 
-      {%- comment -%} Right: Theme Toggle {%- endcomment -%}
-      <button
-        type="button"
-        class="top-bar__theme-toggle"
-        id="themeToggle"
-        aria-label="Toggle theme"
-        data-theme="light"
-      >
-        <svg class="theme-icon theme-icon--light" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M10 2V4M10 16V18M18 10H16M4 10H2M15.657 4.343L14.243 5.757M5.757 14.243L4.343 15.657M15.657 15.657L14.243 14.243M5.757 5.757L4.343 4.343" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <svg class="theme-icon theme-icon--dark" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="top-bar__theme-label">
-          <span class="theme-label--light">Light</span>
-          <span class="theme-label--dark">Dark</span>
-        </span>
-      </button>
+      {%- comment -%} Center: Navigation Links {%- endcomment -%}
+      <nav class="standalone-header__nav">
+        <a href="/" class="nav-link">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.25 6.75L9 1.5L15.75 6.75V15C15.75 15.3978 15.592 15.7794 15.3107 16.0607C15.0294 16.342 14.6478 16.5 14.25 16.5H3.75C3.35218 16.5 2.97064 16.342 2.68934 16.0607C2.40804 15.7794 2.25 15.3978 2.25 15V6.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6.75 16.5V9H11.25V16.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Homepage</span>
+        </a>
+        <a href="https://www.genuineblanks.com/pages/instant-quote" class="nav-link">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.5 3H4.5C3.67157 3 3 3.67157 3 4.5V13.5C3 14.3284 3.67157 15 4.5 15H13.5C14.3284 15 15 14.3284 15 13.5V4.5C15 3.67157 14.3284 3 13.5 3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 7.5H12M6 10.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Pricing Calculator</span>
+        </a>
+        <a
+          href="{{ section.settings.template_download_url | default: '#' }}"
+          class="nav-link"
+          {% if section.settings.template_download_url != blank %}download{% endif %}
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 11.25V13.5C15 13.8978 14.842 14.2794 14.5607 14.5607C14.2794 14.842 13.8978 15 13.5 15H4.5C4.10218 15 3.72064 14.842 3.43934 14.5607C3.15804 14.2794 3 13.8978 3 13.5V11.25M6 7.5L9 10.5M9 10.5L12 7.5M9 10.5V2.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Download Techpack</span>
+        </a>
+        {% if customer %}
+          <a href="/account" class="nav-link nav-link--highlight">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 15.75V14.25C15 13.4544 14.6839 12.6913 14.1213 12.1287C13.5587 11.5661 12.7956 11.25 12 11.25H6C5.20435 11.25 4.44129 11.5661 3.87868 12.1287C3.31607 12.6913 3 13.4544 3 14.25V15.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="9" cy="5.25" r="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        {% else %}
+          <a href="/account/login" class="nav-link nav-link--highlight">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 12.75L15.75 9M15.75 9L12 5.25M15.75 9H6.75M6.75 2.25H5.25C4.85218 2.25 4.47064 2.40804 4.18934 2.68934C3.90804 2.97064 3.75 3.35218 3.75 3.75V14.25C3.75 14.6478 3.90804 15.0294 4.18934 15.3107C4.47064 15.592 4.85218 15.75 5.25 15.75H6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Account Login</span>
+          </a>
+        {% endif %}
+      </nav>
+
+      {%- comment -%} Right: Theme Toggle (Two Buttons) {%- endcomment -%}
+      <div class="standalone-header__theme-toggle">
+        <button
+          type="button"
+          class="theme-btn theme-btn--light"
+          data-theme-set="light"
+          aria-label="Switch to light mode"
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="9" cy="9" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M9 1.5V2.5M9 15.5V16.5M16.5 9H15.5M2.5 9H1.5M14.303 3.697L13.596 4.404M4.404 13.596L3.697 14.303M14.303 14.303L13.596 13.596M4.404 4.404L3.697 3.697" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Light</span>
+        </button>
+        <button
+          type="button"
+          class="theme-btn theme-btn--dark"
+          data-theme-set="dark"
+          aria-label="Switch to dark mode"
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.513 11.763A7 7 0 116.237 2.487a7.001 7.001 0 009.276 9.276z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Dark</span>
+        </button>
+      </div>
 
     </div>
   </div>
