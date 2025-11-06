@@ -17,18 +17,16 @@
         "padding_bottom": 0
       }
     },
-    "techpack_v11_quotation_step1_EjRWnA": {
-      "type": "techpack-v11-quotation-step1",
-      "name": "TechPack V11 - Quotation Step 1",
+    "techpack_v11_calculator_HpEDBF": {
+      "type": "techpack-v11-calculator",
+      "name": "TechPack Calculator",
       "settings": {
-        "enable_test_mode": false,
-        "moq_minimum": 75,
-        "quantity_max": 5000
+        "enable_calculator": true
       }
     }
   },
   "order": [
     "main",
-    "techpack_v11_quotation_step1_EjRWnA"
+    "techpack_v11_calculator_HpEDBF"
   ]
 }
