@@ -436,24 +436,26 @@
       let distribution = {};
 
       if (preset === 'even') {
-        // Even Split: Equal distribution
-        const perSize = Math.floor(total / 6);
-        const remainder = total % 6;
+        // Even Split: Equal distribution across 7 sizes (XXS-XXL)
+        const perSize = Math.floor(total / 7);
+        const remainder = total % 7;
         distribution = {
-          XS: perSize + (remainder > 0 ? 1 : 0),
-          S: perSize + (remainder > 1 ? 1 : 0),
-          M: perSize + (remainder > 2 ? 1 : 0),
-          L: perSize + (remainder > 3 ? 1 : 0),
-          XL: perSize + (remainder > 4 ? 1 : 0),
-          XXL: perSize + (remainder > 5 ? 1 : 0)
+          XXS: perSize + (remainder > 0 ? 1 : 0),
+          XS: perSize + (remainder > 1 ? 1 : 0),
+          S: perSize + (remainder > 2 ? 1 : 0),
+          M: perSize + (remainder > 3 ? 1 : 0),
+          L: perSize + (remainder > 4 ? 1 : 0),
+          XL: perSize + (remainder > 5 ? 1 : 0),
+          XXL: perSize + (remainder > 6 ? 1 : 0)
         };
       } else if (preset === 'bell') {
-        // Bell Curve: XS:10%, S:20%, M:30%, L:25%, XL:10%, XXL:5%
+        // Bell Curve: XXS:5%, XS:10%, S:20%, M:30%, L:20%, XL:10%, XXL:5%
         distribution = {
+          XXS: Math.round(total * 0.05),
           XS: Math.round(total * 0.10),
           S: Math.round(total * 0.20),
           M: Math.round(total * 0.30),
-          L: Math.round(total * 0.25),
+          L: Math.round(total * 0.20),
           XL: Math.round(total * 0.10),
           XXL: Math.round(total * 0.05)
         };
@@ -463,8 +465,9 @@
           distribution.M += (total - sum);
         }
       } else if (preset === 'popular') {
-        // Popular Sizes: XS:5%, S:30%, M:35%, L:25%, XL:5%, XXL:0%
+        // Popular Sizes: XXS:0%, XS:5%, S:30%, M:35%, L:25%, XL:5%, XXL:0%
         distribution = {
+          XXS: 0,
           XS: Math.round(total * 0.05),
           S: Math.round(total * 0.30),
           M: Math.round(total * 0.35),
@@ -780,6 +783,7 @@
         pantoneColor: colorData.pantoneColor || null,
         techpackRef: colorData.techpackRef || null,
         sizes: {
+          XXS: 0,
           XS: 0,
           S: 0,
           M: 0,
@@ -1047,7 +1051,7 @@
      */
     renderSingleColorway: function(garmentId, colorway) {
       const total = this.calculateColorwayTotal(colorway);
-      const sizes = colorway.sizes || {XS:0, S:0, M:0, L:0, XL:0, XXL:0};
+      const sizes = colorway.sizes || {XXS:0, XS:0, S:0, M:0, L:0, XL:0, XXL:0};
 
       // Build color type display
       let colorTypeDisplay = '';
@@ -1092,6 +1096,20 @@
           </div>
 
           <div class="colorway-size-inputs">
+            <div class="size-input-field">
+              <label>XXS</label>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                value="${sizes.XXS > 0 ? sizes.XXS : ''}"
+                data-action="update-colorway-size"
+                data-garment-id="${garmentId}"
+                data-colorway-id="${colorway.id}"
+                data-size="XXS"
+                placeholder="—"
+              />
+            </div>
             <div class="size-input-field">
               <label>XS</label>
               <input
@@ -1283,13 +1301,14 @@
 
       return `
         <div class="garment-color-card ${garmentStateClass}" data-garment-id="${garment.id}">
-          <div class="garment-color-card__main">
+          <!-- Header Section: Image + Title + Buttons (2-column layout) -->
+          <div class="garment-color-card__header-section">
             <div class="garment-color-card__image-wrapper">
               <div class="garment-color-card__number">#${garment.number}</div>
               <img src="${imageUrl}" alt="${garment.type}" class="garment-color-card__image" loading="lazy">
             </div>
 
-            <div class="garment-color-card__content">
+            <div class="garment-color-card__header-content">
               <div class="garment-color-card__header">
                 <div class="garment-color-card__info">
                   <h4 class="garment-color-card__type">${garment.type}</h4>
@@ -1335,14 +1354,17 @@
                   <span class="color-option-btn__badge">2-6 weeks</span>
                 </button>
               </div>
-
-              <div class="garment-color-card__expansion" id="expansion-${garment.id}" style="display: none;"></div>
-
-              ${colorwaySection}
-
-              ${toolbarHTML}
             </div>
           </div>
+
+          <!-- Expansion Section: Stock/Pantone/Techpack color grids (full width) -->
+          <div class="garment-color-card__expansion" id="expansion-${garment.id}" style="display: none;"></div>
+
+          <!-- Colorways Section: Full-width colorway list (no white space) -->
+          ${colorwaySection}
+
+          <!-- Toolbar Section: Size distribution tools (full width) -->
+          ${toolbarHTML}
         </div>
       `;
     },

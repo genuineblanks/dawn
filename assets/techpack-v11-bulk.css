@@ -621,14 +621,20 @@
   transform: scale(1.1);
 }
 
-/* Size input grid: 6 fields (XS-XXL) */
+/* Size input grid: 7 fields (XXS-XXL) */
 .colorway-size-inputs {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: var(--space-3);
 }
 
 @media (max-width: 750px) {
+  .colorway-size-inputs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
   .colorway-size-inputs {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1536,10 +1542,12 @@
    GARMENT CARD STRUCTURE - Step 4 Inline Colorway System
    ============================================================================ */
 
-.garment-color-card__main {
+/* Header Section: 2-column layout (image + content) */
+.garment-color-card__header-section {
   display: flex !important;
   gap: 1rem !important;
   align-items: flex-start !important;
+  margin-bottom: var(--space-4);
 }
 
 .garment-color-card__image-wrapper {
@@ -1576,7 +1584,8 @@
   z-index: 2 !important;
 }
 
-.garment-color-card__content {
+/* Header Content: Title + Buttons (right column of header) */
+.garment-color-card__header-content {
   flex: 1 !important;
   display: flex !important;
   flex-direction: column !important;
