@@ -34,7 +34,27 @@
         </div>
       </section>
 
-      {%- comment -%} 2. SPECIFICATIONS {%- endcomment -%}
+      {%- comment -%} 2. FABRIC TYPE SELECTION (Dynamic based on garment) {%- endcomment -%}
+      <section class="calculator-section" id="fabricTypeSelection" style="display: none;">
+        <div class="section-header">
+          <h2 class="section-header__title">Select Fabric Type</h2>
+        </div>
+        <div class="button-group">
+          {%- comment -%} Fabric type buttons will be populated by JavaScript {%- endcomment -%}
+        </div>
+      </section>
+
+      {%- comment -%} 3. GSM SELECTION (Dynamic based on fabric type) {%- endcomment -%}
+      <section class="calculator-section" id="gsmSelection" style="display: none;">
+        <div class="section-header">
+          <h2 class="section-header__title">Select Fabric Weight (GSM)</h2>
+        </div>
+        <div class="button-group button-group--wrap">
+          {%- comment -%} GSM buttons will be populated by JavaScript {%- endcomment -%}
+        </div>
+      </section>
+
+      {%- comment -%} 4. SPECIFICATIONS {%- endcomment -%}
       <section class="calculator-section" id="specifications">
         <div class="section-header">
           <h2 class="section-header__title">Specification</h2>
@@ -61,23 +81,6 @@
             </select>
           </div>
 
-          {%- comment -%} Fabric Type {%- endcomment -%}
-          <div class="spec-field">
-            <label class="spec-label">
-              <span>Fabric Type</span>
-              <button type="button" class="info-tooltip" data-tooltip="fabric-type">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </button>
-            </label>
-            <div class="button-group">
-              <button type="button" class="button-option" data-option="fabric-type" data-value="Jersey">Jersey</button>
-              <button type="button" class="button-option" data-option="fabric-type" data-value="Waffle Knit">Waffle Knit</button>
-            </div>
-          </div>
-
           {%- comment -%} Fabric Color {%- endcomment -%}
           <div class="spec-field">
             <label class="spec-label">
@@ -98,27 +101,8 @@
             </div>
           </div>
 
-          {%- comment -%} Fabric Weight (GSM) {%- endcomment -%}
-          <div class="spec-field">
-            <label class="spec-label">
-              <span>Fabric Weight</span>
-              <button type="button" class="info-tooltip" data-tooltip="fabric-weight">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </button>
-            </label>
-            <div class="button-group button-group--wrap">
-              <button type="button" class="button-option" data-option="fabric-weight" data-value="185 GSM organic">185 GSM organic</button>
-              <button type="button" class="button-option" data-option="fabric-weight" data-value="235 GSM">235 GSM</button>
-              <button type="button" class="button-option" data-option="fabric-weight" data-value="235 GSM organic">235 GSM organic</button>
-              <button type="button" class="button-option" data-option="fabric-weight" data-value="295 GSM">295 GSM</button>
-            </div>
-          </div>
-
-          {%- comment -%} Fade Out Dye {%- endcomment -%}
-          <div class="spec-field">
+          {%- comment -%} Fade Out Dye (Only shown for cotton fabrics - controlled by JS) {%- endcomment -%}
+          <div class="spec-field" data-field="fade-out" style="display: none;">
             <label class="spec-label">
               <span>Fade Out Dye</span>
               <button type="button" class="info-tooltip" data-tooltip="fade-out">
@@ -181,12 +165,6 @@
               <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
             Add Sunfade
-          </button>
-          <button type="button" class="button-add-embellishment" data-method="Stitching">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Add Stitching
           </button>
         </div>
 
@@ -260,6 +238,23 @@
               <span class="quantity-units">pieces</span>
             </div>
           </div>
+
+          {%- comment -%} CTA Buttons {%- endcomment -%}
+          <div class="quantity-cta-buttons">
+            <a href="/pages/techpack-studio-v11" class="cta-button cta-button--primary">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Start TechPack Studio
+            </a>
+            <a href="mailto:contact@genuineblanks.com" class="cta-button cta-button--secondary">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M3 4h14a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M18 5l-8 6-8-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Contact Us
+            </a>
+          </div>
         </div>
       </section>
 
@@ -272,22 +267,22 @@
         <div class="results-metrics">
           <div class="result-metric">
             <div class="result-metric__label">Timeline</div>
-            <div class="result-metric__value" id="resultTimeline">5.5 weeks</div>
+            <div class="result-metric__value" id="resultTimeline">2-3 weeks</div>
           </div>
 
           <div class="result-metric">
             <div class="result-metric__label">Unit Cost</div>
-            <div class="result-metric__value" id="resultUnitCost">13.35€</div>
+            <div class="result-metric__value" id="resultUnitCost">0.00€</div>
           </div>
 
           <div class="result-metric">
             <div class="result-metric__label">Development Costs</div>
-            <div class="result-metric__value" id="resultDevCosts">20.00€</div>
+            <div class="result-metric__value" id="resultDevCosts">0.00€</div>
           </div>
 
           <div class="result-metric result-metric--total">
             <div class="result-metric__label">Total</div>
-            <div class="result-metric__value" id="resultTotal">4'025.00€</div>
+            <div class="result-metric__value" id="resultTotal">0.00€</div>
           </div>
         </div>
 
