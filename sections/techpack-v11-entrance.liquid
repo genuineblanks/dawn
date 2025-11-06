@@ -128,10 +128,18 @@
 
       <div class="techpack-v11__headline">
         <h2 class="techpack-v11__title">
-          {{ section.settings.headline | default: "TechPack Studio" }}
+          {% if section.settings.headline != blank %}
+            {{ section.settings.headline }}
+          {% else %}
+            TechPack Studio
+          {% endif %}
         </h2>
         <p class="techpack-v11__subtitle">
-          {{ section.settings.subheadline | default: "Professional garment production requests in minutes" }}
+          {% if section.settings.subheadline != blank %}
+            {{ section.settings.subheadline }}
+          {% else %}
+            Professional garment production requests in minutes
+          {% endif %}
         </p>
         <div class="techpack-v11__value-props">
           <span class="value-prop">Direct manufacturer access</span>
