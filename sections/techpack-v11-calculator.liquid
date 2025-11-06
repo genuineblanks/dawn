@@ -1,0 +1,337 @@
+{% comment %}
+  TechPack V11 - Pricing Calculator
+  Purpose: Luxurious single-page calculator for estimating garment production costs
+  Flow: Visual selections → Real-time pricing → Quote generation
+{% endcomment %}
+
+{{ 'techpack-v11-base.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-v11-calculator.css' | asset_url | stylesheet_tag }}
+
+<div class="techpack-v11 calculator-page" id="calculatorMain" data-section-id="{{ section.id }}">
+
+  {%- comment -%} Calculator Container {%- endcomment -%}
+  <div class="calculator-container">
+
+    {%- comment -%} Header {%- endcomment -%}
+    <header class="calculator-header">
+      <h1 class="calculator-header__title">Price Calculator</h1>
+      <p class="calculator-header__description">
+        Quickly estimate your garment production costs with full transparency, powered by the GENUINEBLANKS supply chain.
+      </p>
+    </header>
+
+    {%- comment -%} Calculator Form {%- endcomment -%}
+    <div class="calculator-form">
+
+      {%- comment -%} 1. GARMENT SELECTION {%- endcomment -%}
+      <section class="calculator-section" id="garmentSelection">
+        <div class="section-header">
+          <h2 class="section-header__title">Choose a Garment</h2>
+        </div>
+
+        <div class="garment-grid">
+          {%- comment -%} Garment cards will be populated by JavaScript {%- endcomment -%}
+        </div>
+      </section>
+
+      {%- comment -%} 2. SPECIFICATIONS {%- endcomment -%}
+      <section class="calculator-section" id="specifications">
+        <div class="section-header">
+          <h2 class="section-header__title">Specification</h2>
+        </div>
+
+        <div class="spec-grid">
+
+          {%- comment -%} Fit {%- endcomment -%}
+          <div class="spec-field">
+            <label class="spec-label">
+              <span>Fit</span>
+              <button type="button" class="info-tooltip" data-tooltip="garment-fit">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </label>
+            <select class="spec-dropdown" id="fitSelect">
+              <option value="Boxy Fit">Boxy Fit</option>
+              <option value="Regular Fit">Regular Fit</option>
+              <option value="Slim Fit">Slim Fit</option>
+              <option value="Oversized">Oversized</option>
+            </select>
+          </div>
+
+          {%- comment -%} Fabric Type {%- endcomment -%}
+          <div class="spec-field">
+            <label class="spec-label">
+              <span>Fabric Type</span>
+              <button type="button" class="info-tooltip" data-tooltip="fabric-type">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </label>
+            <div class="button-group">
+              <button type="button" class="button-option" data-option="fabric-type" data-value="Jersey">Jersey</button>
+              <button type="button" class="button-option" data-option="fabric-type" data-value="Waffle Knit">Waffle Knit</button>
+            </div>
+          </div>
+
+          {%- comment -%} Fabric Color {%- endcomment -%}
+          <div class="spec-field">
+            <label class="spec-label">
+              <span>Fabric Color</span>
+              <button type="button" class="info-tooltip" data-tooltip="fabric-color">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </label>
+            <div class="button-group button-group--wrap">
+              <button type="button" class="button-option" data-option="fabric-color" data-value="White">White</button>
+              <button type="button" class="button-option" data-option="fabric-color" data-value="White RTD">White RTD</button>
+              <button type="button" class="button-option" data-option="fabric-color" data-value="Black">Black</button>
+              <button type="button" class="button-option" data-option="fabric-color" data-value="Heather Grey">Heather Grey</button>
+              <button type="button" class="button-option" data-option="fabric-color" data-value="Custom Color">Custom Color</button>
+            </div>
+          </div>
+
+          {%- comment -%} Fabric Weight (GSM) {%- endcomment -%}
+          <div class="spec-field">
+            <label class="spec-label">
+              <span>Fabric Weight</span>
+              <button type="button" class="info-tooltip" data-tooltip="fabric-weight">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </label>
+            <div class="button-group button-group--wrap">
+              <button type="button" class="button-option" data-option="fabric-weight" data-value="185 GSM organic">185 GSM organic</button>
+              <button type="button" class="button-option" data-option="fabric-weight" data-value="235 GSM">235 GSM</button>
+              <button type="button" class="button-option" data-option="fabric-weight" data-value="235 GSM organic">235 GSM organic</button>
+              <button type="button" class="button-option" data-option="fabric-weight" data-value="295 GSM">295 GSM</button>
+            </div>
+          </div>
+
+          {%- comment -%} Fade Out Dye {%- endcomment -%}
+          <div class="spec-field">
+            <label class="spec-label">
+              <span>Fade Out Dye</span>
+              <button type="button" class="info-tooltip" data-tooltip="fade-out">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </label>
+            <div class="button-group">
+              <button type="button" class="button-option" data-option="fade-out" data-value="Yes">Yes</button>
+              <button type="button" class="button-option" data-option="fade-out" data-value="No">No</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {%- comment -%} 3. EMBELLISHMENTS {%- endcomment -%}
+      <section class="calculator-section" id="embellishments">
+        <div class="section-header">
+          <div class="section-header__title-row">
+            <h2 class="section-header__title">Embellishments</h2>
+            <button type="button" class="info-tooltip" data-tooltip="embellishments">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="embellishments-actions">
+          <button type="button" class="button-add-embellishment" data-method="DTG Print">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add DTG Print
+          </button>
+          <button type="button" class="button-add-embellishment" data-method="Screen Print">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Screen Print
+          </button>
+          <button type="button" class="button-add-embellishment" data-method="Embroidery">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Embroidery
+          </button>
+          <button type="button" class="button-add-embellishment" data-method="Distressing">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Distressing
+          </button>
+          <button type="button" class="button-add-embellishment" data-method="Sunfade">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Sunfade
+          </button>
+          <button type="button" class="button-add-embellishment" data-method="Stitching">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Stitching
+          </button>
+        </div>
+
+        <div class="embellishments-list" id="embellishmentsList">
+          {%- comment -%} Embellishment items will be added by JavaScript {%- endcomment -%}
+        </div>
+      </section>
+
+      {%- comment -%} 4. CUSTOM LABELS {%- endcomment -%}
+      <section class="calculator-section" id="customLabels">
+        <div class="section-header">
+          <h2 class="section-header__title">Custom Labels</h2>
+          <button type="button" class="info-tooltip" data-tooltip="custom-labels">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 11V8M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="labels-grid">
+          <div class="label-field">
+            <h3 class="label-field__title">Necklabel</h3>
+            <div class="button-group button-group--vertical">
+              <button type="button" class="button-option" data-option="necklabel" data-value="Polyester">Polyester</button>
+              <button type="button" class="button-option" data-option="necklabel" data-value="Cotton Canvas">Cotton Canvas</button>
+              <button type="button" class="button-option" data-option="necklabel" data-value="Woven">Woven</button>
+            </div>
+          </div>
+
+          <div class="label-field">
+            <h3 class="label-field__title">Carelabel</h3>
+            <div class="button-group button-group--vertical">
+              <button type="button" class="button-option" data-option="carelabel" data-value="Polyester">Polyester</button>
+              <button type="button" class="button-option" data-option="carelabel" data-value="Cotton Canvas">Cotton Canvas</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {%- comment -%} 5. PACKAGING {%- endcomment -%}
+      <section class="calculator-section" id="packaging">
+        <div class="section-header">
+          <h2 class="section-header__title">Packaging</h2>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="button-option" data-option="packaging" data-value="Neutral polybag">Neutral polybag</button>
+          <button type="button" class="button-option" data-option="packaging" data-value="Unpackaged">Unpackaged</button>
+        </div>
+      </section>
+
+      {%- comment -%} 6. ORDER QUANTITY {%- endcomment -%}
+      <section class="calculator-section" id="orderQuantity">
+        <div class="section-header">
+          <h2 class="section-header__title">Order Quantity</h2>
+        </div>
+
+        <div class="quantity-control">
+          <div class="quantity-slider-container">
+            <input
+              type="range"
+              class="quantity-slider"
+              id="quantitySlider"
+              min="100"
+              max="5000"
+              step="25"
+              value="300">
+            <div class="quantity-display">
+              <span id="quantityValue">300</span>
+              <span class="quantity-units">pieces</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    {%- comment -%} RESULTS PANEL (Sticky Bottom) {%- endcomment -%}
+    <div class="results-panel" id="resultsPanel">
+      <div class="results-panel__container">
+
+        <div class="results-metrics">
+          <div class="result-metric">
+            <div class="result-metric__label">Timeline</div>
+            <div class="result-metric__value" id="resultTimeline">5.5 weeks</div>
+          </div>
+
+          <div class="result-metric">
+            <div class="result-metric__label">Unit Cost</div>
+            <div class="result-metric__value" id="resultUnitCost">13.35€</div>
+          </div>
+
+          <div class="result-metric">
+            <div class="result-metric__label">Development Costs</div>
+            <div class="result-metric__value" id="resultDevCosts">20.00€</div>
+          </div>
+
+          <div class="result-metric result-metric--total">
+            <div class="result-metric__label">Total</div>
+            <div class="result-metric__value" id="resultTotal">4'025.00€</div>
+          </div>
+        </div>
+
+        <div class="results-actions">
+          <button type="button" class="button-action button-action--secondary" id="addToCollection">
+            Add to Collection
+          </button>
+          <button type="button" class="button-action button-action--primary" id="getQuoteButton">
+            Get Your Quote
+          </button>
+        </div>
+
+        <p class="results-disclaimer">
+          * The costs shown are estimates only and are not official quotes. For a formal quote, please register in our software. Shipping cost and VAT is not included in the prices shown.
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="{{ 'techpack-v11-calculator.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "TechPack V11 - Calculator",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Calculator Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_calculator",
+      "label": "Enable Calculator",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack Calculator"
+    }
+  ]
+}
+{% endschema %}
