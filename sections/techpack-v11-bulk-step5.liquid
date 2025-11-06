@@ -189,27 +189,7 @@
           </div>
         </div>
 
-        {%- comment -%} SECTION 4: FABRIC SWATCHES (Lab Dips) {%- endcomment -%}
-        <div class="review-section" id="labDipsSection">
-          <div class="review-section__header">
-            <h3 class="review-section__title">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="13" cy="13" r="5" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M10 10l3 3" stroke="currentColor" stroke-width="1.5"/>
-              </svg>
-              Fabric Swatches
-            </h3>
-            <span class="review-section__badge">Lab Dip Requests</span>
-          </div>
-          <div class="review-section__body">
-            <div id="reviewLabDips" class="review-lab-dips">
-              {%- comment -%} Populated by JavaScript {%- endcomment -%}
-            </div>
-          </div>
-        </div>
-
-        {%- comment -%} SECTION 5: COST SUMMARY {%- endcomment -%}
+        {%- comment -%} SECTION 4: COST SUMMARY {%- endcomment -%}
         <div class="review-section review-section--highlighted">
           <div class="review-section__header">
             <h3 class="review-section__title">
@@ -278,8 +258,19 @@
 
       </div>
 
-      {%- comment -%} SUBMIT BUTTON {%- endcomment -%}
-      <div class="form-actions form-actions--centered">
+      {%- comment -%} Form Navigation {%- endcomment -%}
+      <div class="form-navigation">
+        <button
+          type="button"
+          class="button-secondary"
+          data-action="previous-step"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back to Colors
+        </button>
+
         <button
           type="button"
           class="button-primary button-primary--large"
