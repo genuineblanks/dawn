@@ -1049,12 +1049,39 @@
       const total = this.calculateColorwayTotal(colorway);
       const sizes = colorway.sizes || {XS:0, S:0, M:0, L:0, XL:0, XXL:0};
 
+      // Build color type display
+      let colorTypeDisplay = '';
+      let colorDetails = '';
+
+      if (colorway.colorType === 'pantone') {
+        colorTypeDisplay = '<span class="colorway-type-badge colorway-type-badge--pantone">Pantone</span>';
+        if (colorway.pantoneColor) {
+          const washText = colorway.pantoneColor.washTechnique && colorway.pantoneColor.washTechnique !== 'none'
+            ? ` · ${colorway.pantoneColor.washTechnique}`
+            : '';
+          colorDetails = `<span class="colorway-details">${colorway.pantoneColor.code}${washText}</span>`;
+        }
+      } else if (colorway.colorType === 'stock') {
+        colorTypeDisplay = '<span class="colorway-type-badge colorway-type-badge--stock">Stock Color</span>';
+      } else if (colorway.colorType === 'techpack') {
+        colorTypeDisplay = '<span class="colorway-type-badge colorway-type-badge--techpack">Match Techpack</span>';
+        if (colorway.techpackRef) {
+          colorDetails = `<span class="colorway-details">From ${colorway.techpackRef}</span>`;
+        }
+      }
+
       return `
         <div class="colorway-inline-item" data-garment-id="${garmentId}" data-colorway-id="${colorway.id}">
           <div class="colorway-inline-header">
             <div class="colorway-inline-info">
               <div class="colorway-inline-swatch" style="background-color: ${colorway.hex};"></div>
-              <span class="colorway-inline-name">${colorway.color}</span>
+              <div class="colorway-inline-text">
+                <div class="colorway-name-row">
+                  <span class="colorway-inline-name">${colorway.color}</span>
+                  ${colorTypeDisplay}
+                </div>
+                ${colorDetails}
+              </div>
               <span class="colorway-inline-total ${total === 0 ? 'colorway-inline-total--empty' : ''}">${total > 0 ? `${total} pcs` : 'No sizes yet'}</span>
             </div>
             <button type="button" class="colorway-inline-delete" data-action="delete-colorway" data-garment-id="${garmentId}" data-colorway-id="${colorway.id}" title="Delete Colorway">
