@@ -20,13 +20,13 @@
 
 /* Light mode: dark/black header */
 [data-theme="light"] .techpack-v11__standalone-header {
-  background-color: #111827; /* Almost black */
+  background-color: #0a0a0a !important; /* True black - fully opaque */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Dark mode: light grey/white header */
 [data-theme="dark"] .techpack-v11__standalone-header {
-  background-color: #f9fafb; /* Light grey */
+  background-color: #ffffff !important; /* Pure white - fully opaque */
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
