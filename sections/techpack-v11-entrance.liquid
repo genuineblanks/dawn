@@ -14,9 +14,14 @@
     display: none !important;
   }
   body:has(.section-techpack-v11-entrance) .shopify-section-header,
-  body:has(.section-techpack-v11-entrance) header,
+  body:has(.section-techpack-v11-entrance) > header,
   body:has(.section-techpack-v11-entrance) footer {
     display: none !important;
+  }
+
+  /* Ensure entrance header is visible */
+  .techpack-v11__header {
+    display: block !important;
   }
 </style>
 
