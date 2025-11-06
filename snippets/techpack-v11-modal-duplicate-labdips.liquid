@@ -1,0 +1,243 @@
+{% comment %}
+  TechPack V11 - Duplicate Lab Dips Warning Modal
+  Purpose: Warn user about lab dips in cart that match garment colors
+  Triggered: When clicking "Continue to Review" button (Step 3B → Step 4)
+{% endcomment %}
+
+<div
+  class="techpack-modal"
+  id="modalDuplicateLabDips"
+  data-modal-id="modalDuplicateLabDips"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalDuplicateLabDips-title"
+  aria-hidden="true"
+  style="display: none;"
+>
+  {%- comment -%} Backdrop (not closeable for this modal) {%- endcomment -%}
+  <div class="techpack-modal__backdrop"></div>
+
+  {%- comment -%} Modal Container {%- endcomment -%}
+  <div class="techpack-modal__container techpack-modal__container--md">
+
+    {%- comment -%} Modal Header {%- endcomment -%}
+    <div class="techpack-modal__header">
+      <div class="techpack-modal__icon techpack-modal__icon--warning">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 11.333V16M16 20.667H16.013" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13.76 5.333L3.52 22.667A2.667 2.667 0 005.76 26.667H26.24a2.667 2.667 0 002.24-4L18.24 5.333a2.667 2.667 0 00-4.48 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <h3 class="techpack-modal__title" id="modalDuplicateLabDips-title">
+        Duplicate Lab Dips Detected
+      </h3>
+    </div>
+
+    {%- comment -%} Modal Body {%- endcomment -%}
+    <div class="techpack-modal__body">
+
+      {%- comment -%} Warning Message {%- endcomment -%}
+      <div class="duplicate-warning-message">
+        <p class="techpack-modal__description">
+          <strong>You have lab dip swatches for colors already assigned to garments.</strong>
+        </p>
+        <p class="techpack-modal__description">
+          Since you'll receive these colors on the actual garments, the separate fabric swatches are unnecessary and will only add extra cost.
+        </p>
+      </div>
+
+      {%- comment -%} Duplicates List (Populated by JavaScript) {%- endcomment -%}
+      <div class="duplicate-list" id="duplicateLabDipsList">
+        {%- comment -%} JavaScript will populate this {%- endcomment -%}
+      </div>
+
+      {%- comment -%} Cost Savings {%- endcomment -%}
+      <div class="duplicate-savings">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <path d="M7 10L9 12L13 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Removing these duplicates saves you <strong id="duplicateSavingsAmount">€0.00</strong></span>
+      </div>
+
+      {%- comment -%} Help Text {%- endcomment -%}
+      <div class="techpack-modal__help">
+        <p class="text-sm text-secondary">
+          <strong>Note:</strong> If you need the same color on multiple garments, that's fine! This warning is only about unused lab dip swatches in your cart.
+        </p>
+      </div>
+    </div>
+
+    {%- comment -%} Modal Footer {%- endcomment -%}
+    <div class="techpack-modal__footer">
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="button-secondary"
+          data-modal-close="modalDuplicateLabDips"
+        >
+          Go Back to Review
+        </button>
+        <button
+          type="button"
+          class="button-primary"
+          data-action="auto-remove-duplicates"
+        >
+          Auto-Remove Duplicates & Continue
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.duplicate-warning-message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.duplicate-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  max-height: 400px;
+  overflow-y: auto;
+  padding: var(--space-2);
+}
+
+.duplicate-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-lg);
+}
+
+.duplicate-item__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.duplicate-item__swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.duplicate-item__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.duplicate-item__name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-error-text);
+  line-height: 1.4;
+}
+
+.duplicate-item__code {
+  font-size: 0.875rem;
+  color: var(--color-error-text);
+  font-family: var(--font-family-mono);
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+.duplicate-item__wash {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.813rem;
+  color: var(--color-error-text);
+  opacity: 0.9;
+  margin-top: var(--space-1);
+}
+
+.duplicate-item__wash svg {
+  width: 14px;
+  height: 14px;
+}
+
+.duplicate-item__price {
+  font-size: 0.938rem;
+  font-weight: 600;
+  color: var(--color-error-text);
+  white-space: nowrap;
+}
+
+.duplicate-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-16);
+}
+
+.duplicate-item__label {
+  font-size: 0.813rem;
+  font-weight: 500;
+  color: var(--color-error-text);
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.duplicate-item__garments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.duplicate-item__garment {
+  font-size: 0.875rem;
+  color: var(--color-error-text);
+  line-height: 1.4;
+}
+
+.duplicate-item__cart {
+  font-size: 0.875rem;
+  color: var(--color-error-text);
+  line-height: 1.4;
+}
+
+.duplicate-savings {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-success-bg);
+  border: 1px solid var(--color-success);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.duplicate-savings svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.duplicate-savings span {
+  font-size: 0.938rem;
+  color: var(--color-success-text);
+  line-height: 1.5;
+}
+
+.duplicate-savings strong {
+  font-weight: 600;
+}
+</style>

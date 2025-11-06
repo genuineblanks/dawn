@@ -106,12 +106,24 @@
     setupEventListeners: function() {
       const self = this;
 
-      // Listen for clicks on theme toggle button
+      // Listen for clicks on theme buttons
       document.addEventListener('click', function(e) {
+        // Old toggle button (single button that switches)
         const toggleButton = e.target.closest('#themeToggle, .theme-toggle-btn');
         if (toggleButton) {
           e.preventDefault();
           self.toggleTheme();
+          return;
+        }
+
+        // New theme set buttons (two buttons, each sets specific theme)
+        const themeSetButton = e.target.closest('[data-theme-set]');
+        if (themeSetButton) {
+          e.preventDefault();
+          const targetTheme = themeSetButton.getAttribute('data-theme-set');
+          if (targetTheme === self.THEME_LIGHT || targetTheme === self.THEME_DARK) {
+            self.applyTheme(targetTheme);
+          }
         }
       });
 
@@ -121,6 +133,17 @@
         if (toggleButton && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault();
           self.toggleTheme();
+          return;
+        }
+
+        // Theme set buttons keyboard support
+        const themeSetButton = e.target.closest('[data-theme-set]');
+        if (themeSetButton && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          const targetTheme = themeSetButton.getAttribute('data-theme-set');
+          if (targetTheme === self.THEME_LIGHT || targetTheme === self.THEME_DARK) {
+            self.applyTheme(targetTheme);
+          }
         }
       });
     },

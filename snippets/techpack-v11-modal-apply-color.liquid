@@ -1,0 +1,173 @@
+{% comment %}
+  TechPack V11 - Apply Color to Other Garments Modal
+  Purpose: Ask user if they want to keep lab dip in cart for other garments
+  Triggered: When dragging lab dip to garment (if other uncolored garments exist)
+{% endcomment %}
+
+<div
+  class="techpack-modal"
+  id="modalApplyColor"
+  data-modal-id="modalApplyColor"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalApplyColor-title"
+  aria-hidden="true"
+  style="display: none;"
+>
+  {%- comment -%} Backdrop {%- endcomment -%}
+  <div class="techpack-modal__backdrop" data-modal-close="modalApplyColor"></div>
+
+  {%- comment -%} Modal Container {%- endcomment -%}
+  <div class="techpack-modal__container techpack-modal__container--sm">
+
+    {%- comment -%} Modal Header {%- endcomment -%}
+    <div class="techpack-modal__header">
+      <div class="techpack-modal__icon techpack-modal__icon--info">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 4L4 8V14C4 20.627 7.373 27 12 28.989C16.627 27 20 20.627 20 14V8L12 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="20" cy="20" r="8" fill="var(--color-background)" stroke="currentColor" stroke-width="2"/>
+          <path d="M16 20L19 23L24 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <h3 class="techpack-modal__title" id="modalApplyColor-title">
+        Apply to Other Garments?
+      </h3>
+
+      <button
+        type="button"
+        class="techpack-modal__close"
+        data-modal-close="modalApplyColor"
+        aria-label="Close modal"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {%- comment -%} Modal Body {%- endcomment -%}
+    <div class="techpack-modal__body">
+
+      {%- comment -%} Message {%- endcomment -%}
+      <p class="techpack-modal__description" id="applyColorMessage">
+        You have other garments without colors. Would you like to keep this lab dip in the cart to apply it to other garments?
+      </p>
+
+      {%- comment -%} Color Preview Card {%- endcomment -%}
+      <div class="modal-color-preview" id="applyColorPreview">
+        <div class="color-preview__swatch" id="applyColorSwatch" style="background-color: #000000;"></div>
+        <div class="color-preview__details">
+          <div class="color-preview__name" id="applyColorName">Black</div>
+          <div class="color-preview__code" id="applyColorCode">PANTONE 19-0303 TCX</div>
+          <div class="color-preview__wash" id="applyColorWash" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 9C5.5 10 6.5 11 8 11C9.5 11 10.5 10 11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span id="applyColorWashText">Stone Wash</span>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} Help Text {%- endcomment -%}
+      <div class="techpack-modal__help">
+        <p class="text-sm text-secondary">
+          <strong>Keep in cart:</strong> You can assign this color to multiple garments.<br>
+          <strong>Remove from cart:</strong> This color will only be assigned to the current garment.
+        </p>
+      </div>
+    </div>
+
+    {%- comment -%} Modal Footer {%- endcomment -%}
+    <div class="techpack-modal__footer">
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="button-secondary"
+          data-action="confirm-apply-color"
+          data-keep-in-cart="false"
+        >
+          No, Just This Garment
+        </button>
+        <button
+          type="button"
+          class="button-primary"
+          data-action="confirm-apply-color"
+          data-keep-in-cart="true"
+        >
+          Yes, Keep in Cart
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.modal-color-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-4);
+}
+
+.color-preview__swatch {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.color-preview__details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.color-preview__name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.color-preview__code {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-mono);
+  line-height: 1.4;
+}
+
+.color-preview__wash {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-warning-bg);
+  border-radius: var(--radius-md);
+  width: fit-content;
+}
+
+.color-preview__wash svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-warning-text);
+  flex-shrink: 0;
+}
+
+.color-preview__wash span {
+  font-size: 0.813rem;
+  font-weight: 500;
+  color: var(--color-warning-text);
+  line-height: 1;
+}
+</style>
