@@ -71,7 +71,7 @@
         "banner_subtext2": "RELAXED COLLECTION",
         "banner_subtext_url2": "",
         "banner_link_txt": "Explore our facility, past products & more",
-        "banner_link_url": "shopify://pages/futuristic",
+        "banner_link_url": "shopify://pages/show-room",
         "banner_botton_text": "<p class=\"click-to-scroll\"><span>Click to go into the product, or</span>\n<a href=\"#autoplay-video\">scroll down <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\" fill=\"currentColor\" class=\"bi bi-arrow-down\" viewbox=\"0 0 16 16\">\n  <path fill-rule=\"evenodd\" d=\"M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1\"></path>\n</svg></a><br>\nget to know us better</p>",
         "image_overlay_opacity": 0,
         "image_height": "medium",
@@ -162,7 +162,7 @@
         "banner_subtext2": "RELAXED COLLECTION",
         "banner_subtext_url2": "",
         "banner_link_txt": "Explore our facility, past products & more",
-        "banner_link_url": "shopify://pages/futuristic",
+        "banner_link_url": "shopify://pages/show-room",
         "banner_botton_text": "<p class=\"click-to-scroll\"><span>Click to go into the product, or</span>\n<a href=\"#autoplay-video\">scroll down <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\" fill=\"currentColor\" class=\"bi bi-arrow-down\" viewbox=\"0 0 16 16\">\n  <path fill-rule=\"evenodd\" d=\"M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1\"></path>\n</svg></a><br>\nget to know us better</p>",
         "image_overlay_opacity": 0,
         "image_height": "medium",
@@ -372,7 +372,7 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "Explore Past Products, Factory & Team",
-            "button_link_1": "shopify://pages/futuristic",
+            "button_link_1": "shopify://pages/show-room",
             "button_style_secondary_1": false,
             "button_label_2": "",
             "button_link_2": "",
@@ -440,7 +440,7 @@
         "company_title": "We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Barcelos, Portugal. Our facilities and machines are at the cutting edge of technology.",
         "company_description": "Our commitment to excellence drives everything we do, from concept to creation.",
         "button_text": "‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ Explore Past Products, Factory & Team ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎  ‎ ‎",
-        "button_url": "shopify://pages/futuristic",
+        "button_url": "shopify://pages/show-room",
         "button_2_text": "‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ what do you need to get started? & FAQ's ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎",
         "button_2_url": "shopify://pages/how-does-it-work",
         "show_scroll_indicator": true,
@@ -624,7 +624,7 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "LUXURY COLLECTION LOOKBOOK",
-            "button_link_1": "shopify://pages/futuristic",
+            "button_link_1": "shopify://pages/show-room",
             "button_style_secondary_1": false,
             "button_label_2": "",
             "button_link_2": "",
@@ -728,7 +728,7 @@
             "title": "",
             "subtitle": "FACTORY OVERVIEW & SHOW ROOM",
             "rich": "",
-            "link": "shopify://pages/futuristic"
+            "link": "shopify://pages/show-room"
           }
         },
         "add_text_grid_4_techpack": {
